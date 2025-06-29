@@ -31,11 +31,14 @@ export interface UniversityUser {
 }
 
 export interface Admin {
-  id?: string;
-  studentId: string;
-  adminUsername: string;
-  adminPassword?: string;
+  studentid: string;
+  adminusername: string;
+  createdAt?: Date;
   isSuperAdmin?: boolean;
+}
+
+export interface GetAdminResponse {
+  admins: Admin[];
 }
 
 export interface AuthContextType {
@@ -49,7 +52,7 @@ export interface ChartData {
   name: string;
   value: number;
 }
-export interface AuthPayload{
+export interface AuthPayload {
   admin: Admin;
   token: string;
 }

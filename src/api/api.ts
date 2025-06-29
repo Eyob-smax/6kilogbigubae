@@ -12,19 +12,12 @@ interface AxiosError {
 }
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.BASE_API_URL,
   withCredentials: true,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("admin_token");
-  if (token) {
-    config.headers["Authorization"] = `Bearer ${token}`;
-  }
-  return config;
 });
 
 const handleRequestError = (error: AxiosError) => {
@@ -36,6 +29,11 @@ const handleRequestError = (error: AxiosError) => {
     throw new Error("Request setup error");
   }
 };
+
+api.interceptors.request.use((config) => {
+  console.log(config);
+  return config;
+});
 
 export const getRequest = async <T>(
   url: string,

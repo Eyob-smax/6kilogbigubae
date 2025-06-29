@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { Users, UserCog, BarChart2, Calendar } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { format } from 'date-fns';
-import { api } from '../../api/api'; //  Update your API base here
+import { useEffect, useState } from "react";
+// import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { Users, UserCog, BarChart2, Calendar } from "lucide-react";
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import { api } from "../../api/api";
 
 interface User {
   id: string;
@@ -22,24 +22,24 @@ interface Event {
 }
 
 const Dashboard = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-
+  console.log(loading);
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
 
         // Replace with your actual API endpoints
-        const usersRes = await api.get('/admin/users');
-        const eventsRes = await api.get('/admin/events/upcoming');
+        const usersRes = await api.get("/admin/users");
+        const eventsRes = await api.get("/admin/events/upcoming");
 
         setUsers(usersRes.data || []);
         setEvents(eventsRes.data || []);
       } catch (error) {
-        console.error('Error fetching dashboard data:', error);
+        console.error("Error fetching dashboard data:", error);
       } finally {
         setLoading(false);
       }
@@ -62,7 +62,7 @@ const Dashboard = () => {
 
   const totalUsers = users.length;
   const activeUsers = users.filter(
-    (user) => user.universityusers?.participation === 'Active'
+    (user) => user.universityusers?.participation === "Active"
   ).length;
 
   const nextEvent = events.length > 0 ? events[0] : null;
@@ -88,7 +88,10 @@ const Dashboard = () => {
               <Users size={24} />
             </div>
           </div>
-          <Link to="/admin/users" className="text-sm text-liturgical-blue mt-4 inline-block hover:underline">
+          <Link
+            to="/admin/users"
+            className="text-sm text-liturgical-blue mt-4 inline-block hover:underline"
+          >
             View all users
           </Link>
         </motion.div>
@@ -110,7 +113,10 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="mt-4 text-sm text-gray-600">
-            {totalUsers > 0 ? `${Math.round((activeUsers / totalUsers) * 100)}%` : '0%'} of total users
+            {totalUsers > 0
+              ? `${Math.round((activeUsers / totalUsers) * 100)}%`
+              : "0%"}{" "}
+            of total users
           </div>
         </motion.div>
 
@@ -125,14 +131,19 @@ const Dashboard = () => {
             <div>
               <p className="text-gray-500 font-medium">Participation Rate</p>
               <h3 className="text-3xl font-bold mt-1">
-                {totalUsers > 0 ? `${Math.round((activeUsers / totalUsers) * 100)}%` : '0%'}
+                {totalUsers > 0
+                  ? `${Math.round((activeUsers / totalUsers) * 100)}%`
+                  : "0%"}
               </h3>
             </div>
             <div className="bg-green-500/10 p-3 rounded-full text-green-500">
               <BarChart2 size={24} />
             </div>
           </div>
-          <Link to="/admin/analytics" className="text-sm text-green-500 mt-4 inline-block hover:underline">
+          <Link
+            to="/admin/analytics"
+            className="text-sm text-green-500 mt-4 inline-block hover:underline"
+          >
             View analytics
           </Link>
         </motion.div>
@@ -155,7 +166,10 @@ const Dashboard = () => {
             <div>
               <h4 className="text-lg font-medium">{nextEvent.title}</h4>
               <div className="mt-2 space-y-1 text-gray-600">
-                <p>{format(new Date(nextEvent.date), 'MMMM d, yyyy')} at {nextEvent.time}</p>
+                <p>
+                  {format(new Date(nextEvent.date), "MMMM d, yyyy")} at{" "}
+                  {nextEvent.time}
+                </p>
                 <p>{nextEvent.location}</p>
               </div>
               <p className="mt-3 text-gray-700">{nextEvent.description}</p>

@@ -1,5 +1,3 @@
-// features/admin/adminSlice.ts
-
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Admin } from "../../types";
 import {
@@ -8,22 +6,17 @@ import {
   putRequest,
   deleteRequest,
 } from "../../api/api";
-
-// Define state shape
 interface AdminState {
   admins: Admin[];
   loading: boolean;
   error: string | null;
 }
 
-// Initial state
 const initialState: AdminState = {
   admins: [],
   loading: false,
   error: null,
 };
-
-// Async Thunks using the centralized API functions
 
 export const fetchAdmins = createAsyncThunk<
   Admin[],

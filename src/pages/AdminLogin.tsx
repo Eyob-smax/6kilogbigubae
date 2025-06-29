@@ -1,13 +1,13 @@
 // src/pages/AdminLogin.tsx
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../app/store';
-import { loginAdmin, clearAuthError } from '../features/auth/authSlice';
-import { User, Lock, AlertCircle } from 'react-feather';
-import headerLogo from '../assets/headerLogo.png';
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../app/store";
+import { loginAdmin, clearAuthError } from "../features/auth/authSlice";
+import { User, Lock, AlertCircle } from "react-feather";
+import headerLogo from "../assets/headerLogo.png";
 
 const AdminLogin = () => {
   const { t } = useTranslation();
@@ -18,20 +18,20 @@ const AdminLogin = () => {
     (state: RootState) => state.auth
   );
 
-  const [studentId, setStudentId] = useState('');
-  const [password, setPassword] = useState('');
-  const [localError, setLocalError] = useState('');
+  const [studentId, setStudentId] = useState("");
+  const [password, setPassword] = useState("");
+  const [localError, setLocalError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLocalError('');
+    setLocalError("");
     dispatch(clearAuthError());
     dispatch(loginAdmin({ studentId, password }));
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/admin');
+      navigate("/admin");
     }
   }, [isAuthenticated, navigate]);
 
@@ -67,7 +67,7 @@ const AdminLogin = () => {
           </div>
 
           <h2 className="mt-6 text-center text-3xl font-extrabold text-liturgical-blue">
-            {t('admin.login.title')}
+            {t("admin.login.title")}
           </h2>
         </div>
 
@@ -75,7 +75,7 @@ const AdminLogin = () => {
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label htmlFor="studentId" className="sr-only">
-                {t('admin.login.studentId')}
+                {t("admin.login.studentId")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -87,7 +87,7 @@ const AdminLogin = () => {
                   type="text"
                   required
                   className="appearance-none relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder={t('admin.login.studentId')}
+                  placeholder={t("admin.login.studentId")}
                   value={studentId}
                   onChange={(e) => setStudentId(e.target.value)}
                 />
@@ -96,7 +96,7 @@ const AdminLogin = () => {
 
             <div>
               <label htmlFor="password" className="sr-only">
-                {t('admin.login.password')}
+                {t("admin.login.password")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -108,7 +108,7 @@ const AdminLogin = () => {
                   type="password"
                   required
                   className="appearance-none relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder={t('admin.login.password')}
+                  placeholder={t("admin.login.password")}
                   autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -129,16 +129,16 @@ const AdminLogin = () => {
               type="submit"
               disabled={loading}
               className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                loading ? 'opacity-70 cursor-not-allowed' : ''
+                loading ? "opacity-70 cursor-not-allowed" : ""
               }`}
             >
               {loading ? (
                 <span className="flex items-center justify-center">
                   <span className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-                  {t('admin.login.submit')}...
+                  {t("admin.login.submit")}...
                 </span>
               ) : (
-                t('admin.login.submit')
+                t("admin.login.submit")
               )}
             </button>
           </div>

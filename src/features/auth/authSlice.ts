@@ -1,7 +1,8 @@
 // src/features/auth/authSlice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../api/api";
 import { Admin } from "../../types";
+import { AxiosError } from "axios";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -12,12 +13,25 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  isAuthenticated: !!JSON.parse(localStorage.getItem("admin_token")!),
+  isAuthenticated: false,
   admin: null,
-  token: JSON.parse(localStorage.getItem("admin_token")!) || null,
+  token: null,
   loading: false,
   error: null,
 };
+
+// export const fetchCurrentAdmin = createAsyncThunk(
+//   "auth/getCurrentAdmin",
+//   async (_, { rejectWithValue }) => {
+//     try {
+//       const response = await api.get("/api/currentAdmin");
+//       return response.data;
+//     } catch (err) {
+//       const { message } = err as Error;
+//       return rejectWithValue(message);
+//     }
+//   }
+// );
 
 export const loginAdmin = createAsyncThunk<
   { admin: Admin; token: string },
@@ -27,8 +41,11 @@ export const loginAdmin = createAsyncThunk<
   try {
     const response = await api.post("/admin/login", { studentId, password });
     return response.data;
-  } catch (err: any) {
-    return rejectWithValue(err.response?.data?.message || "Login failed");
+  } catch (err) {
+    const error = err as AxiosError<{ message?: string }>;
+    const message =
+      error.response?.data?.message || error.message || "Login failed";
+    return rejectWithValue(message);
   }
 });
 
