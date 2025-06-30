@@ -12,7 +12,7 @@ interface AxiosError {
 }
 
 export const api = axios.create({
-  baseURL: import.meta.env.BASE_API_URL,
+  baseURL: "/api",
   withCredentials: true,
   timeout: 10000,
   headers: {
@@ -31,7 +31,6 @@ const handleRequestError = (error: AxiosError) => {
 };
 
 api.interceptors.request.use((config) => {
-  console.log(config);
   return config;
 });
 

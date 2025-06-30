@@ -1,4 +1,3 @@
-// src/features/auth/authSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../api/api";
 import { Admin } from "../../types";
@@ -7,7 +6,6 @@ import { AxiosError } from "axios";
 interface AuthState {
   isAuthenticated: boolean;
   admin: Admin | null;
-  token: string | null;
   loading: boolean;
   error: string | null;
 }
@@ -15,23 +13,9 @@ interface AuthState {
 const initialState: AuthState = {
   isAuthenticated: false,
   admin: null,
-  token: null,
   loading: false,
   error: null,
 };
-
-// export const fetchCurrentAdmin = createAsyncThunk(
-//   "auth/getCurrentAdmin",
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const response = await api.get("/api/currentAdmin");
-//       return response.data;
-//     } catch (err) {
-//       const { message } = err as Error;
-//       return rejectWithValue(message);
-//     }
-//   }
-// );
 
 export const loginAdmin = createAsyncThunk<
   { admin: Admin; token: string },
@@ -39,13 +23,16 @@ export const loginAdmin = createAsyncThunk<
   { rejectValue: string }
 >("auth/loginAdmin", async ({ studentId, password }, { rejectWithValue }) => {
   try {
-    const response = await api.post("/admin/login", { studentId, password });
+    const response = await api.post("/admin/login", {
+      studentId,
+      adminPassword: password,
+    });
     return response.data;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
-    const message =
-      error.response?.data?.message || error.message || "Login failed";
-    return rejectWithValue(message);
+    return rejectWithValue(
+      error.response?.data?.message || error.message || "Login failed"
+    );
   }
 });
 
@@ -53,11 +40,14 @@ export const logoutAdmin = createAsyncThunk<
   void,
   void,
   { rejectValue: string }
->("auth/logoutAdmin", async (_, { rejectWithValue }) => {
+>("/auth/logoutAdmin", async (_, { rejectWithValue }) => {
   try {
-    localStorage.removeItem("admin_token");
-  } catch (err: any) {
-    return rejectWithValue("Logout failed");
+    await api.get("/logout");
+  } catch (err) {
+    const error = err as AxiosError<{ message?: string }>;
+    return rejectWithValue(
+      error.response?.data?.message || error.message || "Logout failed"
+    );
   }
 });
 
@@ -79,12 +69,12 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.admin = action.payload.admin;
-        state.token = action.payload.token;
-        localStorage.setItem("admin_token", action.payload.token);
       })
       .addCase(loginAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Login failed";
+        state.isAuthenticated = false;
+        state.admin = null;
       })
       .addCase(logoutAdmin.pending, (state) => {
         state.loading = true;
@@ -93,7 +83,6 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = false;
         state.admin = null;
-        state.token = null;
         state.error = null;
       })
       .addCase(logoutAdmin.rejected, (state, action) => {

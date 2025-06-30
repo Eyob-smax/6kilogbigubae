@@ -1,24 +1,27 @@
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../store/hooks';
-import { logoutAdmin } from '../../features/auth/authSlice';
-import { Users, UserCog, BarChart2, LogOut, Home, Menu } from 'lucide-react';
-import { t } from 'i18next';
-import { useState, useEffect, useCallback } from 'react';
-import headerLogo from '../../assets/headerLogo.png'; // Adjust the path as necessary
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAppDispatch } from "../../store/hooks";
+import { logoutAdmin } from "../../features/auth/authSlice";
+import { Users, UserCog, BarChart2, LogOut, Home, Menu } from "lucide-react";
+import { t } from "i18next";
+import { useState, useEffect, useCallback } from "react";
+import headerLogo from "../../assets/headerLogo.png"; // Adjust the path as necessary
 
-const AdminSidebar = () => {
+type AdminSidebarProps = {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+};
+
+const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     setIsOpen(false);
-  }, [location.pathname]);
+  }, [location.pathname, setIsOpen]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -26,22 +29,37 @@ const AdminSidebar = () => {
       setIsMobile(mobile);
       if (!mobile) setIsOpen(false);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [setIsOpen]);
 
   const handleLogout = useCallback(async () => {
-    const resultAction = await dispatch(logoutAdmin());
-    if (logoutAdmin.fulfilled.match(resultAction)) {
-      navigate('/admin/login');
-    }
+    dispatch(logoutAdmin());
+
+    navigate("/admin/login");
   }, [dispatch, navigate]);
 
   const navLinks = [
-    { to: '/admin', icon: <Home size={20} />, label: t('admin.dashboard.title') },
-    { to: '/admin/users', icon: <Users size={20} />, label: t('admin.dashboard.users') },
-    { to: '/admin/admins', icon: <UserCog size={20} />, label: t('admin.dashboard.admins') },
-    { to: '/admin/analytics', icon: <BarChart2 size={20} />, label: t('admin.dashboard.analytics') },
+    {
+      to: "/admin",
+      icon: <Home size={20} />,
+      label: t("admin.dashboard.title"),
+    },
+    {
+      to: "/admin/users",
+      icon: <Users size={20} />,
+      label: t("admin.dashboard.users"),
+    },
+    {
+      to: "/admin/admins",
+      icon: <UserCog size={20} />,
+      label: t("admin.dashboard.admins"),
+    },
+    {
+      to: "/admin/analytics",
+      icon: <BarChart2 size={20} />,
+      label: t("admin.dashboard.analytics"),
+    },
   ];
 
   return (
@@ -50,11 +68,15 @@ const AdminSidebar = () => {
       <div className="md:hidden bg-liturgical-blue text-white sticky top-0 z-40">
         <div className="flex justify-between items-center px-4 py-3 h-16">
           <div className="flex items-center space-x-2">
-            <img src={headerLogo} alt="Logo" className="w-10 h-10 rounded-full" />
+            <img
+              src={headerLogo}
+              alt="Logo"
+              className="w-10 h-10 rounded-full"
+            />
           </div>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? t('aria.closeMenu') : t('aria.openMenu')}
+            aria-label={isOpen ? t("aria.closeMenu") : t("aria.openMenu")}
             aria-expanded={isOpen}
             className="p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-gold"
           >
@@ -68,15 +90,19 @@ const AdminSidebar = () => {
         {(!isMobile || isOpen) && (
           <>
             <motion.div
-              initial={{ x: '-100%' }}
+              initial={{ x: "-100%" }}
               animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.3 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
               className="fixed top-0 left-0 z-50 h-full w-64 bg-liturgical-blue text-white shadow-xl md:relative md:z-auto"
             >
               {/* Logo */}
               <div className="flex items-center px-4 py-6">
-                <img src={headerLogo} alt="Header Logo" className="w-12 h-12 rounded-full" />
+                <img
+                  src={headerLogo}
+                  alt="Header Logo"
+                  className="w-12 h-12 rounded-full"
+                />
               </div>
 
               {/* Navigation Links */}
@@ -93,10 +119,14 @@ const AdminSidebar = () => {
                         to={to}
                         className={({ isActive }) =>
                           `flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                            isActive ? 'bg-white/10 text-gold' : 'hover:bg-white/5'
+                            isActive
+                              ? "bg-white/10 text-gold"
+                              : "hover:bg-white/5"
                           }`
                         }
-                        aria-current={location.pathname === to ? 'page' : undefined}
+                        aria-current={
+                          location.pathname === to ? "page" : undefined
+                        }
                       >
                         {icon}
                         <span>{label}</span>
@@ -111,10 +141,10 @@ const AdminSidebar = () => {
                 <button
                   onClick={handleLogout}
                   className="flex items-center space-x-3 px-4 py-3 rounded-lg w-full hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-gold"
-                  aria-label={t('admin.dashboard.logoutAdmin')}
+                  aria-label={t("admin.dashboard.logoutAdmin")}
                 >
                   <LogOut size={20} />
-                  <span>{t('admin.dashboard.logoutAdmin')}</span>
+                  <span>{t("admin.dashboard.logoutAdmin")}</span>
                 </button>
               </div>
             </motion.div>
