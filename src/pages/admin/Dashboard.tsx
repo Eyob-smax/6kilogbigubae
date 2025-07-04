@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Users, UserCog, BarChart2, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
-import { format } from "date-fns";
+// import { format } from "date-fns";
 import { api } from "../../api/api";
 
 interface User {
@@ -13,31 +13,30 @@ interface User {
   };
 }
 
-interface Event {
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  description: string;
-}
+// interface Event {
+//   title: string;
+//   date: string;
+//   time: string;
+//   location: string;
+//   description: string;
+// }
 
 const Dashboard = () => {
   // const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
+  // const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  console.log(loading);
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
 
         // Replace with your actual API endpoints
-        const usersRes = await api.get("/admin/users");
-        const eventsRes = await api.get("/admin/events/upcoming");
+        const usersRes = await api.get("/user");
+        // const eventsRes = await api.get("/admin/events/upcoming");
 
         setUsers(usersRes.data || []);
-        setEvents(eventsRes.data || []);
+        // setEvents(eventsRes.data || []);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
@@ -60,12 +59,9 @@ const Dashboard = () => {
     }),
   };
 
-  const totalUsers = users.length;
-  const activeUsers = users.filter(
-    (user) => user.universityusers?.participation === "Active"
-  ).length;
+  const totalUsers = users?.length;
 
-  const nextEvent = events.length > 0 ? events[0] : null;
+  // const nextEvent = events.length > 0 ? events[0] : null;
 
   return (
     <div>
@@ -106,17 +102,15 @@ const Dashboard = () => {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-gray-500 font-medium">Active Users</p>
-              <h3 className="text-3xl font-bold mt-1">{activeUsers}</h3>
+              <h3 className="text-3xl font-bold mt-1">{}</h3>
             </div>
             <div className="bg-gold/10 p-3 rounded-full text-gold">
               <UserCog size={24} />
             </div>
           </div>
           <div className="mt-4 text-sm text-gray-600">
-            {totalUsers > 0
-              ? `${Math.round((activeUsers / totalUsers) * 100)}%`
-              : "0%"}{" "}
-            of total users
+            {totalUsers > 0 ? `${Math.round(totalUsers * 100)}%` : "0%"} of
+            total users
           </div>
         </motion.div>
 
@@ -131,9 +125,7 @@ const Dashboard = () => {
             <div>
               <p className="text-gray-500 font-medium">Participation Rate</p>
               <h3 className="text-3xl font-bold mt-1">
-                {totalUsers > 0
-                  ? `${Math.round((activeUsers / totalUsers) * 100)}%`
-                  : "0%"}
+                {totalUsers > 0 ? `${Math.round(totalUsers * 100)}%` : "0%"}
               </h3>
             </div>
             <div className="bg-green-500/10 p-3 rounded-full text-green-500">
@@ -162,7 +154,7 @@ const Dashboard = () => {
             Next Event
           </h3>
 
-          {nextEvent ? (
+          {/* {nextEvent ? (
             <div>
               <h4 className="text-lg font-medium">{nextEvent.title}</h4>
               <div className="mt-2 space-y-1 text-gray-600">
@@ -176,7 +168,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <p className="text-gray-500 italic">No upcoming events</p>
-          )}
+          )} */}
         </motion.div>
 
         <motion.div

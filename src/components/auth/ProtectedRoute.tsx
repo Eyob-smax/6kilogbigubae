@@ -3,6 +3,9 @@ import { ReactNode, useEffect, useState } from "react";
 import { api } from "../../api/api";
 import LoadingScreen from "../ui/LoadingScreen";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/store";
+import { setCurrentUser } from "../../features/auth/authSlice";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -11,6 +14,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -18,6 +22,12 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         const response = await api.get("/auth/current");
         if (response.data.success && response.data.user?.isAuthenticated) {
           setIsAuthenticated(true);
+          dispatch(
+            setCurrentUser({
+              studentid: response?.data?.user?.studentid,
+              username: response?.data?.user?.adminusername,
+            })
+          );
         } else {
           setIsAuthenticated(false);
           Swal.fire({
@@ -40,7 +50,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     };
 
     checkAuth();
-  }, []);
+  }, [dispatch]);
 
   if (loading || isAuthenticated === null) {
     return <LoadingScreen />;

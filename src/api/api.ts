@@ -1,5 +1,6 @@
 // src/api/api.ts
 import axios, { AxiosRequestConfig } from "axios";
+import { User } from "../types";
 
 interface AxiosError {
   response?: {
@@ -9,6 +10,12 @@ interface AxiosError {
   };
   request?: unknown;
   message?: string;
+}
+
+interface IResponseObject {
+  message?: string;
+  success: boolean;
+  user?: User & { userid: number };
 }
 
 export const api = axios.create({
@@ -47,17 +54,18 @@ export const getRequest = async <T>(
   }
 };
 
-export const postRequest = async <T, D>(
+export const postRequest = async <IResponseObject, D>(
   url: string,
   data: D,
   config?: AxiosRequestConfig
-): Promise<T> => {
+): Promise<IResponseObject> => {
   try {
-    const response = await api.post<T>(url, data, config);
+    const response = await api.post<IResponseObject>(url, data, config);
     return response.data;
   } catch (error) {
-    handleRequestError(error as AxiosError);
-    throw error;
+    // handleRequestError(error as AxiosError);
+    const err = error as AxiosError;
+    return err.response?.data as IResponseObject;
   }
 };
 

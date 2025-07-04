@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Admin } from "../../types";
+import { extractError } from "../../util/utils";
+
 import {
   getRequest,
   postRequest,
@@ -24,11 +26,9 @@ export const fetchAdmins = createAsyncThunk<
   { rejectValue: string }
 >("admin/fetchAdmins", async (_, { rejectWithValue }) => {
   try {
-    return await getRequest<Admin[]>("/admins");
-  } catch (err: any) {
-    return rejectWithValue(
-      err?.response?.data?.message || "Failed to fetch admins"
-    );
+    return await getRequest<Admin[]>("/admin");
+  } catch (err) {
+    return rejectWithValue(extractError(err));
   }
 });
 
@@ -36,11 +36,9 @@ export const addAdmin = createAsyncThunk<Admin, Admin, { rejectValue: string }>(
   "admin/addAdmin",
   async (adminData, { rejectWithValue }) => {
     try {
-      return await postRequest<Admin, Admin>("/admins", adminData);
-    } catch (err: any) {
-      return rejectWithValue(
-        err?.response?.data?.message || "Failed to add admin"
-      );
+      return await postRequest<Admin, Admin>("/admin", adminData);
+    } catch (err) {
+      return rejectWithValue(extractError(err));
     }
   }
 );
@@ -51,11 +49,9 @@ export const updateAdmin = createAsyncThunk<
   { rejectValue: string }
 >("admin/updateAdmin", async ({ id, adminData }, { rejectWithValue }) => {
   try {
-    return await putRequest<Admin, Partial<Admin>>(`/admins/${id}`, adminData);
-  } catch (err: any) {
-    return rejectWithValue(
-      err?.response?.data?.message || "Failed to update admin"
-    );
+    return await putRequest<Admin, Partial<Admin>>(`/admin/${id}`, adminData);
+  } catch (err) {
+    return rejectWithValue(extractError(err));
   }
 });
 
@@ -65,12 +61,10 @@ export const deleteAdmin = createAsyncThunk<
   { rejectValue: string }
 >("admin/deleteAdmin", async (id, { rejectWithValue }) => {
   try {
-    await deleteRequest(`/admins/${id}`);
+    await deleteRequest(`/admin/${id}`);
     return id;
-  } catch (err: any) {
-    return rejectWithValue(
-      err?.response?.data?.message || "Failed to delete admin"
-    );
+  } catch (err) {
+    return rejectWithValue(extractError(err));
   }
 });
 

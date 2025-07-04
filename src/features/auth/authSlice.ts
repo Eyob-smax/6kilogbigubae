@@ -3,11 +3,16 @@ import { api } from "../../api/api";
 import { Admin } from "../../types";
 import { AxiosError } from "axios";
 
+type TCurrentUserData = {
+  username: string;
+  studentid: string;
+};
 interface AuthState {
   isAuthenticated: boolean;
   admin: Admin | null;
   loading: boolean;
   error: string | null;
+  currentUserData: null | TCurrentUserData;
 }
 
 const initialState: AuthState = {
@@ -15,6 +20,7 @@ const initialState: AuthState = {
   admin: null,
   loading: false,
   error: null,
+  currentUserData: null,
 };
 
 export const loginAdmin = createAsyncThunk<
@@ -58,6 +64,9 @@ const authSlice = createSlice({
     clearAuthError: (state) => {
       state.error = null;
     },
+    setCurrentUser: (state, { payload }) => {
+      state.currentUserData = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -92,5 +101,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearAuthError } = authSlice.actions;
+export const { clearAuthError, setCurrentUser } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { Route, Routes } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoadingScreen from "./components/ui/LoadingScreen";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
@@ -11,26 +11,46 @@ const Analytics = lazy(() => import("./pages/admin/Analytics"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LandingPage />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin",
+    element: (
+      <ProtectedRoute>
+        <AdminDashboard />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+      {
+        path: "users",
+        element: <ManageUsers />,
+      },
+      {
+        path: "admins",
+        element: <ManageAdmins />,
+      },
+      {
+        path: "analytics",
+        element: <Analytics />,
+      },
+    ],
+  },
+]);
 function App() {
   return (
     <Suspense fallback={<LoadingScreen />}>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Dashboard />} />
-          <Route path="users" element={<ManageUsers />} />
-          <Route path="admins" element={<ManageAdmins />} />
-          <Route path="analytics" element={<Analytics />} />
-        </Route>
-      </Routes>
+      <RouterProvider router={router} />
     </Suspense>
   );
 }

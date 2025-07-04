@@ -1,270 +1,351 @@
 // src/components/forms/UserForm.tsx
-import { Component, ChangeEvent, FormEvent } from 'react';
-import { connect } from 'react-redux';
-// Update the path below to the correct location of your store file
-// Update the path below to the correct location of your store file
-import { AppDispatch } from '../../app/store';
-import { addUser, updateUser } from '../../features/users/userSlice';
-import { User } from '../../types';
-import { X } from 'lucide-react';
+import { useState, ChangeEvent, FormEvent } from "react";
+import { X } from "lucide-react";
+import { User } from "../../types";
 
-interface Props {
-  mode: 'add' | 'edit';
+interface UserFormProps {
+  mode: "add" | "edit";
   initialData: User | null;
   onCancel: () => void;
-  addUser: (user: User) => void;
-  updateUser: (user: User) => void;
+  onSubmit: (user: User) => void;
 }
 
-interface State {
-  formData: User;
-}
+const defaultUser: User = {
+  studentid: "",
+  firstname: "",
+  middlename: "",
+  lastname: "",
+  gender: "Male",
+  baptismalname: "",
+  phone: "",
+  birthdate: "",
+  useremail: "",
+  nationality: "Ethiopian",
+  regionnumber: 10,
+  mothertongue: "Not_Specified",
+  zonename: "",
+  isphysicallydisabled: "None",
+  universityusers: {
+    departmentname: "",
+    sponsorshiptype: "Government",
+    participation: "None",
+    batch: 2016,
+    confessionfather: "",
+    advisors: "Yes",
+    role: "Member",
+    mealcard: "",
+    cafeteriaaccess: true,
+  },
+};
 
-class UserForm extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+const role_type = [
+  ["Member", "Member"],
+  ["ClassSecretary", "Class Secretary"],
+  ["ClassTeamLead", "Class TeamLead"],
+  ["ClassManager", "Class Manager"],
+  ["SubclassSecretary", "Subclass Secretary"],
+  ["SubclassTeamLead", "Subclass TeamLead"],
+  ["SubclassManager", "Subclass Manager"],
+  ["None", "None"],
+];
 
-    this.state = {
-      formData: props.initialData || {
-        studentid: '',
-        firstname: '',
-        middlename: '',
-        lastname: '',
-        gender: 'Male',
-        baptismalname: '',
-        phone: '',
-        birthdate: '',
-        useremail: '',
-        nationality: 'Ethiopian',
-        regionnumber: '',
-        mothertongue: '',
-        zonename: '',
-        disabled: false,
-        universityusers: {
-          departmentname: '',
-          sponsorshiptype: 'Government',
-          participation: 'Active',
-          batch: '',
-          confessionfather: null,
-          advisors: '',
-          role: 'Faithful',
-          mealcard: null,
-          cafeteriaaccess: false,
-        },
-      },
-    };
-  }
+const participation_enum = [
+  ["Batch_and_Programs_Coordination_Section", "Batch and coordination"],
+  ["Gbi_Gubaye_Secretariat", "Secretariat"],
+  ["Audit_and_Inspection_Section", "Audit and Inspection"],
+  ["Education_and_Apostolic_Service_Section", "Education and Apostolic"],
+  ["Accounting_and_Assets_Section", "Accounting and Assets"],
+  ["Development_and_Income_Collection_Section", "Income collection"],
+  ["Languages_and_Special_Interests_Section", "Language and special interests"],
+  ["Hymns_and_Arts_Section", "Hymns and Arts"],
+  [
+    "Planning_Monitoring_Reports_and_Information_Management_Section",
+    "Information management",
+  ],
+  ["Professional_and_Community_Development_Section", "Community development"],
+  ["Member_Care_Advice_and_Capacity_Building_Section", "Member care advice"],
+  ["None", "None"],
+];
 
-  handleChange = (
+const universityusers_enum = [
+  ["departmentname", "Department", "text", "required"],
+  ["batch", "Batch", "text", "required"],
+  ["mealcard", "Meal Card", "text"],
+  ["confessionfather", "Confession father", "text"],
+];
+
+const user_enum = [
+  ["studentid", "Student ID", "text", "required"],
+  ["firstname", "First Name", "text", "required"],
+  ["middlename", "Middle Name", "text"],
+  ["lastname", "Last Name", "text", "required"],
+  ["baptismalname", "Baptismal Name", "text"],
+  ["phone", "Phone", "tel", "required"],
+  ["birthdate", "Birthdate", "date"],
+  ["useremail", "Email", "email"],
+  ["regionnumber", "Region Number", "number"],
+  ["zonename", "Zone Name", "text"],
+  ["nationality", "Nationality", "text"],
+];
+
+const mother_tongue_enum = [
+  ["Amharic", "Amharic"],
+  ["Oromifa", "Oromifa"],
+  ["Tigregna", "Tigregna"],
+  ["English", "English"],
+  ["Not_Specified", "Not Specified"],
+  ["Other", "Other"],
+];
+
+export default function UserForm({
+  mode,
+  initialData,
+  onCancel,
+  onSubmit,
+}: UserFormProps) {
+  const [formData, setFormData] = useState<User>(initialData || defaultUser);
+
+  const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
-    let checked = false;
-    if (type === 'checkbox' && e.target instanceof HTMLInputElement) {
-      checked = e.target.checked;
-    }
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      this.setState(prev => ({
-        formData: {
-          ...prev.formData,
-          [parent]: {
-            ...((prev.formData[parent as keyof User] || {}) as object),
-            [child]: type === 'checkbox' ? checked : value,
-          },
+    const checked =
+      type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
+    if (name.includes(".")) {
+      const [parent, child] = name.split(".");
+      setFormData((prev) => ({
+        ...prev,
+        [parent]: {
+          ...(prev[parent as keyof User] as object),
+          [child]: checked !== undefined ? checked : value,
         },
       }));
     } else {
-      this.setState(prev => ({
-        formData: {
-          ...prev.formData,
-          [name]: type === 'checkbox' ? checked : value,
-        },
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked !== undefined ? checked : value,
       }));
     }
   };
 
-  handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const { mode, addUser, updateUser } = this.props;
-    const { formData } = this.state;
-
-    if (mode === 'add') {
-      addUser(formData);
-    } else {
-      updateUser(formData);
+    if (formData) {
+      onSubmit(formData);
     }
   };
 
-  render() {
-    const { onCancel, mode } = this.props;
-    const { formData } = this.state;
+  return (
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-semibold">
+          {mode === "add" ? "Add User" : "Edit User"}
+        </h3>
+        <button
+          onClick={onCancel}
+          className="text-gray-400 hover:text-gray-600"
+          aria-label="Close form"
+        >
+          <X size={24} />
+        </button>
+      </div>
 
-    return (
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold">
-            {mode === 'add' ? 'Add User' : 'Edit User'}
-          </h3>
-          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
-            <X size={24} />
-          </button>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {user_enum.map(([key, label, inputType, required]) => (
+            <div key={key}>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {label}
+              </label>
+              <input
+                type={inputType}
+                name={key}
+                required={required ? true : false}
+                value={formData[key] || ""}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+            </div>
+          ))}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Gender
+            </label>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Advisor
+            </label>
+            <select
+              name="advisor"
+              value={formData.universityusers?.advisors}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="isphysicallydisabled"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Any kind of impairment?
+            </label>
+            <select
+              id="isphysicallydisabled"
+              name="isphysicallydisabled"
+              value={formData.isphysicallydisabled}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="None">None</option>
+              <option value="Physical">Physical</option>
+              <option value="Visual">Visual</option>
+              <option value="Hearing">Hearing</option>
+              <option value="Intellectual">Intellectual</option>
+              <option value="Psychosocial">Psychosocial</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label
+              htmlFor="isphysimothertongue"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Mother Tongue
+            </label>
+            <select
+              id="mothertongue"
+              name="mothertongue"
+              value={formData.mothertongue}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              {mother_tongue_enum.map(([value, text]) => {
+                return (
+                  <option key={value} value={value}>
+                    {text}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
 
-        <form onSubmit={this.handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              ['studentid', 'Student ID'],
-              ['firstname', 'First Name'],
-              ['middlename', 'Middle Name'],
-              ['lastname', 'Last Name'],
-              ['baptismalname', 'Baptismal Name'],
-              ['phone', 'Phone'],
-              ['birthdate', 'Birthdate'],
-              ['useremail', 'Email'],
-              ['regionnumber', 'Region Number'],
-              ['mothertongue', 'Mother Tongue'],
-              ['zonename', 'Zone Name'],
-            ].map(([key, label]) => (
-              <div key={key}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-                <input
-                  type={key === 'birthdate' ? 'date' : 'text'}
-                  name={key}
-                  value={(formData as any)[key]}
-                  onChange={this.handleChange}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-            ))}
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={this.handleChange}
-                className="w-full px-3 py-2 border rounded-md"
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
-
-            <div className="flex items-center pt-6">
+        <h4 className="text-md font-semibold pt-6">University Information</h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {universityusers_enum.map(([key, label, inputType, required]) => (
+            <div key={`universityusers.${key}`}>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {label}
+              </label>
               <input
-                type="checkbox"
-                name="disabled"
-                checked={formData.disabled}
-                onChange={this.handleChange}
-                className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                type={inputType}
+                required={required ? true : false}
+                name={`universityusers.${key}`}
+                value={(formData.universityusers as any)[key] || ""}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded-md"
               />
-              <label className="ml-2 text-sm text-gray-700">Disabled</label>
             </div>
-          </div>
+          ))}
 
-          <h4 className="text-md font-semibold pt-6">University Information</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              ['departmentname', 'Department'],
-              ['batch', 'Batch'],
-              ['advisors', 'Advisors'],
-              ['mealcard', 'Meal Card'],
-            ].map(([key, label]) => (
-              <div key={key}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-                <input
-                  type="text"
-                  name={`universityusers.${key}`}
-                  value={(formData.universityusers as any)[key]}
-                  onChange={this.handleChange}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-            ))}
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Sponsorship Type</label>
-              <select
-                name="universityusers.sponsorshiptype"
-                value={formData.universityusers?.sponsorshiptype ?? ''}
-                onChange={this.handleChange}
-                className="w-full px-3 py-2 border rounded-md"
-              >
-                <option value="Government">Government</option>
-                <option value="Private">Private</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Participation</label>
-              <select
-                name="universityusers.participation"
-                value={formData.universityusers?.participation ?? ''}
-                onChange={this.handleChange}
-                className="w-full px-3 py-2 border rounded-md"
-              >
-                <option value="Active">Active</option>
-                <option value="Passive">Passive</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-              <select
-                name="universityusers.role"
-                value={formData.universityusers?.role ?? ''}
-                onChange={this.handleChange}
-                className="w-full px-3 py-2 border rounded-md"
-              >
-                <option value="Faithful">Faithful</option>
-                <option value="Administrator">Administrator</option>
-                <option value="Coordinator">Coordinator</option>
-              </select>
-            </div>
-
-            <div className="flex items-center pt-6">
-              <input
-                type="checkbox"
-                name="universityusers.cafeteriaaccess"
-                checked={formData.universityusers?.cafeteriaaccess ?? false}
-                onChange={this.handleChange}
-                className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-              />
-              <label className="ml-2 text-sm text-gray-700">Cafeteria Access</label>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-4 pt-6">
-            <button
-              type="button"
-              onClick={onCancel}
-              className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-100"
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Sponsorship Type
+            </label>
+            <select
+              name="universityusers.sponsorshiptype"
+              value={formData.universityusers?.sponsorshiptype}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Save
-            </button>
+              <option value="Government">Government</option>
+              <option value=" Self_Sponsored"> Self_Sponsored</option>
+            </select>
           </div>
-        </form>
-      </div>
-    );
-  }
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Participation
+            </label>
+            <select
+              name="universityusers.participation"
+              value={formData.universityusers?.participation}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              {participation_enum.map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Role
+            </label>
+            <select
+              name="universityusers.role"
+              value={formData?.universityusers?.role}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              {role_type.map(([value, text]) => {
+                return (
+                  <option key={value} value={value}>
+                    {text}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
+          <div className="flex items-center pt-6">
+            <input
+              type="checkbox"
+              name="universityusers.cafeteriaaccess"
+              checked={formData?.universityusers?.cafeteriaaccess}
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+            />
+            <label className="ml-2 text-sm text-gray-700">
+              Cafeteria Access
+            </label>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-4 pt-6">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 }
-
-// Connect Redux actions
-const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  addUser: (user: User) => dispatch(addUser(user)),
-  updateUser: (user: User) => {
-    if (!user.id) {
-      throw new Error('User id is required for updating a user.');
-    }
-    return dispatch(updateUser({ id: user.id, userData: user }));
-  },
-});
-
-export default connect(null, mapDispatchToProps)(UserForm);

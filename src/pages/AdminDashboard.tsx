@@ -6,7 +6,7 @@ import AdminSidebar from "../components/admin/AdminSidebar";
 import { Menu } from "lucide-react";
 
 const AdminDashboard = () => {
-  const { admin } = useSelector((state: RootState) => state.auth);
+  const { currentUserData } = useSelector((state: RootState) => state.auth);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   useEffect(() => {
     document.title = "Admin Dashboard | 6 Kilo Gibi Gubae";
@@ -30,10 +30,10 @@ const AdminDashboard = () => {
         <div className="p-6">
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-800">
-              Welcome, {admin?.adminusername || "TestAdmin"}
+              Welcome, {currentUserData?.username || "TestAdmin"}
             </h1>
             <p className="text-gray-600">
-              Student ID: {admin?.studentid || "00000"}
+              Student ID: {currentUserData?.studentid || "00000"}
             </p>
           </div>
 

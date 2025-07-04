@@ -1,7 +1,13 @@
 // src/features/user/userSlice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { getRequest, postRequest, putRequest, deleteRequest } from '../../api/api';
-import { User } from '../../types';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import {
+  getRequest,
+  postRequest,
+  putRequest,
+  deleteRequest,
+} from "../../api/api";
+import { User } from "../../types";
+import { extractError } from "../../util/utils";
 
 interface UserState {
   users: User[];
@@ -15,52 +21,76 @@ const initialState: UserState = {
   error: null,
 };
 
-// Helper for uniform error extraction
-const extractError = (err: any): string =>
-  err?.response?.data?.message || err?.message || 'Unexpected error occurred';
+type TFetchResponse = {
+  users: User[];
+  success: boolean;
+};
 
 // Thunks using centralized `api.ts`
 
-export const fetchUsers = createAsyncThunk<User[], void, { rejectValue: string }>(
-  'user/fetchUsers',
-  async (_, { rejectWithValue }) => {
-    try {
-      return await getRequest<User[]>('/users');
-    } catch (err: any) {
-      return rejectWithValue(extractError(err));
-    }
+export const fetchUsers = createAsyncThunk<
+  TFetchResponse,
+  void,
+  { rejectValue: string }
+>("user/fetchUsers", async (_, { rejectWithValue }) => {
+  try {
+    return await getRequest<TFetchResponse>("/user");
+  } catch (err) {
+    return rejectWithValue(extractError(err));
   }
-);
+});
 
 export const addUser = createAsyncThunk<User, User, { rejectValue: string }>(
-  'user/addUser',
+  "user/addUser",
   async (userData, { rejectWithValue }) => {
     try {
-      return await postRequest<User, User>('/users', userData);
-    } catch (err: any) {
+      const res = await postRequest<
+        { success: boolean; user?: User; message: string },
+        User
+      >("/user", userData);
+
+      if (res.success === true && res.user) {
+        return res.user;
+      } else {
+        return rejectWithValue(res.message || "No user returned from server");
+      }
+    } catch (err) {
       return rejectWithValue(extractError(err));
     }
   }
 );
 
-export const updateUser = createAsyncThunk<User, { id: string; userData: Partial<User> }, { rejectValue: string }>(
-  'user/updateUser',
-  async ({ id, userData }, { rejectWithValue }) => {
-    try {
-      return await putRequest<User, Partial<User>>(`/users/${id}`, userData);
-    } catch (err: any) {
-      return rejectWithValue(extractError(err));
-    }
+export const updateUser = createAsyncThunk<
+  User,
+  { id: string; userData: Partial<User> },
+  { rejectValue: string }
+>("user/updateUser", async ({ id, userData }, { rejectWithValue }) => {
+  try {
+    return await putRequest<User, Partial<User>>(`/user/${id}`, userData);
+  } catch (err) {
+    return rejectWithValue(extractError(err));
   }
-);
+});
 
-export const deleteUser = createAsyncThunk<string, string, { rejectValue: string }>(
-  'user/deleteUser',
-  async (id, { rejectWithValue }) => {
+export const deleteUser = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("user/deleteUser", async (id, { rejectWithValue }) => {
+  try {
+    await deleteRequest(`/user/${id}`);
+    return id;
+  } catch (err) {
+    return rejectWithValue(extractError(err));
+  }
+});
+
+export const deleteAllUsers = createAsyncThunk(
+  "user/deleteAll",
+  async (_, { rejectWithValue }) => {
     try {
-      await deleteRequest(`/users/${id}`);
-      return id;
-    } catch (err: any) {
+      return await deleteRequest("/user");
+    } catch (err) {
       return rejectWithValue(extractError(err));
     }
   }
@@ -69,9 +99,13 @@ export const deleteUser = createAsyncThunk<string, string, { rejectValue: string
 //  Slice
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    resetError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Fetch Users
@@ -79,13 +113,16 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
-        state.loading = false;
-        state.users = action.payload;
-      })
+      .addCase(
+        fetchUsers.fulfilled,
+        (state, action: PayloadAction<TFetchResponse>) => {
+          state.loading = false;
+          state.users = action.payload.users;
+        }
+      )
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Failed to fetch users';
+        state.error = action.payload || "Failed to fetch users";
       })
 
       // Add User
@@ -99,24 +136,24 @@ const userSlice = createSlice({
       })
       .addCase(addUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Failed to add user';
+        state.error = (action.payload as string) || "Failed to add user";
       })
-
-      // Update User
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
-        const index = state.users.findIndex((user) => user.id === action.payload.id);
+        const index = state.users.findIndex(
+          (user) => user?.userid === action.payload?.userid
+        );
         if (index !== -1) {
           state.users[index] = action.payload;
         }
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Failed to update user';
+        state.error = action.payload || "Failed to update user";
       })
 
       // Delete User
@@ -126,13 +163,25 @@ const userSlice = createSlice({
       })
       .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
         state.loading = false;
-        state.users = state.users.filter((user) => user.id !== action.payload);
+        state.users = state.users.filter(
+          (user) => user?.studentid !== action.payload
+        );
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Failed to delete user';
+        state.error = action.payload || "Failed to delete user";
+      })
+      .addCase(deleteAllUsers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteAllUsers.fulfilled, (state) => {
+        state.users = [];
+      })
+      .addCase(deleteAllUsers.rejected, (state, { payload }) => {
+        state.error = payload as string | null;
       });
   },
 });
 
+export const { resetError } = userSlice.actions;
 export default userSlice.reducer;
