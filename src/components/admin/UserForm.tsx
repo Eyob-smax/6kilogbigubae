@@ -68,24 +68,24 @@ const participation_enum = [
 ];
 
 const universityusers_enum = [
-  ["departmentname", "Department", "text", "required"],
-  ["batch", "Batch", "text", "required"],
-  ["mealcard", "Meal Card", "text"],
-  ["confessionfather", "Confession father", "text"],
+  ["departmentname", "Department", "text", "required", "Computer Science"],
+  ["batch", "Batch", "text", "required", "2016"],
+  ["mealcard", "Meal Card", "text", "none", "8307"],
+  ["confessionfather", "Confession father", "text", "none", "Abba Tesfaye"],
 ];
 
 const user_enum = [
-  ["studentid", "Student ID", "text", "required"],
-  ["firstname", "First Name", "text", "required"],
-  ["middlename", "Middle Name", "text"],
-  ["lastname", "Last Name", "text", "required"],
-  ["baptismalname", "Baptismal Name", "text"],
-  ["phone", "Phone", "tel", "required"],
-  ["birthdate", "Birthdate", "date"],
-  ["useremail", "Email", "email"],
-  ["regionnumber", "Region Number", "number"],
-  ["zonename", "Zone Name", "text"],
-  ["nationality", "Nationality", "text"],
+  ["studentid", "Student ID", "text", "required", "UGR-****-** USE(-)"],
+  ["firstname", "First Name", "text", "required", "John"],
+  ["middlename", "Middle Name", "text", "none", "Marcus"],
+  ["lastname", "Last Name", "text", "required", "Doe"],
+  ["baptismalname", "Baptismal Name", "text", "none", "Welde Amanuel"],
+  ["phone", "Phone", "tel", "required", "+2519********"],
+  ["birthdate", "Birthdate", "date", "required", "1998-01-01"],
+  ["useremail", "Email", "email", "none", "jhondoe@gmail.com"],
+  ["regionnumber", "Region Number", "number", "none", "10"],
+  ["zonename", "Zone Name", "text", "borena", "Addis Ababa"],
+  ["nationality", "Nationality", "text", "none", "Ethiopian"],
 ];
 
 const mother_tongue_enum = [
@@ -152,14 +152,15 @@ export default function UserForm({
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {user_enum.map(([key, label, inputType, required]) => (
-            <div key={key}>
+          {user_enum.map(([key, label, inputType, required, placeholder]) => (
+            <div key={key as string}>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {label}
               </label>
               <input
-                type={inputType}
-                name={key}
+                type={inputType as string}
+                placeholder={required ? (placeholder as string) : ""}
+                name={key as keyof User}
                 required={required ? true : false}
                 value={formData[key] || ""}
                 onChange={handleChange}
@@ -247,21 +248,24 @@ export default function UserForm({
 
         <h4 className="text-md font-semibold pt-6">University Information</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {universityusers_enum.map(([key, label, inputType, required]) => (
-            <div key={`universityusers.${key}`}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {label}
-              </label>
-              <input
-                type={inputType}
-                required={required ? true : false}
-                name={`universityusers.${key}`}
-                value={(formData.universityusers as any)[key] || ""}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md"
-              />
-            </div>
-          ))}
+          {universityusers_enum.map(
+            ([key, label, inputType, required, placeholder]) => (
+              <div key={`universityusers.${key}`}>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {label}
+                </label>
+                <input
+                  placeholder={placeholder === "none" ? "" : placeholder}
+                  type={inputType}
+                  required={required === "required" ? true : false}
+                  name={`universityusers.${key}`}
+                  value={(formData.universityusers as any)[key] || ""}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+            )
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

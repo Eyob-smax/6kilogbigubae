@@ -29,18 +29,30 @@ const ManageUsers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
 
+  // Fetch users on mount
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  const filteredUsers = Array.isArray(users)
-    ? users.filter((user: User) =>
-        [user.studentid, user.firstname, user.lastname, user.baptismalname]
-          .join(" ")
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      )
-    : [];
+  // Handle errors using SweetAlert inside an effect
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong",
+        text: error,
+      }).then(() => {
+        dispatch(resetError());
+      });
+    }
+  }, [error, dispatch]);
+
+  const filteredUsers = users.filter((user: User) =>
+    [user.studentid, user.firstname, user.lastname, user.baptismalname]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
 
   const openModal = (
     mode: "add" | "edit" | "delete",
@@ -57,31 +69,22 @@ const ManageUsers = () => {
   };
 
   const handleSaveUser = (userData: User) => {
-    if (modalMode === "add") dispatch(addUser(userData));
-    if (modalMode === "edit" && selectedUser?.studentid) {
-      dispatch(updateUser({ id: selectedUser?.studentid, userData }));
+    if (modalMode === "add") {
+      dispatch(addUser(userData));
+    } else if (modalMode === "edit" && selectedUser?.studentid) {
+      dispatch(updateUser({ id: selectedUser.studentid, userData }));
     }
     closeModal();
   };
 
   const handleDeleteUser = () => {
     if (selectedUser?.studentid) {
-      dispatch(deleteUser(selectedUser?.studentid));
+      dispatch(deleteUser(selectedUser.studentid));
     }
     closeModal();
   };
 
   if (loading) return <LoadingScreen />;
-
-  if (error) {
-    (async () =>
-      await Swal.fire({
-        icon: "error",
-        title: "Something went wrong",
-        text: error,
-      }))();
-    dispatch(resetError());
-  }
 
   return (
     <div className="p-4 w-full mx-auto">
@@ -133,7 +136,7 @@ const ManageUsers = () => {
               <th className="px-6 py-3">Name</th>
               <th className="px-6 py-3">Baptismal</th>
               <th className="px-6 py-3">Department</th>
-              <th className="px-6 py-3 ">Participation</th>
+              <th className="px-6 py-3">Participation</th>
               <th className="px-6 py-3">Actions</th>
             </tr>
           </thead>
@@ -149,7 +152,7 @@ const ManageUsers = () => {
                   {user.universityusers?.departmentname}
                 </td>
                 <td className="px-6 py-4 max-w-[350px] break-all">
-                  <span className="inline-block bg-gray-100 text-gray-800 px-5 py-2 rounded-3xl ">
+                  <span className="inline-block bg-gray-100 text-gray-800 px-5 py-2 rounded-3xl">
                     {user.universityusers?.participation}
                   </span>
                 </td>
@@ -195,7 +198,6 @@ const ManageUsers = () => {
                   {t("forms.delete_confirm")}{" "}
                   <strong>{selectedUser?.firstname}</strong>?
                 </p>
-                <h1 className="font-bold text-4xl">Welcome</h1>
                 <div className="flex justify-end space-x-4 pt-4">
                   <button
                     onClick={closeModal}

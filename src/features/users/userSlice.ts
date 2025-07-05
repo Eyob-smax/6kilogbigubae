@@ -8,6 +8,7 @@ import {
 } from "../../api/api";
 import { User } from "../../types";
 import { extractError } from "../../util/utils";
+import Swal from "sweetalert2";
 
 interface UserState {
   users: User[];
@@ -44,16 +45,8 @@ export const addUser = createAsyncThunk<User, User, { rejectValue: string }>(
   "user/addUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await postRequest<
-        { success: boolean; user?: User; message: string },
-        User
-      >("/user", userData);
-
-      if (res.success === true && res.user) {
-        return res.user;
-      } else {
-        return rejectWithValue(res.message || "No user returned from server");
-      }
+      const res = await postRequest<{ user: User }, User>("/user", userData);
+      return res?.user as User;
     } catch (err) {
       return rejectWithValue(extractError(err));
     }
@@ -66,7 +59,17 @@ export const updateUser = createAsyncThunk<
   { rejectValue: string }
 >("user/updateUser", async ({ id, userData }, { rejectWithValue }) => {
   try {
-    return await putRequest<User, Partial<User>>(`/user/${id}`, userData);
+    const res = await putRequest<
+      { success: boolean; updatedUser: User; message: string },
+      Partial<User>
+    >(`/user/${id}`, userData);
+    console.log("Update response:", userData);
+
+    if (res?.success && res.updatedUser) {
+      return res?.updatedUser;
+    } else {
+      return rejectWithValue(res.message || "Update failed");
+    }
   } catch (err) {
     return rejectWithValue(extractError(err));
   }
@@ -133,6 +136,11 @@ const userSlice = createSlice({
       .addCase(addUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
         state.users.push(action.payload);
+        Swal.fire({
+          icon: "success",
+          title: "Operation Successful",
+          text: "User added successfully ",
+        });
       })
       .addCase(addUser.rejected, (state, action) => {
         state.loading = false;
@@ -145,10 +153,15 @@ const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
         const index = state.users.findIndex(
-          (user) => user?.userid === action.payload?.userid
+          (user) => user?.studentid === action.payload?.studentid
         );
         if (index !== -1) {
           state.users[index] = action.payload;
+          Swal.fire({
+            icon: "success",
+            title: "Operation Successful",
+            text: "User updated successfully ",
+          });
         }
       })
       .addCase(updateUser.rejected, (state, action) => {
@@ -166,6 +179,11 @@ const userSlice = createSlice({
         state.users = state.users.filter(
           (user) => user?.studentid !== action.payload
         );
+        Swal.fire({
+          icon: "success",
+          title: "Operation Successful",
+          text: "User deleted successfully ",
+        });
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;

@@ -12,7 +12,7 @@ interface AxiosError {
   message?: string;
 }
 
-interface IResponseObject {
+export interface IResponseObject {
   message?: string;
   success: boolean;
   user?: User & { userid: number };
@@ -58,14 +58,13 @@ export const postRequest = async <IResponseObject, D>(
   url: string,
   data: D,
   config?: AxiosRequestConfig
-): Promise<IResponseObject> => {
+): Promise<IResponseObject | undefined> => {
   try {
     const response = await api.post<IResponseObject>(url, data, config);
-    return response.data;
+    return response.data as IResponseObject;
   } catch (error) {
-    // handleRequestError(error as AxiosError);
-    const err = error as AxiosError;
-    return err.response?.data as IResponseObject;
+    handleRequestError(error as AxiosError);
+    throw error;
   }
 };
 
