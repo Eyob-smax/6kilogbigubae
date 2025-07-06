@@ -5,6 +5,7 @@ import { Users, UserCog, BarChart2, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 // import { format } from "date-fns";
 import { api } from "../../api/api";
+import LoadingScreen from "../../components/ui/LoadingScreen";
 
 interface User {
   id: string;
@@ -62,7 +63,7 @@ const Dashboard = () => {
   const totalUsers = users?.length;
 
   // const nextEvent = events.length > 0 ? events[0] : null;
-
+  if (loading) return <LoadingScreen />;
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Dashboard Overview</h2>

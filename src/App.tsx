@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoadingScreen from "./components/ui/LoadingScreen";
+import ProtectedAdminsPage from "./components/auth/protectedAdminsPage";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
@@ -38,7 +39,11 @@ const router = createBrowserRouter([
       },
       {
         path: "admins",
-        element: <ManageAdmins />,
+        element: (
+          <ProtectedAdminsPage>
+            <ManageAdmins />
+          </ProtectedAdminsPage>
+        ),
       },
       {
         path: "analytics",

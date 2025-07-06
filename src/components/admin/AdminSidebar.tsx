@@ -6,6 +6,8 @@ import { Users, UserCog, BarChart2, LogOut, Home, Menu } from "lucide-react";
 import { t } from "i18next";
 import { useState, useEffect, useCallback } from "react";
 import headerLogo from "../../assets/headerLogo.png"; // Adjust the path as necessary
+import { RootState } from "../../app/store";
+import { useSelector } from "react-redux";
 
 type AdminSidebarProps = {
   isOpen: boolean;
@@ -39,6 +41,8 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
     navigate("/admin/login");
   }, [dispatch, navigate]);
 
+  const { currentUserData } = useSelector((state: RootState) => state.auth);
+
   const navLinks = [
     {
       to: "/admin",
@@ -51,16 +55,19 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
       label: t("admin.dashboard.users"),
     },
     {
-      to: "/admin/admins",
-      icon: <UserCog size={20} />,
-      label: t("admin.dashboard.admins"),
-    },
-    {
       to: "/admin/analytics",
       icon: <BarChart2 size={20} />,
       label: t("admin.dashboard.analytics"),
     },
   ];
+
+  if (currentUserData?.isSuperAdmin) {
+    navLinks.push({
+      to: "/admin/admins",
+      icon: <UserCog size={20} />,
+      label: t("admin.dashboard.admins"),
+    });
+  }
 
   return (
     <>

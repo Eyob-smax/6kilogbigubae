@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 type TCurrentUserData = {
   username: string;
   studentid: string;
+  isSuperAdmin: boolean;
 };
 interface AuthState {
   isAuthenticated: boolean;

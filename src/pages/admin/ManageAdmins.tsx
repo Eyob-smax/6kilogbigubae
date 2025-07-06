@@ -20,6 +20,7 @@ import {
 } from "../../features/admins/adminsSlice";
 import type { AppDispatch } from "../../app/store";
 import { useTranslation } from "react-i18next";
+import useGetCurrentUser from "../../customhook/useGetCurrentUser";
 
 const ManageAdmins = () => {
   const { t } = useTranslation();
