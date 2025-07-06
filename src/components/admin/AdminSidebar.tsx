@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback } from "react";
 import headerLogo from "../../assets/headerLogo.png"; // Adjust the path as necessary
 import { RootState } from "../../app/store";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 type AdminSidebarProps = {
   isOpen: boolean;
@@ -36,8 +37,19 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
   }, [setIsOpen]);
 
   const handleLogout = useCallback(async () => {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "you're about to log out!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, log out",
+      cancelButtonText: "No, cancel",
+    });
+    if (!confirm.isConfirmed) {
+      return;
+    }
+    await dispatch(logoutAdmin());
     navigate("/admin/login");
-    dispatch(logoutAdmin());
   }, [dispatch, navigate]);
 
   const { currentUserData } = useSelector((state: RootState) => state.auth);

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../api/api";
 import { Admin } from "../../types";
 import { AxiosError } from "axios";
+import Swal from "sweetalert2";
 
 type TCurrentUserData = {
   username: string;
@@ -94,6 +95,14 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.admin = null;
         state.error = null;
+
+        (async () => {
+          await Swal.fire({
+            title: "Logged out",
+            icon: "success",
+            text: "You have been logged out successfully.",
+          });
+        })();
       })
       .addCase(logoutAdmin.rejected, (state, action) => {
         state.loading = false;
