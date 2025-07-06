@@ -116,7 +116,6 @@ const adminSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch Admins
       .addCase(fetchAdmins.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -175,10 +174,26 @@ const adminSlice = createSlice({
         if (index !== -1) {
           state.admins[index] = action.payload;
         }
+
+        (async () => {
+          Swal.fire({
+            icon: "success",
+            title: "Operation Successful",
+            text: "Admin updated successfully",
+          });
+        })();
       })
       .addCase(updateAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to update admin";
+
+        (async () => {
+          Swal.fire({
+            icon: "error",
+            title: "Operation Failed",
+            text: state.error || "Failed to update admin",
+          });
+        })();
       })
 
       // Delete Admin

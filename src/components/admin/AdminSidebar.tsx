@@ -148,10 +148,10 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
                 <button
                   onClick={handleLogout}
                   className="flex items-center space-x-3 px-4 py-3 rounded-lg w-full hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-gold"
-                  aria-label={t("admin.dashboard.logoutAdmin")}
+                  aria-label={t("admin.dashboard.logout")}
                 >
                   <LogOut size={20} />
-                  <span>{t("admin.dashboard.logoutAdmin")}</span>
+                  <span>{t("admin.dashboard.logout")}</span>
                 </button>
               </div>
             </motion.div>

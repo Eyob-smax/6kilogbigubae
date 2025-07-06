@@ -155,7 +155,7 @@ export default function UserForm({
           {user_enum.map(([key, label, inputType, required, placeholder]) => (
             <div key={key as string}>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                {label}
+                {label as string}
               </label>
               <input
                 type={inputType as string}
