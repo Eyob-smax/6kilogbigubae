@@ -8,6 +8,7 @@ import {
   putRequest,
   deleteRequest,
 } from "../../api/api";
+import Swal from "sweetalert2";
 interface AdminState {
   admins: Admin[];
   loading: boolean;
@@ -19,41 +20,80 @@ const initialState: AdminState = {
   loading: false,
   error: null,
 };
+// assuming you have this
 
-export const fetchAdmins = createAsyncThunk<
-  Admin[],
-  void,
-  { rejectValue: string }
->("admin/fetchAdmins", async (_, { rejectWithValue }) => {
-  try {
-    return await getRequest<Admin[]>("/admin");
-  } catch (err) {
-    return rejectWithValue(extractError(err));
-  }
-});
+interface AsyncThunkConfig {
+  rejectValue: string;
+}
 
-export const addAdmin = createAsyncThunk<Admin, Admin, { rejectValue: string }>(
-  "admin/addAdmin",
-  async (adminData, { rejectWithValue }) => {
+export const fetchAdmins = createAsyncThunk<Admin[], void, AsyncThunkConfig>(
+  "admin/fetchAdmins",
+  async (_, { rejectWithValue }) => {
     try {
-      return await postRequest<Admin, Admin>("/admin", adminData);
+      const res = await getRequest<{
+        success: boolean;
+        message: string;
+        admins?: Admin[];
+      }>("/admin");
+
+      if (res.success && Array.isArray(res.admins)) {
+        return res.admins;
+      }
+
+      return rejectWithValue(res.message || "Failed to fetch admins");
     } catch (err) {
       return rejectWithValue(extractError(err));
     }
   }
 );
 
-export const updateAdmin = createAsyncThunk<
-  Admin,
-  { id: string; adminData: Partial<Admin> },
-  { rejectValue: string }
->("admin/updateAdmin", async ({ id, adminData }, { rejectWithValue }) => {
+export const addAdmin = createAsyncThunk<
+  Admin | undefined,
+  Partial<Admin>,
+  AsyncThunkConfig
+>("admin/addAdmin", async (adminData, { rejectWithValue, dispatch }) => {
   try {
-    return await putRequest<Admin, Partial<Admin>>(`/admin/${id}`, adminData);
+    const res = await postRequest<
+      { success: boolean; message: string; admin?: Admin },
+      Partial<Admin>
+    >("/admin/register", adminData);
+
+    if (res.success) {
+      dispatch(fetchAdmins());
+      return;
+    }
+
+    return rejectWithValue(res.message || "Failed to add admin");
   } catch (err) {
     return rejectWithValue(extractError(err));
   }
 });
+
+export const updateAdmin = createAsyncThunk<
+  Admin,
+  { id: string; adminData: Partial<Admin> },
+  { rejectValue: string }
+>(
+  "admin/updateAdmin",
+  async ({ id, adminData }, { rejectWithValue, dispatch }) => {
+    try {
+      console.log("Updating admin with ID:", id, "Data:", adminData);
+      const res = await putRequest<
+        { success: boolean; message?: string; updatedAdmin?: Admin },
+        Partial<Admin>
+      >(`/admin/${id}`, adminData);
+
+      if (res.success && res.updatedAdmin) {
+        dispatch(fetchAdmins());
+        return res.updatedAdmin;
+      }
+
+      return rejectWithValue(res.message || "Can't edit an admin");
+    } catch (err) {
+      return rejectWithValue(extractError(err));
+    }
+  }
+);
 
 export const deleteAdmin = createAsyncThunk<
   string,
@@ -83,9 +123,13 @@ const adminSlice = createSlice({
       })
       .addCase(
         fetchAdmins.fulfilled,
+
         (state, action: PayloadAction<Admin[]>) => {
           state.loading = false;
-          state.admins = action.payload;
+          state.admins = action.payload.map((admin) => ({
+            ...admin,
+            adminpassword: "",
+          }));
         }
       )
       .addCase(fetchAdmins.rejected, (state, action) => {
@@ -96,13 +140,28 @@ const adminSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(addAdmin.fulfilled, (state, action: PayloadAction<Admin>) => {
+      .addCase(addAdmin.fulfilled, (state) => {
         state.loading = false;
-        state.admins.push(action.payload);
+
+        (async () => {
+          Swal.fire({
+            icon: "success",
+            title: "Operation Successful",
+            text: "Admin added successfully",
+          });
+        })();
       })
       .addCase(addAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to add admin";
+
+        (async () => {
+          Swal.fire({
+            icon: "error",
+            title: "Operation Failed",
+            text: state.error || "Failed to add admin",
+          });
+        })();
       })
       .addCase(updateAdmin.pending, (state) => {
         state.loading = true;
@@ -111,7 +170,7 @@ const adminSlice = createSlice({
       .addCase(updateAdmin.fulfilled, (state, action: PayloadAction<Admin>) => {
         state.loading = false;
         const index = state.admins.findIndex(
-          (admin) => admin.id === action.payload.id
+          (admin) => admin.studentid === action.payload.studentid
         );
         if (index !== -1) {
           state.admins[index] = action.payload;
@@ -132,13 +191,28 @@ const adminSlice = createSlice({
         (state, action: PayloadAction<string>) => {
           state.loading = false;
           state.admins = state.admins.filter(
-            (admin) => admin.id !== action.payload
+            (admin) => admin.studentid !== action.payload
           );
+
+          (async () => {
+            Swal.fire({
+              icon: "success",
+              title: "Operation Successful",
+              text: "Admin deleted successfully",
+            });
+          })();
         }
       )
       .addCase(deleteAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to delete admin";
+        (async () => {
+          Swal.fire({
+            icon: "error",
+            title: "Operation Failed",
+            text: state.error || "Failed to delete admin",
+          });
+        })();
       });
   },
 });

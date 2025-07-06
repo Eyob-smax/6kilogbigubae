@@ -73,8 +73,9 @@ export interface Admin {
   userid?: string;
   studentid: string;
   adminusername: string;
-  createdAt?: Date;
+  adminpassword?: string;
   isSuperAdmin?: boolean;
+  role?: "Super Admin" | "Admin";
 }
 
 export interface GetAdminResponse {

@@ -58,7 +58,7 @@ export const postRequest = async <IResponseObject, D>(
   url: string,
   data: D,
   config?: AxiosRequestConfig
-): Promise<IResponseObject | undefined> => {
+): Promise<IResponseObject> => {
   try {
     const response = await api.post<IResponseObject>(url, data, config);
     return response.data as IResponseObject;

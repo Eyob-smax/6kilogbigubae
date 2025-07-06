@@ -2,30 +2,35 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
 import { Admin } from "../../types";
-// Adjust the path as necessary
 
 interface AdminFormProps {
   mode: "add" | "edit";
   initialData: Admin | null;
-  onSave: (data: Admin) => void;
+  onSave: (data: Partial<Admin>) => void;
   onCancel: () => void;
 }
 
 const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
   const { t } = useTranslation();
 
-  const [formData, setFormData] = useState<Admin>({
-    studentId: "",
-    adminUsername: "",
-    adminPassword: "",
-    isSuperAdmin: false,
+  const [formData, setFormData] = useState<Partial<Admin>>({
+    studentid: "",
+    adminusername: "",
+    adminpassword: "",
   });
 
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setFormData({
-        ...initialData,
-        adminPassword: initialData.adminPassword || "",
+        studentid: initialData.studentid ?? "",
+        adminusername: initialData.adminusername ?? "",
+        adminpassword: initialData.adminpassword ?? "",
+      });
+    } else if (mode === "add") {
+      setFormData({
+        studentid: "",
+        adminusername: "",
+        adminpassword: "",
       });
     }
   }, [mode, initialData]);
@@ -47,7 +52,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold">
-          {mode === "add" ? "Add Admin" : "Edit Admin"}
+          {mode === "add" ? t("forms.admin.add") : t("forms.admin.edit")}
         </h3>
         <button
           onClick={onCancel}
@@ -58,29 +63,31 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Student ID */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             {t("forms.admin.studentId")}
           </label>
           <input
             type="text"
-            name="studentId"
-            value={formData.studentId}
+            name="studentid"
+            value={formData.studentid || ""}
             onChange={handleChange}
             required
             className="input-field"
-            placeholder="e.g., AAU/1234/12"
+            placeholder="e.g., AAU-1234-12"
           />
         </div>
 
+        {/* Admin Username */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             {t("forms.admin.adminUsername")}
           </label>
           <input
             type="text"
-            name="adminUsername"
-            value={formData.adminUsername}
+            name="adminusername"
+            value={formData.adminusername || ""}
             onChange={handleChange}
             required
             className="input-field"
@@ -88,41 +95,26 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
           />
         </div>
 
+        {/* Admin Password */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             {t("forms.admin.adminPassword")}
           </label>
           <input
             type="password"
-            name="adminPassword"
-            value={formData.adminPassword}
+            name="adminpassword"
+            value={formData.adminpassword || ""}
             onChange={handleChange}
-            required={mode === "add"}
             className="input-field"
             placeholder={
-              mode === "edit" ? "Leave blank to keep current" : "Enter password"
+              mode === "add"
+                ? t("forms.admin.passwordPlaceholder")
+                : "Update password if needed or just leave it blank"
             }
           />
-          {mode === "edit" && (
-            <p className="mt-1 text-sm text-gray-500">
-              Leave blank to keep the current password.
-            </p>
-          )}
         </div>
 
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            name="isSuperAdmin"
-            checked={formData.isSuperAdmin}
-            onChange={handleChange}
-            className="h-4 w-4 text-liturgical-blue focus:ring-liturgical-blue border-gray-300 rounded"
-          />
-          <label className="ml-2 block text-sm text-gray-700">
-            Super Admin (can manage other admins)
-          </label>
-        </div>
-
+        {/* Buttons */}
         <div className="flex justify-end space-x-3 pt-4">
           <button
             type="button"

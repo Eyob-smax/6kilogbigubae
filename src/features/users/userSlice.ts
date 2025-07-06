@@ -64,7 +64,6 @@ export const updateUser = createAsyncThunk<
       Partial<User>
     >(`/user/${id}`, userData);
     console.log("Update response:", userData);
-
     if (res?.success && res.updatedUser) {
       return res?.updatedUser;
     } else {

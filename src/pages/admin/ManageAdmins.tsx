@@ -18,14 +18,13 @@ import {
   updateAdmin,
   deleteAdmin,
 } from "../../features/admins/adminsSlice";
-import type { AppDispatch } from "../../app/store";
+import type { AppDispatch, RootState } from "../../app/store";
 import { useTranslation } from "react-i18next";
-import useGetCurrentUser from "../../customhook/useGetCurrentUser";
 
 const ManageAdmins = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
-  const admins = useSelector((state: any) => state.admin.admins);
+  const admins = useSelector((state: RootState) => state.admin.admins);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
@@ -40,8 +39,8 @@ const ManageAdmins = () => {
     ? admins.filter((admin: Admin) => {
         const term = searchTerm.toLowerCase();
         return (
-          admin.studentId.toLowerCase().includes(term) ||
-          admin.adminUsername.toLowerCase().includes(term)
+          admin?.studentid?.toLowerCase()?.includes(term) ||
+          admin?.adminusername?.toLowerCase()?.includes(term)
         );
       })
     : [];
@@ -66,17 +65,18 @@ const ManageAdmins = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
-  const handleSaveAdmin = (adminData: Admin) => {
+  const handleSaveAdmin = (adminData: Partial<Admin>) => {
     if (modalMode === "add") {
-      dispatch(addAdmin({ ...adminData, id: String(Date.now()) }));
-    } else if (modalMode === "edit" && selectedAdmin?.id) {
-      dispatch(updateAdmin({ id: selectedAdmin.id, adminData }));
+      dispatch(addAdmin(adminData));
+    } else if (modalMode === "edit" && selectedAdmin?.studentid) {
+      dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData }));
     }
     closeModal();
   };
 
   const handleDeleteAdmin = () => {
-    if (selectedAdmin?.id) dispatch(deleteAdmin(selectedAdmin.id));
+    if (selectedAdmin?.studentid)
+      dispatch(deleteAdmin(selectedAdmin?.studentid));
     closeModal();
   };
 
@@ -135,12 +135,12 @@ const ManageAdmins = () => {
           <tbody className="bg-white divide-y divide-gray-100">
             {filteredAdmins.length > 0 ? (
               filteredAdmins.map((admin: Admin) => (
-                <tr key={admin.id} className="hover:bg-gray-50">
+                <tr key={admin.studentid} className="hover:bg-gray-50">
                   <td className="px-6 py-4 text-sm text-gray-900">
-                    {admin.studentId}
+                    {admin.studentid}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
-                    {admin.adminUsername}
+                    {admin.adminusername}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center">
@@ -173,13 +173,13 @@ const ManageAdmins = () => {
                       <button
                         onClick={() => openDeleteModal(admin)}
                         className={`${
-                          admin.adminUsername === "admin"
+                          admin.adminusername === "Admin"
                             ? "text-red-300 cursor-not-allowed"
                             : "text-red-600 hover:text-red-900"
                         }`}
-                        disabled={admin.adminUsername === "admin"}
+                        disabled={admin.adminusername === "admin"}
                         title={
-                          admin.adminUsername === "admin"
+                          admin.adminusername === "admin"
                             ? "Cannot delete main admin"
                             : ""
                         }
@@ -214,7 +214,7 @@ const ManageAdmins = () => {
                 </h3>
                 <p className="mb-6">
                   Are you sure you want to delete admin "
-                  {selectedAdmin?.adminUsername}"?
+                  {selectedAdmin?.adminusername}"?
                 </p>
                 <div className="flex justify-end space-x-3">
                   <button

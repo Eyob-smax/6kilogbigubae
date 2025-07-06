@@ -175,7 +175,10 @@
     "admin": {
       "studentId": "Student ID",
       "adminUsername": "Admin Username",
-      "adminPassword": "Admin Password"
+      "adminPassword": "Admin Password",
+      "passwordPlaceholder": "Enter a secure password",
+      "add": "Add User",
+      "edit": "Edit User"
     },
     "save": "Save",
     "cancel": "Cancel",
