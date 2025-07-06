@@ -36,9 +36,8 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
   }, [setIsOpen]);
 
   const handleLogout = useCallback(async () => {
-    dispatch(logoutAdmin());
-
     navigate("/admin/login");
+    dispatch(logoutAdmin());
   }, [dispatch, navigate]);
 
   const { currentUserData } = useSelector((state: RootState) => state.auth);

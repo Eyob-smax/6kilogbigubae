@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../app/store";
 import { loginAdmin, clearAuthError } from "../features/auth/authSlice";
@@ -144,6 +144,14 @@ const AdminLogin = () => {
           </div>
         </form>
       </motion.div>
+      <div>
+        <Link
+          to={"/"}
+          className="text-sm text-indigo-600 absolute bg-[#fffefe] top-[10%] left-[5%] hover:text-indigo-500 mt-4 px-3 py-2 rounded-lg shadow-sm shadow-slate-900/15"
+        >
+          {t("admin.login.backToHome")}
+        </Link>
+      </div>
     </div>
   );
 };

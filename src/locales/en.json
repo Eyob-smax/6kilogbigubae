@@ -118,9 +118,12 @@
     "login": {
       "title": "Admin Login",
       "username": "Username",
+      "studentId": "Student ID",
       "password": "Password",
       "submit": "Login",
-      "error": "Invalid credentials"
+      "error": "Invalid credentials",
+      "forgotPassword": "Forgot Password?",
+      "backToHome": "Back to Home"
     },
     "dashboard": {
       "title": "Dashboard",
