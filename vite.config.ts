@@ -7,13 +7,4 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["lucide-react"],
   },
-  server: {
-    proxy: {
-      "/api": {
-        target: "https://gbi-backend.onrender.com",
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
 });
