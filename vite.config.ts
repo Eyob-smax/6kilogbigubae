@@ -11,7 +11,7 @@ export default defineConfig({
     port: 7374,
     proxy: {
       "/api": {
-        target: "http://localhost:5500",
+        target: " https://gbi-backend.onrender.com",
         changeOrigin: true,
         secure: false,
       },
