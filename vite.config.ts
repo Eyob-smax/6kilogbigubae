@@ -8,7 +8,6 @@ export default defineConfig({
     exclude: ["lucide-react"],
   },
   server: {
-    port: 7374,
     proxy: {
       "/api": {
         target: " https://gbi-backend.onrender.com",
