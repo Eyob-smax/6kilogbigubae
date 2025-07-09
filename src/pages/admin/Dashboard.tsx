@@ -25,7 +25,6 @@ interface User {
 const Dashboard = () => {
   // const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
-  // const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchDashboardData = async () => {

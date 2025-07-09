@@ -14,7 +14,7 @@ export default function useGetCurrentUser() {
     const checkAuth = async () => {
       try {
         const response = await api.get("/auth/current");
-        if (response.data.success && response.data.user?.isAuthenticated) {
+        if (response?.data?.success && response?.data?.user?.isAuthenticated) {
           setIsAuthenticated(true);
           dispatch(
             setCurrentUser({
