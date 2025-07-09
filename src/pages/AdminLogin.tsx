@@ -31,8 +31,7 @@ const AdminLogin = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log("Admin logged in successfully");
-      // navigate("/admin");
+      navigate("/admin");
     }
   }, [isAuthenticated, navigate]);
 
