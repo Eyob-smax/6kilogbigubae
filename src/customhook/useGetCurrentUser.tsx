@@ -47,7 +47,7 @@ export default function useGetCurrentUser() {
     checkAuth();
   }, [dispatch]);
 
-  if (loading || isAuthenticated === null) {
+  if (isAuthenticated === null) {
     return { loading: true, isAuthenticated: false };
   }
   return { loading: false, isAuthenticated };
