@@ -32,8 +32,8 @@ export const loginAdmin = createAsyncThunk<
 >("auth/loginAdmin", async ({ studentId, password }, { rejectWithValue }) => {
   try {
     const response = await api.post("/admin/login", {
-      studentId,
-      adminPassword: password,
+      studentid: studentId,
+      adminpassword: password,
     });
     return response.data;
   } catch (err) {
