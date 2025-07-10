@@ -47,7 +47,8 @@ export default function useGetCurrentUser() {
     checkAuth();
   }, [dispatch]);
 
-  if (isAuthenticated === null) {
+  if (loading || isAuthenticated === null) {
+    console.log("Loading authentication status...");
     return { loading: true, isAuthenticated: false };
   }
   return { loading: false, isAuthenticated };
