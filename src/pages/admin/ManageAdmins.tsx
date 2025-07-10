@@ -20,11 +20,13 @@ import {
 } from "../../features/admins/adminsSlice";
 import type { AppDispatch, RootState } from "../../app/store";
 import { useTranslation } from "react-i18next";
+import LoadingScreen from "../../components/ui/LoadingScreen";
 
 const ManageAdmins = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const admins = useSelector((state: RootState) => state.admin.admins);
+  const isLoading = useSelector((state: RootState) => state.admin.loading);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
@@ -79,6 +81,10 @@ const ManageAdmins = () => {
       dispatch(deleteAdmin(selectedAdmin?.studentid));
     closeModal();
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="p-4">
