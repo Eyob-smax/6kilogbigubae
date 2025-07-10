@@ -1,7 +1,7 @@
 // src/components/forms/UserForm.tsx
 import { useState, ChangeEvent, FormEvent } from "react";
 import { X } from "lucide-react";
-import { User } from "../../types";
+import { UniversityUser, User } from "../../types";
 
 interface UserFormProps {
   mode: "add" | "edit";
@@ -103,6 +103,14 @@ const mother_tongue_enum = [
   ["Other", "Other"],
 ];
 
+function getUniversityUserValue<K extends keyof UniversityUser>(
+  obj: UniversityUser | undefined,
+  key: K
+): string | number {
+  const value = obj?.[key];
+  return (value ?? "").toString();
+}
+
 export default function UserForm({
   mode,
   initialData,
@@ -170,8 +178,10 @@ export default function UserForm({
                 required={required ? true : false}
                 value={
                   key === "birthdate"
-                    ? new Date(formData[key]).toISOString().split("T")[0]
-                    : formData[key] || ""
+                    ? new Date(formData[key as keyof User] as Date)
+                        .toISOString()
+                        .split("T")[0]
+                    : (formData[key as keyof User] as string | number) ?? ""
                 }
                 onChange={handleChange}
                 className="w-full px-3 py-2 border rounded-md"
@@ -269,7 +279,10 @@ export default function UserForm({
                   type={inputType}
                   required={required === "required" ? true : false}
                   name={`universityusers.${key}`}
-                  value={(formData.universityusers as any)[key] || ""}
+                  value={getUniversityUserValue(
+                    formData.universityusers,
+                    key as keyof UniversityUser
+                  )}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded-md"
                 />
