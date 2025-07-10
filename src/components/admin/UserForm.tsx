@@ -168,11 +168,12 @@ export default function UserForm({
                 placeholder={required ? (placeholder as string) : ""}
                 name={key as keyof User}
                 required={required ? true : false}
-                value={formData[key] || ""}
-                onChange={handleChange}
-                defaultValue={
-                  key === "birthdate" && new Date().toISOString().split("T")[0]
+                value={
+                  key === "birthdate"
+                    ? new Date().toISOString().split("T")[0]
+                    : formData[key] || ""
                 }
+                onChange={handleChange}
                 className="w-full px-3 py-2 border rounded-md"
               />
             </div>
