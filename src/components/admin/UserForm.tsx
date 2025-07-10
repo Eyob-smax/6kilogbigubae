@@ -170,7 +170,7 @@ export default function UserForm({
                 required={required ? true : false}
                 value={
                   key === "birthdate"
-                    ? new Date().toISOString().split("T")[0]
+                    ? new Date(formData[key]).toISOString().split("T")[0]
                     : formData[key] || ""
                 }
                 onChange={handleChange}
