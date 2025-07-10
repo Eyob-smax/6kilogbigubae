@@ -24,9 +24,9 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      // <ProtectedRoute>
-      <AdminDashboard />
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <AdminDashboard />
+      </ProtectedRoute>
     ),
     children: [
       {
