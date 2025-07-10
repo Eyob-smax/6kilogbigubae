@@ -170,6 +170,9 @@ export default function UserForm({
                 required={required ? true : false}
                 value={formData[key] || ""}
                 onChange={handleChange}
+                defaultValue={
+                  key === "birthdate" && new Date().toISOString().split("T")[0]
+                }
                 className="w-full px-3 py-2 border rounded-md"
               />
             </div>
