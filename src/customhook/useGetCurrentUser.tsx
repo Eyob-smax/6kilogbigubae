@@ -25,7 +25,7 @@ export default function useGetCurrentUser() {
           );
         } else {
           setIsAuthenticated(false);
-          Swal.fire({
+          await Swal.fire({
             icon: "error",
             title: "Access Denied",
             text: "You are not authorized.",
@@ -34,7 +34,7 @@ export default function useGetCurrentUser() {
       } catch (error) {
         const { message } = error as { message: string };
         setIsAuthenticated(false);
-        Swal.fire({
+        await Swal.fire({
           icon: "error",
           title: "Authentication Error",
           text: message,
