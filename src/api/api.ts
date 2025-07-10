@@ -19,7 +19,7 @@ export interface IResponseObject {
 }
 
 export const api = axios.create({
-  baseURL: "http://localhost:5500/api",
+  baseURL: "https://gbi-backend.onrender.com",
   withCredentials: true,
   timeout: 10000,
   headers: {
