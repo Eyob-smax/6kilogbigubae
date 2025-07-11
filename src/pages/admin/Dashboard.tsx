@@ -2,19 +2,10 @@
 import { motion } from "framer-motion";
 import { Users, UserCog, BarChart2, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
-// import { format } from "date-fns";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import Swal from "sweetalert2";
-
-// interface Event {
-//   title: string;
-//   date: string;
-//   time: string;
-//   location: string;
-//   description: string;
-// }
 
 const Dashboard = () => {
   // const { t } = useTranslation();
