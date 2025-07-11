@@ -4,14 +4,18 @@ import { Users, UserCog, BarChart2, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { fetchUsers } from "../../features/users/userSlice";
 
 const Dashboard = () => {
   // const { t } = useTranslation();
   const { users, loading, error } = useSelector(
     (state: RootState) => state.user
   );
+  const dispatch = useDispatch<AppDispatch>();
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -24,6 +28,10 @@ const Dashboard = () => {
       },
     }),
   };
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   const totalUsers = users?.length;
 
