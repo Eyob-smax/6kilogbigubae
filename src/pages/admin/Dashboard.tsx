@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 // import { format } from "date-fns";
 import { api } from "../../api/api";
 import LoadingScreen from "../../components/ui/LoadingScreen";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+import Swal from "sweetalert2";
 
 interface User {
   id: string;
@@ -24,28 +27,9 @@ interface User {
 
 const Dashboard = () => {
   // const { t } = useTranslation();
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-
-        // Replace with your actual API endpoints
-        const usersRes = await api.get("/user");
-        // const eventsRes = await api.get("/admin/events/upcoming");
-
-        setUsers(usersRes.data || []);
-        // setEvents(eventsRes.data || []);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
+  const { users, loading, error } = useSelector(
+    (state: RootState) => state.user
+  );
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -63,6 +47,16 @@ const Dashboard = () => {
 
   // const nextEvent = events.length > 0 ? events[0] : null;
   if (loading) return <LoadingScreen />;
+
+  if (error) {
+    (async () => {
+      await Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error,
+      });
+    })();
+  }
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Dashboard Overview</h2>
