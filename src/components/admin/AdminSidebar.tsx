@@ -2,7 +2,15 @@ import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAppDispatch } from "../../store/hooks";
 import { logoutAdmin } from "../../features/auth/authSlice";
-import { Users, UserCog, BarChart2, LogOut, Home, Menu } from "lucide-react";
+import {
+  Users,
+  UserCog,
+  BarChart2,
+  LogOut,
+  Home,
+  Menu,
+  LucideHome,
+} from "lucide-react";
 import { t } from "i18next";
 import { useState, useEffect, useCallback } from "react";
 import headerLogo from "../../assets/headerLogo.png"; // Adjust the path as necessary
@@ -126,7 +134,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
                   to="/admin"
                   className="ml-3 text-lg font-bold text-white hover:text-gold transition-colors"
                 >
-                  back Home
+                  <LucideHome size={24} className="inline-block mr-2" />
                 </Link>
               </div>
 
