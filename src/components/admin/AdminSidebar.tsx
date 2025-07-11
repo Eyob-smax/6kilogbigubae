@@ -1,4 +1,4 @@
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAppDispatch } from "../../store/hooks";
 import { logoutAdmin } from "../../features/auth/authSlice";
@@ -121,6 +121,13 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
                   alt="Header Logo"
                   className="w-12 h-12 rounded-full"
                 />
+
+                <Link
+                  to="/admin"
+                  className="ml-3 text-lg font-bold text-white hover:text-gold transition-colors"
+                >
+                  back Home
+                </Link>
               </div>
 
               {/* Navigation Links */}
