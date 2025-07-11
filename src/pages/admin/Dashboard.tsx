@@ -1,21 +1,12 @@
-import { useEffect, useState } from "react";
 // import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Users, UserCog, BarChart2, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 // import { format } from "date-fns";
-import { api } from "../../api/api";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import Swal from "sweetalert2";
-
-interface User {
-  id: string;
-  universityusers?: {
-    participation?: string;
-  };
-}
 
 // interface Event {
 //   title: string;
