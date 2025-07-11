@@ -131,7 +131,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
                 />
 
                 <Link
-                  to="/admin"
+                  to="/"
                   className="ml-3 text-lg font-bold text-white hover:text-gold transition-colors"
                 >
                   <LucideHome size={24} className="inline-block mr-2" />
