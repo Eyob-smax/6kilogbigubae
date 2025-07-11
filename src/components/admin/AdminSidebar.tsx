@@ -123,7 +123,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
               className="fixed top-0 left-0 z-50 h-full w-64 bg-liturgical-blue text-white shadow-xl md:relative md:z-auto"
             >
               {/* Logo */}
-              <div className="flex items-center px-4 py-6">
+              <div className="flex items-center justify-between px-4 py-6">
                 <img
                   src={headerLogo}
                   alt="Header Logo"
