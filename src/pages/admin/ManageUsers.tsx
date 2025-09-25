@@ -34,21 +34,30 @@ const ManageUsers = () => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  // Handle errors using SweetAlert inside an effect
+  // Handle errors
   useEffect(() => {
     if (error) {
       Swal.fire({
         icon: "error",
         title: "Something went wrong",
         text: error,
-      }).then(() => {
-        dispatch(resetError());
-      });
+      }).then(() => dispatch(resetError()));
     }
   }, [error, dispatch]);
 
   const filteredUsers = users.filter((user: User) =>
-    [user.studentid, user.firstname, user.lastname, user.baptismalname]
+    [
+      user.studentid,
+      user.firstname,
+      user.lastname,
+      user.baptismalname,
+      user.universityusers?.departmentname,
+      user.universityusers?.participation,
+      user.universityusers?.batch,
+      user.universityusers?.participation,
+      user.regionnumber,
+      user.phone,
+    ]
       .join(" ")
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
@@ -89,13 +98,13 @@ const ManageUsers = () => {
   return (
     <div className="p-4 w-full mx-auto">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
           {t("admin.users.title")}
         </h2>
         <button
           onClick={() => openModal("add")}
-          className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto"
         >
           <Plus size={18} className="mr-2" />
           {t("admin.users.add")}
@@ -109,7 +118,7 @@ const ManageUsers = () => {
         </span>
         <input
           type="text"
-          className="w-full pl-10 pr-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+          className="w-full pl-10 pr-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base"
           placeholder={t("admin.users.search")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -127,36 +136,44 @@ const ManageUsers = () => {
 
       {/* Table */}
       <div className="overflow-x-auto bg-white rounded-lg border shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200 text-sm text-left">
+        <table className="min-w-full divide-y divide-gray-200 text-sm sm:text-base text-left">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-gray-500 uppercase tracking-wider">
                 Student ID
               </th>
-              <th className="px-6 py-3">Name</th>
-              <th className="px-6 py-3">Baptismal</th>
-              <th className="px-6 py-3">Department</th>
-              <th className="px-6 py-3">Participation</th>
-              <th className="px-6 py-3">Actions</th>
+              <th className="px-3 sm:px-6 py-3">Name</th>
+              <th className="px-3 sm:px-6 py-3 hidden md:table-cell">
+                Baptismal
+              </th>
+              <th className="px-3 sm:px-6 py-3 hidden lg:table-cell">
+                Department
+              </th>
+              <th className="px-3 sm:px-6 py-3 hidden lg:table-cell">
+                Participation
+              </th>
+              <th className="px-3 sm:px-6 py-3">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {filteredUsers.map((user: User) => (
-              <tr key={user.userid}>
-                <td className="px-6 py-4">{user.studentid}</td>
-                <td className="px-6 py-4">
+              <tr key={user.userid} className="hover:bg-gray-50">
+                <td className="px-3 sm:px-6 py-4">{user.studentid}</td>
+                <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                   {user.firstname} {user.lastname}
                 </td>
-                <td className="px-6 py-4">{user.baptismalname}</td>
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-4 hidden md:table-cell">
+                  {user.baptismalname}
+                </td>
+                <td className="px-3 sm:px-6 py-4 hidden lg:table-cell truncate max-w-[120px]">
                   {user.universityusers?.departmentname}
                 </td>
-                <td className="px-6 py-4 max-w-[350px] break-all">
-                  <span className="inline-block bg-gray-100 text-gray-800 px-5 py-2 rounded-3xl">
+                <td className="px-3 sm:px-6 py-4 hidden lg:table-cell">
+                  <span className="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-2xl text-xs sm:text-sm">
                     {user.universityusers?.participation}
                   </span>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-4">
                   <div className="flex space-x-3">
                     <button
                       onClick={() => openModal("edit", user)}
@@ -178,7 +195,10 @@ const ManageUsers = () => {
             ))}
             {filteredUsers.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                <td
+                  colSpan={6}
+                  className="px-3 sm:px-6 py-4 text-center text-gray-500"
+                >
                   {t("admin.users.no_users")}
                 </td>
               </tr>
@@ -190,7 +210,7 @@ const ManageUsers = () => {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto transform transition-all duration-300">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl h-auto max-h-[90vh] overflow-y-auto transform transition-all duration-300 sm:rounded-lg sm:max-w-2xl">
             {modalMode === "delete" ? (
               <div className="p-6 space-y-4">
                 <h3 className="text-lg font-semibold">{t("forms.confirm")}</h3>
@@ -198,23 +218,23 @@ const ManageUsers = () => {
                   {t("forms.delete_confirm")}{" "}
                   <strong>{selectedUser?.firstname}</strong>?
                 </p>
-                <div className="flex justify-end space-x-4 pt-4">
+                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
                   <button
                     onClick={closeModal}
-                    className="px-4 py-2 rounded-md border text-gray-700 hover:bg-gray-100"
+                    className="px-4 py-2 rounded-md border text-gray-700 hover:bg-gray-100 w-full sm:w-auto"
                   >
                     {t("forms.no")}
                   </button>
                   <button
                     onClick={handleDeleteUser}
-                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 w-full sm:w-auto"
                   >
                     {t("forms.yes")}
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <UserForm
                   mode={modalMode}
                   initialData={selectedUser}

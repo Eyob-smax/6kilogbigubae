@@ -3,11 +3,12 @@ import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import AdminSidebar from "../components/admin/AdminSidebar";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const AdminDashboard = () => {
   const { currentUserData } = useSelector((state: RootState) => state.auth);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   useEffect(() => {
     document.title = "Admin Dashboard | 6 Kilo Gibi Gubae";
   }, []);
@@ -15,25 +16,34 @@ const AdminDashboard = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <AdminSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      <div
+        className={`fixed md:static inset-y-0 left-0 z-50 transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out md:translate-x-0`}
+      >
+        <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      </div>
+
+      {/* Overlay (mobile only) */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
       {/* Main content */}
       <div className="flex-1 overflow-auto relative">
-        {/* Mobile toggle button */}
+        {/* Toggle button (mobile only) */}
         <button
-          onClick={() => setSidebarOpen(true)}
-          className="md:hidden absolute top-4 left-4 z-50 text-gray-700"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="md:hidden flex items-center px-4 py-3 bg-white shadow sticky  top-0 left-0 z-50 w-full text-gray-700"
         >
-          <Menu size={28} />
+          {isSidebarOpen ? <X size={28} /> : <Menu size={28} />}
+          <span className="ml-2 font-medium">
+            {isSidebarOpen ? "Close Menu" : "Open Menu"}
+          </span>
         </button>
-
-        {/* Overlay for mobile when sidebar is open */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-            onClick={() => setSidebarOpen(false)}
-          ></div>
-        )}
 
         <div className="p-4 sm:p-6">
           <div className="mb-4 sm:mb-6">
