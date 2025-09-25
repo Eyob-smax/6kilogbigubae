@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { t } from "i18next";
 import { useState, useEffect, useCallback } from "react";
-import headerLogo from "../../assets/headerLogo.png"; // Adjust the path as necessary
+import headerLogo from "../../assets/headerLogo.png";
 import { RootState } from "../../app/store";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -47,7 +47,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
   const handleLogout = useCallback(async () => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
-      text: "you're about to log out!",
+      text: "You're about to log out!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, log out",
@@ -120,7 +120,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed top-0 left-0 z-50 h-full w-64 bg-liturgical-blue text-white shadow-xl md:relative md:z-auto"
+              className="fixed top-0 left-0 z-50 h-full max-h-screen w-64 bg-liturgical-blue text-white shadow-xl md:relative md:z-auto overflow-y-auto"
             >
               {/* Logo */}
               <div className="flex items-center justify-between px-4 py-6">
@@ -173,7 +173,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
               <div className="p-4 border-t border-white/10">
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg w-full hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-gold"
+                  className="flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-lg w-full hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-gold"
                   aria-label={t("admin.dashboard.logout")}
                 >
                   <LogOut size={20} />

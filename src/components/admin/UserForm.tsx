@@ -150,7 +150,7 @@ export default function UserForm({
   };
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6 max-w-full overflow-y-auto">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold">
           {mode === "add" ? "Add User" : "Edit User"}
@@ -164,8 +164,11 @@ export default function UserForm({
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 overflow-y-auto max-h-[80vh]"
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {user_enum.map(([key, label, inputType, required, placeholder]) => (
             <div key={key as string}>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -267,7 +270,7 @@ export default function UserForm({
         </div>
 
         <h4 className="text-md font-semibold pt-6">University Information</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {universityusers_enum.map(
             ([key, label, inputType, required, placeholder]) => (
               <div key={`universityusers.${key}`}>
@@ -357,17 +360,17 @@ export default function UserForm({
           </div>
         </div>
 
-        <div className="flex justify-end gap-4 pt-6">
+        <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6">
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-100"
+            className="w-full sm:w-auto px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-100"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Save
           </button>

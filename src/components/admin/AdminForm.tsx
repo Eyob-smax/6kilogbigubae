@@ -49,7 +49,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold">
           {mode === "add" ? t("forms.admin.add") : t("forms.admin.edit")}
@@ -74,7 +74,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
             value={formData.studentid || ""}
             onChange={handleChange}
             required
-            className="input-field"
+            className="w-full px-3 py-2 border rounded-md"
             placeholder="e.g., AAU-1234-12"
           />
         </div>
@@ -90,7 +90,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
             value={formData.adminusername || ""}
             onChange={handleChange}
             required
-            className="input-field"
+            className="w-full px-3 py-2 border rounded-md"
             placeholder="e.g., john_admin"
           />
         </div>
@@ -105,7 +105,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
             name="adminpassword"
             value={formData.adminpassword || ""}
             onChange={handleChange}
-            className="input-field"
+            className="w-full px-3 py-2 border rounded-md"
             placeholder={
               mode === "add"
                 ? t("forms.admin.passwordPlaceholder")
@@ -115,15 +115,18 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-end space-x-3 pt-4">
+        <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4">
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
           >
             {t("forms.cancel")}
           </button>
-          <button type="submit" className="btn-primary">
+          <button
+            type="submit"
+            className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
             {t("forms.save")}
           </button>
         </div>
