@@ -19,7 +19,7 @@ export interface IResponseObject {
 }
 
 export const api = axios.create({
-  baseURL: "/api",
+  baseURL: "https://gbi-backend-h76f.vercel.app/api",
   withCredentials: true,
   timeout: 10000,
   headers: {
