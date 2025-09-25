@@ -99,6 +99,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
           navLinks={navLinks}
           handleLogout={handleLogout}
           setIsOpen={() => {}}
+          isOpen={isOpen}
         />
       </div>
     </>
@@ -111,16 +112,22 @@ const SidebarContent = ({
   navLinks,
   handleLogout,
   setIsOpen,
+  isOpen,
 }: {
   locationPath: string;
   navLinks: { to: string; icon: JSX.Element; label: string }[];
   handleLogout: () => void;
   setIsOpen: (isOpen: boolean) => void;
+  isOpen?: boolean;
 }) => {
   return (
     <>
       {/* Logo */}
-      <div className="pt-20 flex items-center justify-between px-4 py-6">
+      <div
+        className={`${
+          isOpen ? "pt-20" : "pt-6"
+        } flex items-center justify-between px-4 py-6`}
+      >
         <img
           src={headerLogo}
           alt="Header Logo"

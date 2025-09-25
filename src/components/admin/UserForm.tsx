@@ -44,7 +44,7 @@ const role_type = [
   ["ClassTeamLead", "Class TeamLead"],
   ["ClassManager", "Class Manager"],
   ["SubclassSecretary", "Subclass Secretary"],
-  ["SubclassTeamLead", "Subclass TeamLead"],
+  ["SubclassTeamLead", "SubclassTeamLead"],
   ["SubclassManager", "Subclass Manager"],
   ["None", "None"],
 ];
@@ -69,16 +69,16 @@ const participation_enum = [
 
 const universityusers_enum = [
   ["departmentname", "Department", "text", "required", "Computer Science"],
-  ["batch", "Batch", "text", "required", "2016"],
+  ["batch", "Batch", "number", "required", "2016"],
   ["mealcard", "Meal Card", "text", "none", "8307"],
   ["confessionfather", "Confession father", "text", "none", "Abba Tesfaye"],
 ];
 
 const user_enum = [
   ["studentid", "Student ID", "text", "required", "UGR-****-** USE(-)"],
-  ["firstname", "First Name", "text", "required", "John"],
-  ["middlename", "Middle Name", "text", "none", "Marcus"],
-  ["lastname", "Last Name", "text", "required", "Doe"],
+  ["firstname", "First Name", "text", "required", "Berhanu"],
+  ["lastname", "Father's Name", "text", "required", "Tesfaye"],
+  ["middlename", "GrandFather's Name", "text", "none", "Amanuel"],
   ["baptismalname", "Baptismal Name", "text", "none", "Welde Amanuel"],
   ["phone", "Phone", "tel", "required", "+2519********"],
   [
@@ -88,9 +88,9 @@ const user_enum = [
     "required",
     new Date().toISOString().split("T")[0],
   ],
-  ["useremail", "Email", "email", "none", "jhondoe@gmail.com"],
+  ["useremail", "Email", "email", "none", "someone@gmail.com"],
   ["regionnumber", "Region Number", "number", "none", 10],
-  ["zonename", "Zone Name", "text", "borena", "Addis Ababa"],
+  ["zonename", "Zone Name", "text", "optional"],
   ["nationality", "Nationality", "text", "none", "Ethiopian"],
 ];
 
@@ -206,12 +206,14 @@ export default function UserForm({
               <option value="Female">Female</option>
             </select>
           </div>
+
+          {/* ✅ Corrected advisor field */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Advisor
             </label>
             <select
-              name="advisor"
+              name="universityusers.advisors"
               value={formData.universityusers?.advisors}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-md"
@@ -304,7 +306,7 @@ export default function UserForm({
               className="w-full px-3 py-2 border rounded-md"
             >
               <option value="Government">Government</option>
-              <option value=" Self_Sponsored"> Self_Sponsored</option>
+              <option value="Self_Sponsored">Self_Sponsored</option>
             </select>
           </div>
 
