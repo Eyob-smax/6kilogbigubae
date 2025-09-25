@@ -31,10 +31,12 @@ export const loginAdmin = createAsyncThunk<
   { rejectValue: string }
 >("auth/loginAdmin", async ({ studentId, password }, { rejectWithValue }) => {
   try {
+    console.log("Attempting login for studentId:", studentId);
     const response = await api.post("/admin/login", {
       studentid: studentId,
       adminpassword: password,
     });
+    console.log("Login response:", response.data);
     return response.data;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
