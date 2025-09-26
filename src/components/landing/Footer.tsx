@@ -39,7 +39,7 @@ const Footer = () => {
           <p className="text-white/70 text-sm flex items-center justify-center">
             &copy; {new Date().getFullYear()} 6 Kilo Gibi Gubae
             <img src={logo} alt="Logo" className="mx-1 w-4 h-4 rounded-full" />
-            {i18n.language === "am" ? "በተማሪዎች" : "Made with love by students"}
+            {i18n.language === "am" ? "በተማሪዎች" : "Made with love by 6 kilo IT Teams"}
           </p>
         </motion.div>
       </div>
