@@ -11,7 +11,6 @@ import { useEffect } from "react";
 import { fetchUsers } from "../../features/users/userSlice";
 
 const Dashboard = () => {
-  // const { t } = useTranslation();
   const { users, loading, error } = useSelector(
     (state: RootState) => state.user
   );
@@ -35,7 +34,6 @@ const Dashboard = () => {
 
   const totalUsers = users?.length;
 
-  // const nextEvent = events.length > 0 ? events[0] : null;
   if (loading) return <LoadingScreen />;
 
   if (error) {
@@ -137,22 +135,6 @@ const Dashboard = () => {
             <Calendar size={20} className="mr-2 text-liturgical-blue" />
             Next Event
           </h3>
-
-          {/* {nextEvent ? (
-            <div>
-              <h4 className="text-lg font-medium">{nextEvent.title}</h4>
-              <div className="mt-2 space-y-1 text-gray-600">
-                <p>
-                  {format(new Date(nextEvent.date), "MMMM d, yyyy")} at{" "}
-                  {nextEvent.time}
-                </p>
-                <p>{nextEvent.location}</p>
-              </div>
-              <p className="mt-3 text-gray-700">{nextEvent.description}</p>
-            </div>
-          ) : (
-            <p className="text-gray-500 italic">No upcoming events</p>
-          )} */}
         </motion.div>
 
         <motion.div

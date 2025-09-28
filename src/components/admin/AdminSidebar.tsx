@@ -11,7 +11,7 @@ import {
   LucideHome,
 } from "lucide-react";
 import { t } from "i18next";
-import { useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import headerLogo from "../../assets/headerLogo.png";
 import { RootState } from "../../app/store";
 import { useSelector } from "react-redux";
@@ -27,6 +27,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Memoized logout handler
   const handleLogout = useCallback(async () => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
@@ -44,31 +45,36 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
 
   const { currentUserData } = useSelector((state: RootState) => state.auth);
 
-  const navLinks = [
-    {
-      to: "/admin",
-      icon: <Home size={20} />,
-      label: t("admin.dashboard.title"),
-    },
-    {
-      to: "/admin/users",
-      icon: <Users size={20} />,
-      label: t("admin.dashboard.users"),
-    },
-    {
-      to: "/admin/analytics",
-      icon: <BarChart2 size={20} />,
-      label: t("admin.dashboard.analytics"),
-    },
-  ];
+  // Memoized nav links to prevent unnecessary recalculation
+  const navLinks = useMemo(() => {
+    const links = [
+      {
+        to: "/admin",
+        icon: <Home size={20} />,
+        label: t("admin.dashboard.title"),
+      },
+      {
+        to: "/admin/users",
+        icon: <Users size={20} />,
+        label: t("admin.dashboard.users"),
+      },
+      {
+        to: "/admin/analytics",
+        icon: <BarChart2 size={20} />,
+        label: t("admin.dashboard.analytics"),
+      },
+    ];
 
-  if (currentUserData?.isSuperAdmin) {
-    navLinks.push({
-      to: "/admin/admins",
-      icon: <UserCog size={20} />,
-      label: t("admin.dashboard.admins"),
-    });
-  }
+    if (currentUserData?.isSuperAdmin) {
+      links.push({
+        to: "/admin/admins",
+        icon: <UserCog size={20} />,
+        label: t("admin.dashboard.admins"),
+      });
+    }
+
+    return links;
+  }, [currentUserData?.isSuperAdmin]);
 
   return (
     <>
@@ -86,6 +92,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
               navLinks={navLinks}
               handleLogout={handleLogout}
               setIsOpen={setIsOpen}
+              isOpen={isOpen}
             />
           </motion.div>
         )}
@@ -104,79 +111,82 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
   );
 };
 
-const SidebarContent = ({
-  locationPath,
-  navLinks,
-  handleLogout,
-  setIsOpen,
-  isOpen,
-}: {
-  locationPath: string;
-  navLinks: { to: string; icon: JSX.Element; label: string }[];
-  handleLogout: () => void;
-  setIsOpen: (isOpen: boolean) => void;
-  isOpen?: boolean;
-}) => {
-  return (
-    <>
-      <div
-        className={`${
-          isOpen ? "pt-20" : "pt-6"
-        } flex items-center justify-between px-4 py-6`}
-      >
-        <img
-          src={headerLogo}
-          alt="Header Logo"
-          className="w-12 h-12 rounded-full"
-        />
-        <Link
-          to="/"
-          className="ml-3 text-lg font-bold text-white hover:text-gold transition-colors"
-          onClick={() => setIsOpen(false)}
+// Memoized SidebarContent to prevent unnecessary re-renders
+const SidebarContent = memo(
+  ({
+    locationPath,
+    navLinks,
+    handleLogout,
+    setIsOpen,
+    isOpen,
+  }: {
+    locationPath: string;
+    navLinks: { to: string; icon: JSX.Element; label: string }[];
+    handleLogout: () => void;
+    setIsOpen: (isOpen: boolean) => void;
+    isOpen?: boolean;
+  }) => {
+    return (
+      <>
+        <div
+          className={`${
+            isOpen ? "pt-20" : "pt-6"
+          } flex items-center justify-between px-4 py-6`}
         >
-          <LucideHome size={24} className="inline-block mr-2" />
-        </Link>
-      </div>
+          <img
+            src={headerLogo}
+            alt="Header Logo"
+            className="w-12 h-12 rounded-full"
+          />
+          <Link
+            to="/"
+            className="ml-3 text-lg font-bold text-white hover:text-gold transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            <LucideHome size={24} className="inline-block mr-2" />
+          </Link>
+        </div>
 
-      <div className="px-4 py-4 flex-1 overflow-y-auto">
-        <ul className="space-y-2">
-          {navLinks.map(({ to, icon, label }, index) => (
-            <motion.li
-              key={to}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-            >
-              <NavLink
-                to={to}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                    isActive ? "bg-white/10 text-gold" : "hover:bg-white/5"
-                  }`
-                }
-                aria-current={locationPath === to ? "page" : undefined}
+        <div className="px-4 py-4 flex-1 overflow-y-auto">
+          <ul className="space-y-2">
+            {navLinks.map(({ to, icon, label }, index) => (
+              <motion.li
+                key={to}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                {icon}
-                <span>{label}</span>
-              </NavLink>
-            </motion.li>
-          ))}
-        </ul>
-      </div>
+                <NavLink
+                  to={to}
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                      isActive ? "bg-white/10 text-gold" : "hover:bg-white/5"
+                    }`
+                  }
+                  aria-current={locationPath === to ? "page" : undefined}
+                >
+                  {icon}
+                  <span>{label}</span>
+                </NavLink>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
 
-      <div className="p-4 border-t border-white/10">
-        <button
-          onClick={handleLogout}
-          className="flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-lg w-full hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-gold"
-          aria-label={t("admin.dashboard.logout")}
-        >
-          <LogOut size={20} />
-          <span>{t("admin.dashboard.logout")}</span>
-        </button>
-      </div>
-    </>
-  );
-};
+        <div className="p-4 border-t border-white/10">
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-lg w-full hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-gold"
+            aria-label={t("admin.dashboard.logout")}
+          >
+            <LogOut size={20} />
+            <span>{t("admin.dashboard.logout")}</span>
+          </button>
+        </div>
+      </>
+    );
+  }
+);
 
 export default AdminSidebar;
