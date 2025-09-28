@@ -4,26 +4,27 @@ import { MapPin, Mail, Phone, User } from "lucide-react";
 import { Facebook, Youtube } from "react-feather";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L, { IconOptions } from "leaflet";
+import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-// Extend the Default Icon type safely
-const DefaultIcon = L.Icon.Default.extend({
-  options: {
-    iconRetinaUrl: markerIcon2x,
-    iconUrl: markerIcon,
-    shadowUrl: markerShadow,
-  } as IconOptions,
-});
+delete (
+  L.Icon.Default.prototype as typeof L.Icon.Default.prototype & {
+    _getIconUrl: unknown;
+  }
+)._getIconUrl;
 
-L.Marker.prototype.options.icon = new DefaultIcon();
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 const Contact = () => {
   const { t, i18n } = useTranslation();
 
-  const position: [number, number] = [9.04, 38.75];
+  const position: [number, number] = [9.045376, 38.760893];
 
   return (
     <section id="contact" className="section-container holy-cross-bg">
@@ -40,7 +41,6 @@ const Contact = () => {
       </motion.h2>
 
       <div className="grid md:grid-cols-2 gap-8">
-        {/* Contact Info */}
         <motion.div
           className="bg-white rounded-lg shadow-md p-6 space-y-6"
           initial={{ opacity: 0, x: -20 }}
@@ -48,7 +48,6 @@ const Contact = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          {/* Location */}
           <div>
             <h3
               className={`text-xl font-semibold mb-4 text-liturgical-blue flex items-center gap-2 ${
@@ -68,7 +67,6 @@ const Contact = () => {
             </p>
           </div>
 
-          {/* Email */}
           <div>
             <h3
               className={`text-xl font-semibold mb-4 text-liturgical-blue flex items-center gap-2 ${
@@ -88,7 +86,6 @@ const Contact = () => {
             </p>
           </div>
 
-          {/* Phone */}
           <div>
             <h3
               className={`text-xl font-semibold mb-4 text-liturgical-blue flex items-center gap-2 ${
@@ -108,7 +105,6 @@ const Contact = () => {
             </p>
           </div>
 
-          {/* Admin */}
           <div>
             <h3
               className={`text-xl font-semibold mb-4 text-liturgical-blue flex items-center gap-2 ${
@@ -121,7 +117,6 @@ const Contact = () => {
             <p className="text-gray-700">{t("contact.admin_contact")}</p>
           </div>
 
-          {/* Social Media */}
           <div>
             <h3
               className={`text-xl font-semibold mb-4 text-liturgical-blue flex items-center gap-2 ${
@@ -140,7 +135,6 @@ const Contact = () => {
           </div>
         </motion.div>
 
-        {/* Map */}
         <motion.div
           className="h-96 rounded-lg shadow-md overflow-hidden"
           initial={{ opacity: 0, x: 20 }}
@@ -150,8 +144,8 @@ const Contact = () => {
         >
           <MapContainer
             center={position}
-            zoom={15}
-            scrollWheelZoom={false}
+            zoom={16}
+            scrollWheelZoom={true}
             className="w-full h-full"
           >
             <TileLayer
