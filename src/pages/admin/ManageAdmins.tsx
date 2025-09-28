@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Search,
   Plus,
@@ -21,11 +21,13 @@ import type { AppDispatch, RootState } from "../../app/store";
 import { useTranslation } from "react-i18next";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 
-const ManageAdmins = () => {
+const ManageAdmins: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
-  const admins = useSelector((state: RootState) => state.admin.admins);
-  const isLoading = useSelector((state: RootState) => state.admin.loading);
+
+  const { admins = [], loading } = useSelector(
+    (state: RootState) => state.admin
+  );
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
@@ -36,58 +38,63 @@ const ManageAdmins = () => {
     dispatch(fetchAdmins());
   }, [dispatch]);
 
-  const filteredAdmins = Array.isArray(admins)
-    ? admins.filter((admin: Admin) => {
-        const term = searchTerm.toLowerCase();
-        return (
-          admin?.studentid?.toLowerCase()?.includes(term) ||
-          admin?.adminusername?.toLowerCase()?.includes(term)
-        );
-      })
-    : [];
+  const filteredAdmins = useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    return Array.isArray(admins)
+      ? admins.filter(
+          (admin: Admin) =>
+            admin?.studentid?.toLowerCase()?.includes(term) ||
+            admin?.adminusername?.toLowerCase()?.includes(term)
+        )
+      : [];
+  }, [admins, searchTerm]);
 
-  const openAddModal = () => {
+  const openAddModal = useCallback(() => {
     setSelectedAdmin(null);
     setModalMode("add");
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const openEditModal = (admin: Admin) => {
+  const openEditModal = useCallback((admin: Admin) => {
     setSelectedAdmin(admin);
     setModalMode("edit");
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const openDeleteModal = (admin: Admin) => {
+  const openDeleteModal = useCallback((admin: Admin) => {
     setSelectedAdmin(admin);
     setModalMode("delete");
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedAdmin(null);
+  }, []);
 
-  const handleSaveAdmin = (adminData: Partial<Admin>) => {
-    if (modalMode === "add") {
-      dispatch(addAdmin(adminData));
-    } else if (modalMode === "edit" && selectedAdmin?.studentid) {
-      dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData }));
+  const handleSaveAdmin = useCallback(
+    (adminData: Partial<Admin>) => {
+      if (modalMode === "add") {
+        dispatch(addAdmin(adminData));
+      } else if (modalMode === "edit" && selectedAdmin?.studentid) {
+        dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData }));
+      }
+      closeModal();
+    },
+    [dispatch, modalMode, selectedAdmin, closeModal]
+  );
+
+  const handleDeleteAdmin = useCallback(() => {
+    if (selectedAdmin?.studentid) {
+      dispatch(deleteAdmin(selectedAdmin.studentid));
     }
     closeModal();
-  };
+  }, [dispatch, selectedAdmin, closeModal]);
 
-  const handleDeleteAdmin = () => {
-    if (selectedAdmin?.studentid)
-      dispatch(deleteAdmin(selectedAdmin?.studentid));
-    closeModal();
-  };
-
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
+  if (loading) return <LoadingScreen />;
 
   return (
     <div className="p-4 w-full mx-auto">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <h2 className="text-xl sm:text-2xl font-bold">
           {t("admin.dashboard.admins")}
@@ -101,7 +108,6 @@ const ManageAdmins = () => {
         </button>
       </div>
 
-      {/* Search */}
       <div className="mb-6 relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Search className="h-5 w-5 text-gray-400" />
@@ -109,7 +115,7 @@ const ManageAdmins = () => {
         <input
           type="text"
           className="w-full pl-10 pr-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base"
-          placeholder="Search admins..."
+          placeholder={t("admin.users.search")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -124,7 +130,6 @@ const ManageAdmins = () => {
         )}
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto bg-white rounded-lg border shadow-sm">
         <table className="min-w-full divide-y divide-gray-200 text-sm sm:text-base text-left">
           <thead className="bg-gray-50">
@@ -208,7 +213,7 @@ const ManageAdmins = () => {
                   colSpan={4}
                   className="px-3 sm:px-6 py-4 text-center text-gray-500"
                 >
-                  No admins found
+                  {t("admin.users.no_users")}
                 </td>
               </tr>
             )}
@@ -216,7 +221,6 @@ const ManageAdmins = () => {
         </table>
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-lg h-auto max-h-[90vh] overflow-y-auto transform transition-all duration-300 p-4 sm:p-6">
@@ -226,7 +230,7 @@ const ManageAdmins = () => {
                   {t("forms.confirm")}
                 </h3>
                 <p className="mb-6">
-                  Are you sure you want to delete admin{" "}
+                  {t("forms.delete_confirm")}{" "}
                   <strong>{selectedAdmin?.adminusername}</strong>?
                 </p>
                 <div className="flex flex-col sm:flex-row justify-end gap-3">
@@ -257,6 +261,6 @@ const ManageAdmins = () => {
       )}
     </div>
   );
-};
+});
 
 export default ManageAdmins;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
 import { Admin } from "../../types";
@@ -14,34 +14,18 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState<Partial<Admin>>({
-    studentid: "",
-    adminusername: "",
+    studentid: initialData?.studentid ?? "",
+    adminusername: initialData?.adminusername ?? "",
     adminpassword: "",
   });
 
-  useEffect(() => {
-    if (mode === "edit" && initialData) {
-      setFormData({
-        studentid: initialData.studentid ?? "",
-        adminusername: initialData.adminusername ?? "",
-        adminpassword: initialData.adminpassword ?? "",
-      });
-    } else if (mode === "add") {
-      setFormData({
-        studentid: "",
-        adminusername: "",
-        adminpassword: "",
-      });
-    }
-  }, [mode, initialData]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-  };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,6 +34,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
 
   return (
     <div className="p-4 sm:p-6">
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold">
           {mode === "add" ? t("forms.admin.add") : t("forms.admin.edit")}
@@ -62,6 +47,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
         </button>
       </div>
 
+      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Student ID */}
         <div>
@@ -71,7 +57,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
           <input
             type="text"
             name="studentid"
-            value={formData.studentid || ""}
+            value={formData.studentid}
             onChange={handleChange}
             required
             className="w-full px-3 py-2 border rounded-md"
@@ -87,7 +73,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
           <input
             type="text"
             name="adminusername"
-            value={formData.adminusername || ""}
+            value={formData.adminusername}
             onChange={handleChange}
             required
             className="w-full px-3 py-2 border rounded-md"
@@ -103,13 +89,14 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
           <input
             type="password"
             name="adminpassword"
-            value={formData.adminpassword || ""}
+            value={formData.adminpassword}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded-md"
             placeholder={
               mode === "add"
                 ? t("forms.admin.passwordPlaceholder")
-                : "Update password if needed or just leave it blank"
+                : t("forms.admin.updatePasswordPlaceholder") ||
+                  "Update password if needed or leave blank"
             }
           />
         </div>

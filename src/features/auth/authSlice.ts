@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { api } from "../../api/api";
 import { Admin } from "../../types";
 import { AxiosError } from "axios";
@@ -9,12 +9,13 @@ type TCurrentUserData = {
   studentid: string;
   isSuperAdmin: boolean;
 };
+
 interface AuthState {
   isAuthenticated: boolean;
   admin: Admin | null;
   loading: boolean;
   error: string | null;
-  currentUserData: null | TCurrentUserData;
+  currentUserData: TCurrentUserData | null;
 }
 
 const initialState: AuthState = {
@@ -25,24 +26,35 @@ const initialState: AuthState = {
   currentUserData: null,
 };
 
+const extractErrorMessage = (
+  err: unknown,
+  fallback = "Something went wrong"
+) => {
+  const error = err as AxiosError<{ message?: string }>;
+  return error.response?.data?.message || error.message || fallback;
+};
+
+const showLogoutSuccess = async () => {
+  await Swal.fire({
+    title: "Logged out",
+    icon: "success",
+    text: "You have been logged out successfully.",
+  });
+};
+
 export const loginAdmin = createAsyncThunk<
   { admin: Admin; token: string },
   { studentId: string; password: string },
   { rejectValue: string }
 >("auth/loginAdmin", async ({ studentId, password }, { rejectWithValue }) => {
   try {
-    console.log("Attempting login for studentId:", studentId);
     const response = await api.post("/admin/login", {
       studentid: studentId,
       adminpassword: password,
     });
-    console.log("Login response:", response.data);
     return response.data;
   } catch (err) {
-    const error = err as AxiosError<{ message?: string }>;
-    return rejectWithValue(
-      error.response?.data?.message || error.message || "Login failed"
-    );
+    return rejectWithValue(extractErrorMessage(err, "Login failed"));
   }
 });
 
@@ -50,14 +62,12 @@ export const logoutAdmin = createAsyncThunk<
   void,
   void,
   { rejectValue: string }
->("/auth/logoutAdmin", async (_, { rejectWithValue }) => {
+>("auth/logoutAdmin", async (_, { rejectWithValue }) => {
   try {
     await api.get("/logout");
+    await showLogoutSuccess();
   } catch (err) {
-    const error = err as AxiosError<{ message?: string }>;
-    return rejectWithValue(
-      error.response?.data?.message || error.message || "Logout failed"
-    );
+    return rejectWithValue(extractErrorMessage(err, "Logout failed"));
   }
 });
 
@@ -68,7 +78,7 @@ const authSlice = createSlice({
     clearAuthError: (state) => {
       state.error = null;
     },
-    setCurrentUser: (state, { payload }) => {
+    setCurrentUser: (state, { payload }: PayloadAction<TCurrentUserData>) => {
       state.currentUserData = payload;
     },
   },
@@ -89,6 +99,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.admin = null;
       })
+
       .addCase(logoutAdmin.pending, (state) => {
         state.loading = true;
       })
@@ -97,14 +108,6 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.admin = null;
         state.error = null;
-
-        (async () => {
-          await Swal.fire({
-            title: "Logged out",
-            icon: "success",
-            text: "You have been logged out successfully.",
-          });
-        })();
       })
       .addCase(logoutAdmin.rejected, (state, action) => {
         state.loading = false;

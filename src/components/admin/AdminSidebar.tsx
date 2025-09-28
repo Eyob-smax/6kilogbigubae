@@ -72,7 +72,6 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
 
   return (
     <>
-      {/* Mobile Sidebar (slide in/out) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -92,7 +91,6 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
         )}
       </AnimatePresence>
 
-      {/* Desktop Sidebar (always visible from md+) */}
       <div className="hidden md:flex md:flex-col md:w-64 md:h-screen md:bg-liturgical-blue md:text-white md:shadow-xl">
         <SidebarContent
           locationPath={location.pathname}
@@ -106,7 +104,6 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
   );
 };
 
-/* Extracted sidebar content so it's reused for mobile + desktop */
 const SidebarContent = ({
   locationPath,
   navLinks,
@@ -122,7 +119,6 @@ const SidebarContent = ({
 }) => {
   return (
     <>
-      {/* Logo */}
       <div
         className={`${
           isOpen ? "pt-20" : "pt-6"
@@ -142,7 +138,6 @@ const SidebarContent = ({
         </Link>
       </div>
 
-      {/* Navigation Links */}
       <div className="px-4 py-4 flex-1 overflow-y-auto">
         <ul className="space-y-2">
           {navLinks.map(({ to, icon, label }, index) => (
@@ -170,7 +165,6 @@ const SidebarContent = ({
         </ul>
       </div>
 
-      {/* Logout Button */}
       <div className="p-4 border-t border-white/10">
         <button
           onClick={handleLogout}

@@ -37,19 +37,37 @@ type TRoleType =
   | "SubclassTeamLead";
 
 type TAdvisorType = "Yes" | "No";
+
+type TRegionType =
+  | "Addis_Ababa"
+  | "Dire_Dawa"
+  | "Tigray"
+  | "Afar"
+  | "Amhara"
+  | "Oromia"
+  | "Somali"
+  | "Benishangul_Gumuz"
+  | "SNNPR"
+  | "Sidama"
+  | "South_West_Ethiopia_Peoples_Region"
+  | "Central_Ethiopia_Region"
+  | "South_Ethiopia_Region"
+  | "Harari"
+  | "Not_Specified";
 export interface User {
   userid?: string;
   studentid: string;
   firstname: string;
   middlename: string;
   lastname: string;
+  telegram_username: string;
   gender: "Male" | "Female";
   baptismalname: string;
   phone: string;
   birthdate: Date | string;
   useremail: string;
   nationality: string;
-  regionnumber: number;
+  region: TRegionType;
   mothertongue: TMotherTongue;
   zonename: string;
   isphysicallydisabled: TImparment;
@@ -67,6 +85,7 @@ export interface UniversityUser {
   role: TRoleType;
   mealcard?: string;
   cafeteriaaccess: boolean;
+  holidayincampus: boolean;
 }
 
 export interface Admin {

@@ -32,9 +32,7 @@ const AdminDashboard = () => {
         />
       )}
 
-      {/* Main content */}
       <div className="flex-1 overflow-auto relative">
-        {/* Toggle button (mobile only) */}
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="md:hidden flex items-center px-4 py-3 bg-white shadow sticky  top-0 left-0 z-50 w-full text-gray-700"

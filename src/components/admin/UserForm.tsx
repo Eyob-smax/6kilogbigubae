@@ -1,5 +1,5 @@
 // src/components/forms/UserForm.tsx
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, memo } from "react";
 import { X } from "lucide-react";
 import { UniversityUser, User } from "../../types";
 
@@ -20,8 +20,9 @@ const defaultUser: User = {
   phone: "",
   birthdate: new Date(),
   useremail: "",
+  telegram_username: "",
   nationality: "Ethiopian",
-  regionnumber: 10,
+  region: "Addis_Ababa",
   mothertongue: "Not_Specified",
   zonename: "",
   isphysicallydisabled: "None",
@@ -35,6 +36,7 @@ const defaultUser: User = {
     role: "Member",
     mealcard: "",
     cafeteriaaccess: true,
+    holidayincampus: false,
   },
 };
 
@@ -49,22 +51,25 @@ const role_type = [
   ["None", "None"],
 ];
 
-const participation_enum = [
-  ["Batch_and_Programs_Coordination_Section", "Batch and coordination"],
-  ["Gbi_Gubaye_Secretariat", "Secretariat"],
-  ["Audit_and_Inspection_Section", "Audit and Inspection"],
-  ["Education_and_Apostolic_Service_Section", "Education and Apostolic"],
-  ["Accounting_and_Assets_Section", "Accounting and Assets"],
-  ["Development_and_Income_Collection_Section", "Income collection"],
-  ["Languages_and_Special_Interests_Section", "Language and special interests"],
-  ["Hymns_and_Arts_Section", "Hymns and Arts"],
+const participation_enum: [string, string][] = [
+  ["Gbi_Gubaye_Secretariat", "የግቢ ጉባኤው ጽ/ቤት"], // 2
+  ["Audit_and_Inspection_Section", "ኦዲትና ኢንስፔክሽን ክፍል"], // 1
+  ["Education_and_Apostolic_Service_Section", "ትምህርትና ሐዋርያው አገልግሎት ክፍል"], // 3
+  ["Accounting_and_Assets_Section", "የሒሳብና ንብረት ክፍል"], // 4
+  ["Development_and_Income_Collection_Section", "ልማትና ገቢ አሰባሰብ ክፍል"], // 5
+  ["Languages_and_Special_Interests_Section", "ቋንቋዎችና ልዩ ፍላጎት ክፍል"], // 6
+  ["Hymns_and_Arts_Section", "መዝሙርና ስነ ጥበባት ክፍል"], // 7
   [
     "Planning_Monitoring_Reports_and_Information_Management_Section",
-    "Information management",
-  ],
-  ["Professional_and_Community_Development_Section", "Community development"],
-  ["Member_Care_Advice_and_Capacity_Building_Section", "Member care advice"],
-  ["None", "None"],
+    "ዕቅድ ክትትል ሪፓርትና መረጃ ማደራጃ ክፍል",
+  ], // 8
+  ["Professional_and_Community_Development_Section", "የሞያና በጎ አድራጎት ክፍል"], // 9
+  ["Batch_and_Programs_Coordination_Section", "የባችና መርሀግራት ማስተባበሪያ ክፍል"], // 10
+  [
+    "Member_Care_Advice_and_Capacity_Building_Section",
+    "የአባላት እንክብካቤ ምክክርና አቅም ማጎልበቻ ክፍል",
+  ], // 11
+  ["None", "ምንም አይደለም"], // None
 ];
 
 const universityusers_enum = [
@@ -72,6 +77,22 @@ const universityusers_enum = [
   ["batch", "Batch", "number", "required", "2016"],
   ["mealcard", "Meal Card", "text", "none", "8307"],
   ["confessionfather", "Confession father", "text", "none", "Abba Tesfaye"],
+];
+
+const region_enum = [
+  ["Addis_Ababa", "Addis Ababa"],
+  ["Dire_Dawa", "Dire Dawa"],
+  ["Afar", "Afar"],
+  ["Amhara", "Amhara"],
+  ["Oromia", "Oromia"],
+  ["Somali", "Somali"],
+  ["Benishangul_Gumuz", "Benishangul-Gumuz"],
+  ["SNNPR", "SNNPR"],
+  ["Sidama", "Sidama"],
+  ["South_West_Ethiopia_Peoples_Region", "South West Ethiopia Peoples Region"],
+  ["Central_Ethiopia_Region", "Central Ethiopia Region"],
+  ["South_Ethiopia_Region", "South Ethiopia Region"],
+  ["Harari", "Harari"],
 ];
 
 const user_enum = [
@@ -88,8 +109,8 @@ const user_enum = [
     "required",
     new Date().toISOString().split("T")[0],
   ],
+  ["telegram_username", "Telegram Username", "text", "none", "@berhanu123"],
   ["useremail", "Email", "email", "none", "someone@gmail.com"],
-  ["regionnumber", "Region Number", "number", "none", 10],
   ["zonename", "Zone Name", "text", "optional"],
   ["nationality", "Nationality", "text", "none", "Ethiopian"],
 ];
@@ -111,12 +132,7 @@ function getUniversityUserValue<K extends keyof UniversityUser>(
   return (value ?? "").toString();
 }
 
-export default function UserForm({
-  mode,
-  initialData,
-  onCancel,
-  onSubmit,
-}: UserFormProps) {
+function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
   const [formData, setFormData] = useState<User>(initialData || defaultUser);
 
   const handleChange = (
@@ -194,6 +210,25 @@ export default function UserForm({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
+              Region
+            </label>
+            <select
+              name="region"
+              value={formData.region}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              {region_enum.map(([value, text]) => {
+                return (
+                  <option key={value} value={value}>
+                    {text}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Gender
             </label>
             <select
@@ -207,14 +242,13 @@ export default function UserForm({
             </select>
           </div>
 
-          {/* ✅ Corrected advisor field */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Advisor
             </label>
             <select
               name="universityusers.advisors"
-              value={formData.universityusers?.advisors}
+              value={formData?.universityusers?.advisors}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-md"
             >
@@ -233,7 +267,7 @@ export default function UserForm({
             <select
               id="isphysicallydisabled"
               name="isphysicallydisabled"
-              value={formData.isphysicallydisabled}
+              value={formData?.isphysicallydisabled}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-md"
             >
@@ -256,7 +290,7 @@ export default function UserForm({
             <select
               id="mothertongue"
               name="mothertongue"
-              value={formData.mothertongue}
+              value={formData?.mothertongue}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-md"
             >
@@ -301,7 +335,7 @@ export default function UserForm({
             </label>
             <select
               name="universityusers.sponsorshiptype"
-              value={formData.universityusers?.sponsorshiptype}
+              value={formData?.universityusers?.sponsorshiptype}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-md"
             >
@@ -360,6 +394,18 @@ export default function UserForm({
               Cafeteria Access
             </label>
           </div>
+          <div className="flex items-center pt-6">
+            <input
+              type="checkbox"
+              name="universityusers.holidayincampus"
+              checked={formData?.universityusers?.holidayincampus}
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+            />
+            <label className="ml-2 text-sm text-gray-700">
+              Holiday in Campus
+            </label>
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6">
@@ -381,3 +427,6 @@ export default function UserForm({
     </div>
   );
 }
+
+const UserFormMemo = memo(UserForm);
+export default UserFormMemo;

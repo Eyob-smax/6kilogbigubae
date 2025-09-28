@@ -27,7 +27,22 @@ type TFetchResponse = {
   success: boolean;
 };
 
-// Thunks using centralized `api.ts`
+type TUpdateResponse = {
+  success: boolean;
+  updatedUser: User;
+  message: string;
+};
+
+// ✅ Centralized success alert
+const showSuccessAlert = (message: string) =>
+  Swal.fire({
+    icon: "success",
+    title: "Operation Successful",
+    text: message,
+    timer: 300,
+  });
+
+// ✅ Thunks
 
 export const fetchUsers = createAsyncThunk<
   TFetchResponse,
@@ -46,7 +61,7 @@ export const addUser = createAsyncThunk<User, User, { rejectValue: string }>(
   async (userData, { rejectWithValue }) => {
     try {
       const res = await postRequest<{ user: User }, User>("/user", userData);
-      return res?.user as User;
+      return res.user;
     } catch (err) {
       return rejectWithValue(extractError(err));
     }
@@ -59,15 +74,14 @@ export const updateUser = createAsyncThunk<
   { rejectValue: string }
 >("user/updateUser", async ({ id, userData }, { rejectWithValue }) => {
   try {
-    const res = await putRequest<
-      { success: boolean; updatedUser: User; message: string },
-      Partial<User>
-    >(`/user/${id}`, userData);
-    if (res?.success && res.updatedUser) {
-      return res?.updatedUser;
-    } else {
-      return rejectWithValue(res.message || "Update failed");
+    const res = await putRequest<TUpdateResponse, Partial<User>>(
+      `/user/${id}`,
+      userData
+    );
+    if (res.success && res.updatedUser) {
+      return res.updatedUser;
     }
+    return rejectWithValue(res.message || "Update failed");
   } catch (err) {
     return rejectWithValue(extractError(err));
   }
@@ -86,18 +100,19 @@ export const deleteUser = createAsyncThunk<
   }
 });
 
-export const deleteAllUsers = createAsyncThunk(
-  "user/deleteAll",
-  async (_, { rejectWithValue }) => {
-    try {
-      return await deleteRequest("/user");
-    } catch (err) {
-      return rejectWithValue(extractError(err));
-    }
+export const deleteAllUsers = createAsyncThunk<
+  void,
+  void,
+  { rejectValue: string }
+>("user/deleteAll", async (_, { rejectWithValue }) => {
+  try {
+    await deleteRequest("/user");
+  } catch (err) {
+    return rejectWithValue(extractError(err));
   }
-);
+});
 
-//  Slice
+// ✅ Slice
 
 const userSlice = createSlice({
   name: "user",
@@ -108,8 +123,8 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // Fetch Users
     builder
-      // Fetch Users
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -124,50 +139,44 @@ const userSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch users";
-      })
+      });
 
-      // Add User
+    // Add User
+    builder
       .addCase(addUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(addUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
-        state.users.push(action.payload);
-        Swal.fire({
-          icon: "success",
-          title: "Operation Successful",
-          text: "User added successfully ",
-        });
+        state.users = [...state.users, action.payload];
+        showSuccessAlert("User added successfully");
       })
       .addCase(addUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as string) || "Failed to add user";
-      })
+        state.error = action.payload || "Failed to add user";
+      });
+
+    // Update User
+    builder
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
-        const index = state.users.findIndex(
-          (user) => user?.studentid === action.payload?.studentid
+        state.users = state.users.map((user) =>
+          user.studentid === action.payload.studentid ? action.payload : user
         );
-        if (index !== -1) {
-          state.users[index] = action.payload;
-          Swal.fire({
-            icon: "success",
-            title: "Operation Successful",
-            text: "User updated successfully ",
-          });
-        }
+        showSuccessAlert("User updated successfully");
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to update user";
-      })
+      });
 
-      // Delete User
+    // Delete User
+    builder
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -175,26 +184,28 @@ const userSlice = createSlice({
       .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
         state.loading = false;
         state.users = state.users.filter(
-          (user) => user?.studentid !== action.payload
+          (user) => user.studentid !== action.payload
         );
-        Swal.fire({
-          icon: "success",
-          title: "Operation Successful",
-          text: "User deleted successfully ",
-        });
+        showSuccessAlert("User deleted successfully");
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to delete user";
-      })
+      });
+
+    // Delete All
+    builder
       .addCase(deleteAllUsers.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteAllUsers.fulfilled, (state) => {
+        state.loading = false;
         state.users = [];
+        showSuccessAlert("All users deleted successfully");
       })
-      .addCase(deleteAllUsers.rejected, (state, { payload }) => {
-        state.error = payload as string | null;
+      .addCase(deleteAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to delete all users";
       });
   },
 });
