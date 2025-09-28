@@ -21,7 +21,7 @@ export interface IResponseObject {
 export const api = axios.create({
   baseURL: "https://gbi-backend-h76f.vercel.app/api",
   withCredentials: true,
-  timeout: 10000,
+  timeout: 20000,
   headers: {
     "Content-Type": "application/json",
   },
