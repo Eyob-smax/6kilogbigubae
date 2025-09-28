@@ -114,7 +114,7 @@ const Contact = () => {
               <User size={20} className="text-gold" />
               {t("contact.admin")}
             </h3>
-            <p className="text-gray-700">{t("contact.admin_contact")}</p>
+            <p className="text-gray-700">+251 951 21 911</p>
           </div>
 
           <div>
