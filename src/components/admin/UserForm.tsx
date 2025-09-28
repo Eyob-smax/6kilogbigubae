@@ -52,24 +52,24 @@ const role_type = [
 ];
 
 const participation_enum: [string, string][] = [
-  ["Gbi_Gubaye_Secretariat", "የግቢ ጉባኤው ጽ/ቤት"], // 2
-  ["Audit_and_Inspection_Section", "ኦዲትና ኢንስፔክሽን ክፍል"], // 1
-  ["Education_and_Apostolic_Service_Section", "ትምህርትና ሐዋርያው አገልግሎት ክፍል"], // 3
-  ["Accounting_and_Assets_Section", "የሒሳብና ንብረት ክፍል"], // 4
-  ["Development_and_Income_Collection_Section", "ልማትና ገቢ አሰባሰብ ክፍል"], // 5
-  ["Languages_and_Special_Interests_Section", "ቋንቋዎችና ልዩ ፍላጎት ክፍል"], // 6
-  ["Hymns_and_Arts_Section", "መዝሙርና ስነ ጥበባት ክፍል"], // 7
+  ["Gbi_Gubaye_Secretariat", "የግቢ ጉባኤው ጽ/ቤት"],
+  ["Audit_and_Inspection_Section", "ኦዲትና ኢንስፔክሽን ክፍል"],
+  ["Education_and_Apostolic_Service_Section", "ትምህርትና ሐዋርያው አገልግሎት ክፍል"],
+  ["Accounting_and_Assets_Section", "የሒሳብና ንብረት ክፍል"],
+  ["Development_and_Income_Collection_Section", "ልማትና ገቢ አሰባሰብ ክፍል"],
+  ["Languages_and_Special_Interests_Section", "ቋንቋዎችና ልዩ ፍላጎት ክፍል"],
+  ["Hymns_and_Arts_Section", "መዝሙርና ስነ ጥበባት ክፍል"],
   [
     "Planning_Monitoring_Reports_and_Information_Management_Section",
     "ዕቅድ ክትትል ሪፓርትና መረጃ ማደራጃ ክፍል",
-  ], // 8
-  ["Professional_and_Community_Development_Section", "የሞያና በጎ አድራጎት ክፍል"], // 9
-  ["Batch_and_Programs_Coordination_Section", "የባችና መርሀግራት ማስተባበሪያ ክፍል"], // 10
+  ],
+  ["Professional_and_Community_Development_Section", "የሞያና በጎ አድራጎት ክፍል"],
+  ["Batch_and_Programs_Coordination_Section", "የባችና መርሀግራት ማስተባበሪያ ክፍል"],
   [
     "Member_Care_Advice_and_Capacity_Building_Section",
     "የአባላት እንክብካቤ ምክክርና አቅም ማጎልበቻ ክፍል",
-  ], // 11
-  ["None", "ምንም አይደለም"], // None
+  ],
+  ["None", "ምንም አይደለም"],
 ];
 
 const universityusers_enum = [
