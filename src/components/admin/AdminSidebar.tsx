@@ -111,7 +111,6 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
   );
 };
 
-// Memoized SidebarContent to prevent unnecessary re-renders
 const SidebarContent = memo(
   ({
     locationPath,
