@@ -112,8 +112,6 @@ export const deleteAllUsers = createAsyncThunk<
   }
 });
 
-// ✅ Slice
-
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -123,7 +121,6 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Fetch Users
     builder
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
@@ -141,7 +138,6 @@ const userSlice = createSlice({
         state.error = action.payload || "Failed to fetch users";
       });
 
-    // Add User
     builder
       .addCase(addUser.pending, (state) => {
         state.loading = true;
@@ -157,7 +153,6 @@ const userSlice = createSlice({
         state.error = action.payload || "Failed to add user";
       });
 
-    // Update User
     builder
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
@@ -175,7 +170,6 @@ const userSlice = createSlice({
         state.error = action.payload || "Failed to update user";
       });
 
-    // Delete User
     builder
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;
@@ -193,7 +187,6 @@ const userSlice = createSlice({
         state.error = action.payload || "Failed to delete user";
       });
 
-    // Delete All
     builder
       .addCase(deleteAllUsers.pending, (state) => {
         state.loading = true;

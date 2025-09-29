@@ -11,19 +11,19 @@ interface UserFormProps {
 }
 
 const defaultUser: User = {
-  studentid: "",
+  studentid: "UGR-",
   firstname: "",
   middlename: "",
   lastname: "",
   gender: "Male",
   baptismalname: "",
-  phone: "",
+  phone: "+251",
   birthdate: new Date(),
   useremail: "",
-  telegram_username: "",
+  telegram_username: "@",
   nationality: "Ethiopian",
   region: "Addis_Ababa",
-  mothertongue: "Not_Specified",
+  mothertongue: "Amharic",
   zonename: "",
   isphysicallydisabled: "None",
   universityusers: {
@@ -31,13 +31,14 @@ const defaultUser: User = {
     sponsorshiptype: "Government",
     participation: "None",
     batch: 2016,
-    confessionfather: "",
+    confessionfather: "Aba",
     advisors: "Yes",
     role: "Member",
     mealcard: "",
     cafeteriaaccess: true,
     holidayincampus: false,
-    coursetaken: true,
+    tookcourse: true,
+    ispriestordeacon: false,
   },
 };
 
@@ -74,10 +75,16 @@ const participation_enum: [string, string][] = [
 ];
 
 const universityusers_enum = [
-  ["departmentname", "Department", "text", "required", "Computer Science"],
+  ["departmentname", "Department", "text", "required", "Information System"],
   ["batch", "Batch", "number", "required", "2016"],
-  ["mealcard", "Meal Card", "text", "none", "8307"],
-  ["confessionfather", "Confession father", "text", "none", "Abba Tesfaye"],
+  ["mealcard", "Meal Card", "text", "optional", "8307"],
+  [
+    "confessionfather",
+    "Conf. father(optional)",
+    "text",
+    "optional",
+    "Abba Tesfaye",
+  ],
 ];
 
 const region_enum = [
@@ -100,8 +107,14 @@ const user_enum = [
   ["studentid", "Student ID", "text", "required", "UGR-****-** USE(-)"],
   ["firstname", "First Name", "text", "required", "Berhanu"],
   ["lastname", "Father's Name", "text", "required", "Tesfaye"],
-  ["middlename", "GrandFather's Name", "text", "none", "Amanuel"],
-  ["baptismalname", "Baptismal Name", "text", "none", "Welde Amanuel"],
+  ["middlename", "GrandFather's Name", "text", "optional", "Amanuel"],
+  [
+    "baptismalname",
+    "Baptismal Name(optional)",
+    "text",
+    "optional",
+    "Welde Amanuel",
+  ],
   ["phone", "Phone", "tel", "required", "+2519********"],
   [
     "birthdate",
@@ -110,10 +123,10 @@ const user_enum = [
     "required",
     new Date().toISOString().split("T")[0],
   ],
-  ["telegram_username", "Telegram Username", "text", "none", "@berhanu123"],
-  ["useremail", "Email", "email", "none", "someone@gmail.com"],
-  ["zonename", "Zone Name", "text", "optional"],
-  ["nationality", "Nationality", "text", "none", "Ethiopian"],
+  ["telegram_username", "Telegram Username", "text", "optional", "@berhanu123"],
+  ["useremail", "Email", "email", "optional", "someone@gmail.com"],
+  ["zonename", "Zone(optional)", "text", "optional", "Gedeo"],
+  ["nationality", "Nationality", "text", "required", "Ethiopian"],
 ];
 
 const mother_tongue_enum = [
@@ -186,28 +199,35 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
         className="space-y-6 overflow-y-auto max-h-[80vh]"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {user_enum.map(([key, label, inputType, required, placeholder]) => (
-            <div key={key as string}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {label as string}
-              </label>
-              <input
-                type={inputType as string}
-                placeholder={required ? (placeholder as string) : ""}
-                name={key as keyof User}
-                required={required ? true : false}
-                value={
-                  key === "birthdate"
-                    ? new Date(formData[key as keyof User] as Date)
-                        .toISOString()
-                        .split("T")[0]
-                    : (formData[key as keyof User] as string | number) ?? ""
-                }
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md"
-              />
-            </div>
-          ))}
+          {user_enum.map(
+            ([key, label, inputType, required, placeholder, defaultValue]) => (
+              <div key={key as string}>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1">
+                  {label as string}
+                </label>
+                <input
+                  type={inputType as string}
+                  placeholder={required ? (placeholder as string) : ""}
+                  name={key as keyof User}
+                  defaultValue={
+                    defaultValue !== "none"
+                      ? (defaultValue as string)
+                      : undefined
+                  }
+                  required={required === "required" ? true : false}
+                  value={
+                    key === "birthdate"
+                      ? new Date(formData[key as keyof User] as Date)
+                          .toISOString()
+                          .split("T")[0]
+                      : (formData[key as keyof User] as string | number) ?? ""
+                  }
+                  onChange={handleChange}
+                  className="w-full text-sm px-3 py-2 border rounded-md"
+                />
+              </div>
+            )
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -398,16 +418,6 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
           <div className="flex items-center pt-6">
             <input
               type="checkbox"
-              name="universityusers.coursetaken"
-              checked={formData?.universityusers?.coursetaken}
-              onChange={handleChange}
-              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-            />
-            <label className="ml-2 text-sm text-gray-700">Course Taken</label>
-          </div>
-          <div className="flex items-center pt-6">
-            <input
-              type="checkbox"
               name="universityusers.holidayincampus"
               checked={formData?.universityusers?.holidayincampus}
               onChange={handleChange}
@@ -416,6 +426,26 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
             <label className="ml-2 text-sm text-gray-700">
               Holiday in Campus
             </label>
+          </div>
+          <div className="flex items-center pt-6">
+            <input
+              type="checkbox"
+              name="universityusers.tookcourse"
+              checked={formData?.universityusers?.tookcourse}
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+            />
+            <label className="ml-2 text-sm text-gray-700">took course?</label>
+          </div>
+          <div className="flex items-center pt-6">
+            <input
+              type="checkbox"
+              name="universityusers.ispriestordeacon"
+              checked={formData?.universityusers?.ispriestordeacon}
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+            />
+            <label className="ml-2 text-sm text-gray-700">ክህነት አለዎት?</label>
           </div>
         </div>
 

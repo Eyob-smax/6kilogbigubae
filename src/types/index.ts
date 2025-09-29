@@ -86,7 +86,8 @@ export interface UniversityUser {
   mealcard?: string;
   cafeteriaaccess: boolean;
   holidayincampus: boolean;
-  coursetaken: boolean;
+  tookcourse: boolean;
+  ispriestordeacon: boolean;
 }
 
 export interface Admin {

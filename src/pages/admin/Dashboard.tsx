@@ -29,8 +29,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+    if (!users.length || !users[0].studentid) dispatch(fetchUsers());
+  }, [dispatch, users.length, users]);
 
   const totalUsers = users?.length;
 

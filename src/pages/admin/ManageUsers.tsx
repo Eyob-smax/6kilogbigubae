@@ -79,8 +79,8 @@ const ManageUsers = () => {
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+    if (!users.length || !users[0].studentid) dispatch(fetchUsers());
+  }, [dispatch, users.length, users]);
 
   useEffect(() => {
     if (error) {

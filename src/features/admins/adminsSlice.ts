@@ -25,9 +25,6 @@ interface AsyncThunkConfig {
   rejectValue: string;
 }
 
-// ----------------------
-// 🔔 Helpers for alerts
-// ----------------------
 const showSuccess = (msg: string) =>
   Swal.fire({
     icon: "success",
@@ -42,9 +39,6 @@ const showError = (msg: string) =>
     text: msg,
   });
 
-// ----------------------
-// Thunks
-// ----------------------
 export const fetchAdmins = createAsyncThunk<Admin[], void, AsyncThunkConfig>(
   "admin/fetchAdmins",
   async (_, { rejectWithValue }) => {
@@ -128,16 +122,12 @@ export const deleteAdmin = createAsyncThunk<string, string, AsyncThunkConfig>(
   }
 );
 
-// ----------------------
-// Slice
-// ----------------------
 const adminSlice = createSlice({
   name: "admin",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch Admins
       .addCase(fetchAdmins.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -157,7 +147,6 @@ const adminSlice = createSlice({
         state.error = action.payload || "Failed to fetch admins";
       })
 
-      // Add Admin
       .addCase(addAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -170,7 +159,6 @@ const adminSlice = createSlice({
         state.error = action.payload || "Failed to add admin";
       })
 
-      // Update Admin
       .addCase(updateAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -189,7 +177,6 @@ const adminSlice = createSlice({
         state.error = action.payload || "Failed to update admin";
       })
 
-      // Delete Admin
       .addCase(deleteAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;

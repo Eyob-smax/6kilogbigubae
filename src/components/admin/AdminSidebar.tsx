@@ -19,15 +19,14 @@ import Swal from "sweetalert2";
 
 type AdminSidebarProps = {
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  closeSidebar: () => void;
 };
 
-const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
+const AdminSidebar = ({ isOpen, closeSidebar }: AdminSidebarProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Memoized logout handler
   const handleLogout = useCallback(async () => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
@@ -45,7 +44,6 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
 
   const { currentUserData } = useSelector((state: RootState) => state.auth);
 
-  // Memoized nav links to prevent unnecessary recalculation
   const navLinks = useMemo(() => {
     const links = [
       {
@@ -78,6 +76,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
 
   return (
     <>
+      {/* Mobile Sidebar */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -91,20 +90,20 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
               locationPath={location.pathname}
               navLinks={navLinks}
               handleLogout={handleLogout}
-              setIsOpen={setIsOpen}
-              isOpen={isOpen}
+              closeSidebar={closeSidebar}
+              isMobile
             />
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Desktop Sidebar */}
       <div className="hidden md:flex md:flex-col md:w-64 md:h-screen md:bg-liturgical-blue md:text-white md:shadow-xl">
         <SidebarContent
           locationPath={location.pathname}
           navLinks={navLinks}
           handleLogout={handleLogout}
-          setIsOpen={() => {}}
-          isOpen={isOpen}
+          closeSidebar={closeSidebar}
         />
       </div>
     </>
@@ -116,20 +115,20 @@ const SidebarContent = memo(
     locationPath,
     navLinks,
     handleLogout,
-    setIsOpen,
-    isOpen,
+    closeSidebar,
+    isMobile = false,
   }: {
     locationPath: string;
     navLinks: { to: string; icon: JSX.Element; label: string }[];
     handleLogout: () => void;
-    setIsOpen: (isOpen: boolean) => void;
-    isOpen?: boolean;
+    closeSidebar: () => void;
+    isMobile?: boolean;
   }) => {
     return (
       <>
         <div
           className={`${
-            isOpen ? "pt-20" : "pt-6"
+            isMobile ? "pt-20" : "pt-6"
           } flex items-center justify-between px-4 py-6`}
         >
           <img
@@ -140,7 +139,7 @@ const SidebarContent = memo(
           <Link
             to="/"
             className="ml-3 text-lg font-bold text-white hover:text-gold transition-colors"
-            onClick={() => setIsOpen(false)}
+            onClick={closeSidebar}
           >
             <LucideHome size={24} className="inline-block mr-2" />
           </Link>
@@ -157,7 +156,8 @@ const SidebarContent = memo(
               >
                 <NavLink
                   to={to}
-                  onClick={() => setIsOpen(false)}
+                  end={true}
+                  onClick={closeSidebar}
                   className={({ isActive }) =>
                     `flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                       isActive ? "bg-white/10 text-gold" : "hover:bg-white/5"
