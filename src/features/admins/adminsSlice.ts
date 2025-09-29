@@ -39,6 +39,7 @@ const showError = (msg: string) =>
     text: msg,
   });
 
+// ✅ Fetch Admins
 export const fetchAdmins = createAsyncThunk<Admin[], void, AsyncThunkConfig>(
   "admin/fetchAdmins",
   async (_, { rejectWithValue }) => {
@@ -59,6 +60,7 @@ export const fetchAdmins = createAsyncThunk<Admin[], void, AsyncThunkConfig>(
   }
 );
 
+// ✅ Add Admin
 export const addAdmin = createAsyncThunk<
   void,
   Partial<Admin>,
@@ -72,7 +74,7 @@ export const addAdmin = createAsyncThunk<
 
     if (res.success) {
       await showSuccess("Admin added successfully");
-      dispatch(fetchAdmins());
+      await dispatch(fetchAdmins());
       return;
     }
     return rejectWithValue(res.message || "Failed to add admin");
@@ -82,8 +84,9 @@ export const addAdmin = createAsyncThunk<
   }
 });
 
+// ✅ Update Admin
 export const updateAdmin = createAsyncThunk<
-  Admin,
+  void,
   { id: string; adminData: Partial<Admin> },
   AsyncThunkConfig
 >(
@@ -91,14 +94,14 @@ export const updateAdmin = createAsyncThunk<
   async ({ id, adminData }, { rejectWithValue, dispatch }) => {
     try {
       const res = await putRequest<
-        { success: boolean; message?: string; updatedAdmin?: Admin },
+        { success: boolean; message?: string },
         Partial<Admin>
       >(`/admin/${id}`, adminData);
 
-      if (res.success && res.updatedAdmin) {
+      if (res.success) {
         await showSuccess("Admin updated successfully");
-        dispatch(fetchAdmins());
-        return res.updatedAdmin;
+        await dispatch(fetchAdmins());
+        return;
       }
       return rejectWithValue(res.message || "Can't edit admin");
     } catch (err) {
@@ -108,13 +111,21 @@ export const updateAdmin = createAsyncThunk<
   }
 );
 
-export const deleteAdmin = createAsyncThunk<string, string, AsyncThunkConfig>(
+// ✅ Delete Admin
+export const deleteAdmin = createAsyncThunk<void, string, AsyncThunkConfig>(
   "admin/deleteAdmin",
-  async (id, { rejectWithValue }) => {
+  async (id, { rejectWithValue, dispatch }) => {
     try {
-      await deleteRequest(`/admin/${id}`);
-      await showSuccess("Admin deleted successfully");
-      return id;
+      const res = await deleteRequest<{ success: boolean; message?: string }>(
+        `/admin/${id}`
+      );
+
+      if (res.success) {
+        await showSuccess("Admin deleted successfully");
+        await dispatch(fetchAdmins());
+        return;
+      }
+      return rejectWithValue(res.message || "Failed to delete admin");
     } catch (err) {
       await showError("Failed to delete admin");
       return rejectWithValue(extractError(err));
@@ -128,6 +139,7 @@ const adminSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // FETCH
       .addCase(fetchAdmins.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -138,7 +150,7 @@ const adminSlice = createSlice({
           state.loading = false;
           state.admins = action.payload.map((admin) => ({
             ...admin,
-            adminpassword: "", // 🚨 avoid leaking password
+            adminpassword: "", // prevent leaking password
           }));
         }
       )
@@ -159,37 +171,27 @@ const adminSlice = createSlice({
         state.error = action.payload || "Failed to add admin";
       })
 
+      // UPDATE
       .addCase(updateAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateAdmin.fulfilled, (state, action: PayloadAction<Admin>) => {
+      .addCase(updateAdmin.fulfilled, (state) => {
         state.loading = false;
-        const index = state.admins.findIndex(
-          (admin) => admin.studentid === action.payload.studentid
-        );
-        if (index !== -1) {
-          state.admins[index] = action.payload;
-        }
       })
       .addCase(updateAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to update admin";
       })
 
+      // DELETE
       .addCase(deleteAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        deleteAdmin.fulfilled,
-        (state, action: PayloadAction<string>) => {
-          state.loading = false;
-          state.admins = state.admins.filter(
-            (admin) => admin.studentid !== action.payload
-          );
-        }
-      )
+      .addCase(deleteAdmin.fulfilled, (state) => {
+        state.loading = false;
+      })
       .addCase(deleteAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to delete admin";

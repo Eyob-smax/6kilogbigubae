@@ -18,11 +18,9 @@ import {
   deleteAdmin,
 } from "../../features/admins/adminsSlice";
 import type { AppDispatch, RootState } from "../../app/store";
-import { useTranslation } from "react-i18next";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 
 const ManageAdmins: React.FC = React.memo(() => {
-  const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
 
   const { admins = [], loading } = useSelector(
@@ -96,15 +94,13 @@ const ManageAdmins: React.FC = React.memo(() => {
   return (
     <div className="p-4 w-full mx-auto">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold">
-          {t("admin.dashboard.admins")}
-        </h2>
+        <h2 className="text-xl sm:text-2xl font-bold">Manage Admins</h2>
         <button
           onClick={openAddModal}
           className="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto"
         >
           <Plus size={18} className="mr-2" />
-          {t("admin.users.add")}
+          Add Admin
         </button>
       </div>
 
@@ -115,7 +111,7 @@ const ManageAdmins: React.FC = React.memo(() => {
         <input
           type="text"
           className="w-full pl-10 pr-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base"
-          placeholder={t("admin.users.search")}
+          placeholder="Search Admins"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -165,7 +161,12 @@ const ManageAdmins: React.FC = React.memo(() => {
                             className="text-red-500 mr-1"
                           />
                           <span className="text-sm font-medium">
-                            Super Admin
+                            Super Admin{" "}
+                            {admins.find(
+                              (a) => a.adminusername === admin.adminusername
+                            )
+                              ? "(You)"
+                              : ""}
                           </span>
                         </>
                       ) : (
@@ -188,17 +189,13 @@ const ManageAdmins: React.FC = React.memo(() => {
                       <button
                         onClick={() => openDeleteModal(admin)}
                         className={`${
-                          admin.adminusername?.toLowerCase() === "admin"
+                          admin.isSuperAdmin
                             ? "text-red-300 cursor-not-allowed"
                             : "text-red-600 hover:text-red-900"
                         }`}
-                        disabled={
-                          admin.adminusername?.toLowerCase() === "admin"
-                        }
+                        disabled={admin.isSuperAdmin}
                         title={
-                          admin.adminusername?.toLowerCase() === "admin"
-                            ? "Cannot delete main admin"
-                            : ""
+                          admin.isSuperAdmin ? "Cannot delete main admin" : ""
                         }
                       >
                         <Trash2 size={18} />
@@ -213,7 +210,7 @@ const ManageAdmins: React.FC = React.memo(() => {
                   colSpan={4}
                   className="px-3 sm:px-6 py-4 text-center text-gray-500"
                 >
-                  {t("admin.users.no_users")}
+                  No admins found.
                 </td>
               </tr>
             )}
@@ -227,10 +224,10 @@ const ManageAdmins: React.FC = React.memo(() => {
             {modalMode === "delete" ? (
               <>
                 <h3 className="text-lg sm:text-xl font-semibold mb-4">
-                  {t("forms.confirm")}
+                  Confirm
                 </h3>
                 <p className="mb-6">
-                  {t("forms.delete_confirm")}{" "}
+                  You are about to delete{" "}
                   <strong>{selectedAdmin?.adminusername}</strong>?
                 </p>
                 <div className="flex flex-col sm:flex-row justify-end gap-3">
@@ -238,13 +235,13 @@ const ManageAdmins: React.FC = React.memo(() => {
                     onClick={closeModal}
                     className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 w-full sm:w-auto"
                   >
-                    {t("forms.no")}
+                    No
                   </button>
                   <button
                     onClick={handleDeleteAdmin}
                     className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 w-full sm:w-auto"
                   >
-                    {t("forms.yes")}
+                    Yes
                   </button>
                 </div>
               </>
