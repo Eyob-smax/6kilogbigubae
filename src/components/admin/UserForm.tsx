@@ -196,7 +196,7 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 overflow-y-auto max-h-[80vh]"
+        className="space-y-6 overflow-y-auto max-h-[70vh]"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {user_enum.map(

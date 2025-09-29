@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Search,
   Plus,
-  // Edit,
+  Edit,
   Trash2,
   X,
   Shield,
@@ -53,11 +53,11 @@ const ManageAdmins: React.FC = React.memo(() => {
     setIsModalOpen(true);
   }, []);
 
-  // const openEditModal = useCallback((admin: Admin) => {
-  //   setSelectedAdmin(admin);
-  //   setModalMode("edit");
-  //   setIsModalOpen(true);
-  // }, []);
+  const openEditModal = useCallback((admin: Admin) => {
+    setSelectedAdmin(admin);
+    setModalMode("edit");
+    setIsModalOpen(true);
+  }, []);
 
   const openDeleteModal = useCallback((admin: Admin) => {
     setSelectedAdmin(admin);
@@ -75,6 +75,9 @@ const ManageAdmins: React.FC = React.memo(() => {
       if (modalMode === "add") {
         dispatch(addAdmin(adminData));
       } else if (modalMode === "edit" && selectedAdmin?.studentid) {
+        if (adminData.adminpassword === "") {
+          adminData.adminpassword = "previous one";
+        }
         dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData }));
       }
       closeModal();
@@ -179,13 +182,13 @@ const ManageAdmins: React.FC = React.memo(() => {
                   </td>
                   <td className="px-3 sm:px-6 py-4">
                     <div className="flex space-x-2">
-                      {/* <button
+                      <button
                         onClick={() => openEditModal(admin)}
                         className="text-indigo-600 hover:text-indigo-900"
                         aria-label="Edit admin"
                       >
                         <Edit size={18} />
-                      </button> */}
+                      </button>
                       <button
                         onClick={() => openDeleteModal(admin)}
                         className={`${
