@@ -77,7 +77,7 @@ const participation_enum: [string, string][] = [
 const universityusers_enum = [
   ["departmentname", "Department", "text", "required", "Information System"],
   ["batch", "Batch", "number", "required", "2016"],
-  ["mealcard", "Meal Card", "text", "optional", "8307"],
+  ["mealcard", "Meal Card(optional)", "text", "optional", "8307"],
   [
     "confessionfather",
     "Conf. father(optional)",
@@ -101,6 +101,7 @@ const region_enum = [
   ["Central_Ethiopia_Region", "Central Ethiopia Region"],
   ["South_Ethiopia_Region", "South Ethiopia Region"],
   ["Harari", "Harari"],
+  ["Not_Specified", "Not Specified"],
 ];
 
 const user_enum = [
@@ -265,7 +266,7 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Advisor
+              has Advisor(family)?
             </label>
             <select
               name="universityusers.advisors"
