@@ -95,8 +95,7 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
             placeholder={
               mode === "add"
                 ? t("forms.admin.passwordPlaceholder")
-                : t("forms.admin.updatePasswordPlaceholder") ||
-                  "Update password if needed or leave blank"
+                : "Update password if needed or leave blank"
             }
           />
         </div>
