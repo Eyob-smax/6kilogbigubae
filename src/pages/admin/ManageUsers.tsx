@@ -105,6 +105,9 @@ const ManageUsers = () => {
         user.universityusers?.batch,
         user.region,
         user.phone,
+        user.useremail,
+        user.telegram_username,
+        user.gender,
       ]
         .join(" ")
         .toLowerCase()

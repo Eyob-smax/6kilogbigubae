@@ -133,7 +133,7 @@ const user_enum = [
 const mother_tongue_enum = [
   ["Amharic", "Amharic"],
   ["Oromifa", "Oromifa"],
-  ["Tigregna", "Tigregna"],
+  ["Tigrigna", "Tigregna"],
   ["English", "English"],
   ["Not_Specified", "Not Specified"],
   ["Other", "Other"],
