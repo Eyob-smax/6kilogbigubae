@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 import {
   PieChart,
   Pie,
@@ -10,39 +10,37 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  ResponsiveContainer
-} from 'recharts';
+  ResponsiveContainer,
+} from "recharts";
 
-import { Users, UserCheck, Layers } from 'lucide-react';
+import { Users, UserCheck, Layers } from "lucide-react";
 
-const COLORS = ['#1A237E', '#5C6BC0', '#9FA8DA', '#C5CAE9'];
+const COLORS = ["#1A237E", "#5C6BC0", "#9FA8DA", "#C5CAE9"];
 
 const Analytics = ({ participationData = [], groupDistributionData = [] }) => {
   const { t } = useTranslation();
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">
-        {t('admin.analytics.title')}
-      </h2>
+      <h2 className="text-2xl font-bold mb-6">{t("admin.analytics.title")}</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {[
           {
             icon: <Users size={24} />,
-            color: 'liturgical-blue',
-            label: t('admin.analytics.total')
+            color: "liturgical-blue",
+            label: t("admin.analytics.total"),
           },
           {
             icon: <UserCheck size={24} />,
-            color: 'green-500',
-            label: t('admin.analytics.active')
+            color: "green-500",
+            label: t("admin.analytics.active"),
           },
           {
             icon: <Layers size={24} />,
-            color: 'gold',
-            label: t('admin.analytics.distribution')
-          }
+            color: "gold",
+            label: t("admin.analytics.distribution"),
+          },
         ].map(({ icon, color, label }, index) => (
           <motion.div
             key={index}
@@ -72,7 +70,7 @@ const Analytics = ({ participationData = [], groupDistributionData = [] }) => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h3 className="text-lg font-semibold mb-4">
-              {t('admin.analytics.participation')}
+              {t("admin.analytics.participation")}
             </h3>
 
             <div className="h-80">
@@ -90,7 +88,7 @@ const Analytics = ({ participationData = [], groupDistributionData = [] }) => {
                       `${name}: ${(percent * 100).toFixed(0)}%`
                     }
                   >
-                    {participationData.map((entry, index) => (
+                    {participationData.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
@@ -113,7 +111,7 @@ const Analytics = ({ participationData = [], groupDistributionData = [] }) => {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <h3 className="text-lg font-semibold mb-4">
-              {t('admin.analytics.distribution')}
+              {t("admin.analytics.distribution")}
             </h3>
 
             <div className="h-80">

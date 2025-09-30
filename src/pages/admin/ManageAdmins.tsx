@@ -22,6 +22,7 @@ import LoadingScreen from "../../components/ui/LoadingScreen";
 
 const ManageAdmins: React.FC = React.memo(() => {
   const dispatch = useDispatch<AppDispatch>();
+  const isFirstPageLoad = React.useRef(true);
 
   const { admins = [], loading } = useSelector(
     (state: RootState) => state.admin
@@ -33,6 +34,10 @@ const ManageAdmins: React.FC = React.memo(() => {
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
 
   useEffect(() => {
+    if (isFirstPageLoad.current) {
+      isFirstPageLoad.current = false;
+      dispatch(fetchAdmins());
+    }
     if (!admins) dispatch(fetchAdmins());
   }, [dispatch, admins]);
 
