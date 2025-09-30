@@ -33,8 +33,8 @@ const ManageAdmins: React.FC = React.memo(() => {
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
 
   useEffect(() => {
-    if (!admins.length || !admins[0].studentid) dispatch(fetchAdmins());
-  }, [dispatch, admins.length, admins]);
+    if (!admins) dispatch(fetchAdmins());
+  }, [dispatch, admins]);
 
   const filteredAdmins = useMemo(() => {
     const term = searchTerm.toLowerCase();
