@@ -26,6 +26,7 @@ const defaultUser: User = {
   mothertongue: "Amharic",
   zonename: "",
   isphysicallydisabled: "None",
+  clergicalstatus: "None",
   universityusers: {
     departmentname: "",
     sponsorshiptype: "Government",
@@ -38,7 +39,7 @@ const defaultUser: User = {
     cafeteriaaccess: true,
     holidayincampus: false,
     tookcourse: true,
-    ispriestordeacon: false,
+    activitylevel: "Active",
   },
 };
 
@@ -403,6 +404,37 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
               })}
             </select>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Activity Level
+            </label>
+            <select
+              name="universityusers.activitylevel"
+              value={formData?.universityusers?.activitylevel}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="Active">Active</option>
+              <option value="Very_Active">Very Active</option>
+              <option value="Less_Active">Less Active</option>
+              <option value="Not_Active">Not Active</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Clergy Status(if any)
+            </label>
+            <select
+              name="universityusers.clergicalstatus"
+              value={formData?.clergicalstatus}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+            >
+              <option value="None">Not Clergy</option>
+              <option value="Deacon">Deacon</option>
+              <option value="Priest">Priest</option>
+            </select>
+          </div>
 
           <div className="flex items-center pt-6">
             <input
@@ -437,16 +469,6 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
               className="h-4 w-4 text-blue-600 border-gray-300 rounded"
             />
             <label className="ml-2 text-sm text-gray-700">took course?</label>
-          </div>
-          <div className="flex items-center pt-6">
-            <input
-              type="checkbox"
-              name="universityusers.ispriestordeacon"
-              checked={formData?.universityusers?.ispriestordeacon}
-              onChange={handleChange}
-              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-            />
-            <label className="ml-2 text-sm text-gray-700">ክህነት አለዎት?</label>
           </div>
         </div>
 

@@ -71,6 +71,7 @@ export interface User {
   mothertongue: TMotherTongue;
   zonename: string;
   isphysicallydisabled: TImparment;
+  clergicalstatus?: "Deacon" | "Priest" | "None";
   universityusers?: UniversityUser;
 }
 
@@ -87,7 +88,7 @@ export interface UniversityUser {
   cafeteriaaccess: boolean;
   holidayincampus: boolean;
   tookcourse: boolean;
-  ispriestordeacon: boolean;
+  activitylevel: "Very_Active" | "Active" | "Less_Active" | "Not_Active";
 }
 
 export interface Admin {
