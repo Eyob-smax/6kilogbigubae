@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { fetchUsers } from "../../features/users/userSlice";
 
 const Dashboard = () => {
@@ -15,7 +15,7 @@ const Dashboard = () => {
     (state: RootState) => state.user
   );
   const dispatch = useDispatch<AppDispatch>();
-
+  const isFirstPageLoad = useRef(true);
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
@@ -29,6 +29,10 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    if (isFirstPageLoad.current) {
+      isFirstPageLoad.current = false;
+      dispatch(fetchUsers());
+    }
     if (!users) dispatch(fetchUsers());
   }, [dispatch, users]);
 
