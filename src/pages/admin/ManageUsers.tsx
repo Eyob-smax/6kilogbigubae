@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, Plus, Edit, Trash2, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -77,14 +77,10 @@ const ManageUsers = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
-  const isFirstPageLoad = useRef(true);
+
   useEffect(() => {
-    if (isFirstPageLoad.current) {
-      isFirstPageLoad.current = false;
-      dispatch(fetchUsers());
-    }
-    if (!users) dispatch(fetchUsers());
-  }, [dispatch, users]);
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   useEffect(() => {
     if (error) {
