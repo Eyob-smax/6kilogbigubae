@@ -127,7 +127,7 @@ const user_enum = [
   ],
   [
     "telegram_username",
-    "Telegram Username(optional)",
+    "Telegram(optional)",
     "text",
     "optional",
     "@berhanu123",
