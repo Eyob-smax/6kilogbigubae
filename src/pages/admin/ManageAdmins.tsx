@@ -19,6 +19,7 @@ import {
 } from "../../features/admins/adminsSlice";
 import type { AppDispatch, RootState } from "../../app/store";
 import LoadingScreen from "../../components/ui/LoadingScreen";
+let isFirstRender = true;
 
 const ManageAdmins: React.FC = React.memo(() => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,8 +34,12 @@ const ManageAdmins: React.FC = React.memo(() => {
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
 
   useEffect(() => {
-    dispatch(fetchAdmins());
-  }, [dispatch]);
+    if (isFirstRender) {
+      isFirstRender = false;
+      dispatch(fetchAdmins());
+      return;
+    }
+  }, [dispatch, admins]);
 
   const filteredAdmins = useMemo(() => {
     const term = searchTerm.toLowerCase();

@@ -15,7 +15,7 @@ import type { AppDispatch, RootState } from "../../app/store";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import Swal from "sweetalert2";
 import { memo } from "react";
-
+let isFirstRender = true;
 const UserRow = memo(
   ({
     user,
@@ -79,7 +79,11 @@ const ManageUsers = () => {
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    if (isFirstRender) {
+      isFirstRender = false;
+      dispatch(fetchUsers());
+      return;
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -108,6 +112,8 @@ const ManageUsers = () => {
         user.useremail,
         user.telegram_username,
         user.gender,
+        user.universityusers?.activitylevel,
+        user.clergicalstatus,
       ]
         .join(" ")
         .toLowerCase()
@@ -152,6 +158,12 @@ const ManageUsers = () => {
 
   return (
     <div className="p-4 w-full mx-auto">
+      {filteredUsers.length && (
+        <div className="mb-4 w-full ">
+          {filteredUsers.length}{" "}
+          <span className="text-liturgical-blue">users found</span>
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
           {t("admin.users.title")}

@@ -63,7 +63,9 @@ const Contact = () => {
                 i18n.language === "am" ? "amharic" : ""
               }`}
             >
-              {t("contact.location")}
+              {i18n.language === "am"
+                ? "አዲስ አበባ 6 ኪሎ | ቅዱስ ማርቆስ ቤተ-ክርስቲያን በስተጀርባ"
+                : "Addis Ababa 6 Kilo | St. Mark's Cathedral Behind"}
             </p>
           </div>
 
@@ -155,8 +157,8 @@ const Contact = () => {
             <Marker position={position}>
               <Popup>
                 {i18n.language === "am"
-                  ? "አዲስ አበባ ዩኒቨርሲቲ፣ ፮ኪሎ ግቢ፣ ሕንፃ 12"
-                  : "Addis Ababa University, 6 Kilo Campus, Building 12"}
+                  ? "አዲስ አበባ 6 ኪሎ | ቅዱስ ማርቆስ ቤተ-ክርስቲያን በስተጀርባ"
+                  : "Addis Ababa 6 Kilo | St. Mark's Cathedral Behind"}
               </Popup>
             </Marker>
           </MapContainer>

@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchUsers } from "../../features/users/userSlice";
 
+let isFirstRender = true;
+
 const Dashboard = () => {
   const { users, loading, error } = useSelector(
     (state: RootState) => state.user
@@ -29,10 +31,26 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+    if (isFirstRender) {
+      isFirstRender = false;
+      dispatch(fetchUsers());
+      return;
+    }
+  }, [dispatch, users]);
 
   const totalUsers = users?.length;
+
+  const activeUsers = users
+    ?.map((user): number => {
+      if (user.universityusers?.activitylevel === "Active") return 0.75;
+      if (user.universityusers?.activitylevel === "Very_Active") return 1;
+      if (user.universityusers?.activitylevel === "Less_Active") return 0.5;
+      return 0;
+    })
+    .reduce((a, b) => a + b, 0);
+  const participationRate = totalUsers
+    ? ((activeUsers / totalUsers) * 100).toFixed(2)
+    : "0.00";
 
   if (loading) return <LoadingScreen />;
 
@@ -84,15 +102,31 @@ const Dashboard = () => {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-gray-500 font-medium">Active Users</p>
-              <h3 className="text-3xl font-bold mt-1">{}</h3>
+              <h3 className="text-3xl font-bold mt-1">
+                {users.filter(
+                  (u) =>
+                    u.universityusers?.activitylevel === "Active" ||
+                    u.universityusers?.activitylevel === "Very_Active"
+                ).length || 0}
+              </h3>
             </div>
             <div className="bg-gold/10 p-3 rounded-full text-gold">
               <UserCog size={24} />
             </div>
           </div>
           <div className="mt-4 text-sm text-gray-600">
-            {totalUsers > 0 ? `${Math.round(totalUsers * 100)}%` : "0%"} of
-            total users
+            {(
+              (users.filter(
+                (u) =>
+                  u.universityusers?.activitylevel === "Active" ||
+                  u.universityusers?.activitylevel === "Very_Active"
+              ).length /
+                totalUsers) *
+              100
+            )
+              .toFixed(2)
+              .toString() + "%"}{" "}
+            of total users
           </div>
         </motion.div>
 
@@ -106,9 +140,7 @@ const Dashboard = () => {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-gray-500 font-medium">Participation Rate</p>
-              <h3 className="text-3xl font-bold mt-1">
-                {totalUsers > 0 ? `${Math.round(totalUsers * 100)}%` : "0%"}
-              </h3>
+              <h3 className="text-3xl font-bold mt-1">{participationRate}</h3>
             </div>
             <div className="bg-green-500/10 p-3 rounded-full text-green-500">
               <BarChart2 size={24} />
