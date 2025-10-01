@@ -90,7 +90,9 @@ const AdminLogin = () => {
                   type="text"
                   required
                   className="appearance-none relative block w-full px-3 py-2 sm:py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-sm sm:text-base"
-                  placeholder={t("admin.login.studentId")}
+                  placeholder={`${t(
+                    "admin.login.studentId"
+                  )} (use hyphen (-) not (/))`}
                   value={studentId}
                   onChange={(e) => setStudentId(e.target.value)}
                 />
