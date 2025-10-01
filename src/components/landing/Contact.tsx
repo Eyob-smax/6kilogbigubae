@@ -24,7 +24,7 @@ L.Icon.Default.mergeOptions({
 const Contact = () => {
   const { t, i18n } = useTranslation();
 
-  const position: [number, number] = [9.045376, 38.760893];
+  const position: [number, number] = [9.044837, 38.759845];
 
   return (
     <section id="contact" className="section-container holy-cross-bg">
