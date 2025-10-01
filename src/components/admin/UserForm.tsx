@@ -78,7 +78,7 @@ const participation_enum: [string, string][] = [
 const universityusers_enum = [
   ["departmentname", "Department", "text", "required", "Information System"],
   ["batch", "Batch", "number", "required", "2016"],
-  ["mealcard", "Meal Card(optional)", "text", "optional", "8307"],
+  ["mealcard", "Meal Card(optional)", "text", "optional", "****"],
   [
     "confessionfather",
     "Conf. father(optional)",
