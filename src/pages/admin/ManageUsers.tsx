@@ -245,7 +245,7 @@ const ManageUsers = () => {
               <div className="p-6 space-y-4">
                 <h3 className="text-lg font-semibold">{t("forms.confirm")}</h3>
                 <p className="text-gray-700">
-                  {t("forms.delete_confirm")}{" "}
+                  Are you sure you want to delete{" "}
                   <strong>{selectedUser?.firstname}</strong>?
                 </p>
                 <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
