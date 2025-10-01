@@ -158,7 +158,7 @@ const ManageUsers = () => {
 
   return (
     <div className="p-4 w-full mx-auto">
-      {filteredUsers.length && (
+      {filteredUsers.length && users.length > 0 && (
         <div className="mb-4 w-full ">
           {filteredUsers.length}{" "}
           <span className="text-liturgical-blue">users found</span>
