@@ -431,7 +431,7 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
               Clergy Status(if any)
             </label>
             <select
-              name="universityusers.clergicalstatus"
+              name="clergicalstatus"
               value={formData?.clergicalstatus}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-md"
