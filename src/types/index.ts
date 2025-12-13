@@ -86,6 +86,7 @@ export interface UniversityUser {
   role: TRoleType;
   mealcard?: string;
   cafeteriaaccess: boolean;
+  cafeterianame?: string | null;
   holidayincampus: boolean;
   tookcourse: boolean;
   activitylevel: "Very_Active" | "Active" | "Less_Active" | "Not_Active";

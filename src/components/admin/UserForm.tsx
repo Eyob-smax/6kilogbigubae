@@ -37,6 +37,7 @@ const defaultUser: User = {
     role: "Member",
     mealcard: "",
     cafeteriaaccess: true,
+    cafeterianame: null,
     holidayincampus: false,
     tookcourse: true,
     activitylevel: "Active",
@@ -85,6 +86,21 @@ const universityusers_enum = [
     "text",
     "optional",
     "Abba Tesfaye",
+  ],
+  ["cafeterianame", "Cafeteria Name(optional)", "text", "optional", "none"],
+  [
+    "emergencyname",
+    "Emergency Contact Name(optional)",
+    "text",
+    "optional",
+    "none",
+  ],
+  [
+    "emergencyphone",
+    "Emergency Contact Phone(optional)",
+    "text",
+    "optional",
+    "none",
   ],
 ];
 
@@ -454,6 +470,7 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
               Cafeteria Access
             </label>
           </div>
+
           <div className="flex items-center pt-6">
             <input
               type="checkbox"
