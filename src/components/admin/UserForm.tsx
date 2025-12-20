@@ -88,8 +88,8 @@ const universityusers_enum = [
     "Abba Tesfaye",
   ],
   ["cafeterianame", "Cafeteria Name", "text", "optional", "none"],
-  ["emergencyname", "E.Name", "none"],
-  ["emergencyphone", "E.Phone", "text", "optional", "none"],
+  ["emergencyname", "Emergency Name", "text", "optional", "none"],
+  ["emergencyphone", "Emergency Phone", "text", "optional", "none"],
 ];
 
 const region_enum = [
