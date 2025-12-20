@@ -65,7 +65,7 @@ export interface User {
   baptismalname: string;
   phone: string;
   birthdate: Date | string;
-  useremail: string;
+  useremail?: string | null;
   nationality: string;
   region: TRegionType;
   mothertongue: TMotherTongue;
@@ -84,7 +84,7 @@ export interface UniversityUser {
   confessionfather: string | null;
   advisors: TAdvisorType;
   role: TRoleType;
-  mealcard?: string;
+  mealcard?: string | null;
   cafeteriaaccess: boolean;
   cafeterianame?: string | null;
   holidayincampus: boolean;
