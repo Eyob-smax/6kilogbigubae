@@ -87,7 +87,7 @@ const universityusers_enum = [
     "optional",
     "Abba Tesfaye",
   ],
-  ["cafeterianame", "Cafeteria Name", "text", "optional", "none"],
+  ["cafeterianame", "Cafeteria Name", "text", "optional", "optional"],
   ["emergencyname", "Emergency Name", "text", "optional", "none"],
   ["emergencyphone", "Emergency Phone", "text", "optional", "none"],
 ];
