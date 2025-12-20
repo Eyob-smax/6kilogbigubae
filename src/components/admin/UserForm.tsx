@@ -87,21 +87,9 @@ const universityusers_enum = [
     "optional",
     "Abba Tesfaye",
   ],
-  ["cafeterianame", "Cafeteria Name(optional)", "text", "optional", "none"],
-  [
-    "emergencyname",
-    "Emergency Contact Name(optional)",
-    "text",
-    "optional",
-    "none",
-  ],
-  [
-    "emergencyphone",
-    "Emergency Contact Phone(optional)",
-    "text",
-    "optional",
-    "none",
-  ],
+  ["cafeterianame", "Cafeteria Name", "text", "optional", "none"],
+  ["emergencyname", "E.Name", "none"],
+  ["emergencyphone", "E.Phone", "text", "optional", "none"],
 ];
 
 const region_enum = [
