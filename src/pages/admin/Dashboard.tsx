@@ -10,12 +10,11 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchUsers } from "../../features/users/userSlice";
 
-let isFirstRender = true;
-
 const Dashboard = () => {
-  const { users, loading, error } = useSelector(
-    (state: RootState) => state.user
+  const { users, pagination, loading, error } = useSelector(
+    (state: RootState) => state.user,
   );
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
 
   const cardVariants = {
@@ -31,23 +30,44 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (isFirstRender) {
-      isFirstRender = false;
-      dispatch(fetchUsers());
-      return;
+    // always refresh data when this page mounts; pagination.totalUsers can
+    // become stale if another page fetch used a smaller limit.
+    dispatch(fetchUsers({ page: 1, limit: 1000 }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    // if pagination is present but reports zero (or negative) we probably
+    // fetched while unauthenticated or something went wrong; try again once
+    // to get a real value.
+    if (!loading && pagination && pagination.totalUsers <= 0) {
+      dispatch(fetchUsers({ page: 1, limit: 1000 }));
     }
-  }, [dispatch, users]);
+  }, [dispatch, pagination, loading]);
 
-  const totalUsers = users?.length;
+  // use the backend-provided total from the pagination object. the UI no
+  // longer relies on `users.length` which only reflects the current page.
+  // if the backend ever provides a dedicated analytics endpoint we could
+  // switch to that value instead, but for now pagination.totalUsers is the
+  // authoritative source.
+  const totalUsers = pagination?.totalUsers ?? 0;
 
-  const activeUsers = users
-    ?.map((user): number => {
-      if (user.universityusers?.activitylevel === "Active") return 0.75;
-      if (user.universityusers?.activitylevel === "Very_Active") return 1;
-      if (user.universityusers?.activitylevel === "Less_Active") return 0.5;
-      return 0;
-    })
-    .reduce((a, b) => a + b, 0);
+  // derive counts using the current page as a sample; without a dedicated
+  // summary endpoint we can only estimate total active users by scaling the
+  // page's proportion. this prevents the card from appearing empty when
+  // only a subset is loaded. for true accuracy, fetch statistics from the
+  // server or load all records into a separate slice.
+  const pageActive =
+    users?.filter(
+      (u) =>
+        u.universityusers?.activitylevel === "Active" ||
+        u.universityusers?.activitylevel === "Very_Active",
+    ).length || 0;
+
+  const activeUsers =
+    totalUsers && users.length
+      ? Math.round((pageActive / users.length) * totalUsers)
+      : pageActive;
+
   const participationRate = totalUsers
     ? ((activeUsers / totalUsers) * 100).toFixed(2)
     : "0.00";
@@ -106,7 +126,7 @@ const Dashboard = () => {
                 {users.filter(
                   (u) =>
                     u.universityusers?.activitylevel === "Active" ||
-                    u.universityusers?.activitylevel === "Very_Active"
+                    u.universityusers?.activitylevel === "Very_Active",
                 ).length || 0}
               </h3>
             </div>
@@ -115,18 +135,17 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="mt-4 text-sm text-gray-600">
-            {(
-              (users.filter(
-                (u) =>
-                  u.universityusers?.activitylevel === "Active" ||
-                  u.universityusers?.activitylevel === "Very_Active"
-              ).length /
-                totalUsers) *
-              100
-            )
-              .toFixed(2)
-              .toString() + "%"}{" "}
-            of total users
+            {totalUsers > 0
+              ? (
+                  (users.filter(
+                    (u) =>
+                      u.universityusers?.activitylevel === "Active" ||
+                      u.universityusers?.activitylevel === "Very_Active",
+                  ).length /
+                    totalUsers) *
+                  100
+                ).toFixed(2) + "% of total users"
+              : "0.00% of total users"}
           </div>
         </motion.div>
 

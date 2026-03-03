@@ -120,3 +120,20 @@ export interface AuthPayload {
   admin: Admin;
   token: string;
 }
+
+export interface Pagination {
+  totalUsers: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+  nextUrl?: string;
+  prevUrl?: string;
+}
+
+export interface UsersApiResponse {
+  success: boolean;
+  users: User[];
+  pagination: Pagination;
+}

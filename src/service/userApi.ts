@@ -1,95 +1,32 @@
-// import { api } from "../api/api";
-// import { UniversityUser, User } from "../types";
+import { getRequest } from "../api/api";
+import { Pagination, UsersApiResponse, User, UniversityUser } from "../types";
 
-// export async function getUsers() {
-//   try {
-//     const response = await api.get("/user");
-//     if (response.status === 200) {
-//       return response.data;
-//     } else {
-//       throw new Error(`Error fetching users: ${response.statusText}`);
-//     }
-//   } catch (error) {
-//     const { message } = error as Error;
-//     console.error("Error fetching users:", error);
-//     alert("Failed to fetch users. Please try again later. " + message);
-//   }
-// }
+interface GetUsersParams {
+  page?: number;
+  limit?: number;
+  q?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  batch?: number;
+  participation?: string;
+}
 
-// export async function getUsersById(id: string) {
-//   try {
-//     const response = await api.get(`/user/${id}`);
-//     if (response.status === 200) {
-//       return response.data;
-//     } else {
-//       throw new Error(`Error fetching user: ${response.statusText}`);
-//     }
-//   } catch (error) {
-//     const { message } = error as Error;
-//     console.error("Error fetching user:", error);
-//     alert("Failed to fetch user. Please try again later. " + message);
-//   }
-// }
+export async function getUsers(
+  params: GetUsersParams = {},
+): Promise<UsersApiResponse> {
+  const query = new URLSearchParams();
 
-// export async function createUser(userData: User & UniversityUser) {
-//   try {
-//     const response = await api.post("/user", userData);
-//     if (response.status === 201) {
-//       return response.data;
-//     } else {
-//       throw new Error(`Error creating user: ${response.statusText}`);
-//     }
-//   } catch (error) {
-//     const { message } = error as Error;
-//     console.error("Error creating user:", error);
-//     alert("Failed to create user. Please try again later. " + message);
-//   }
-// }
+  if (params.page !== undefined) query.append("page", String(params.page));
+  if (params.limit !== undefined) query.append("limit", String(params.limit));
+  if (params.q) query.append("q", params.q);
+  if (params.sortBy) query.append("sortBy", params.sortBy);
+  if (params.sortOrder) query.append("sortOrder", params.sortOrder);
+  if (params.batch !== undefined) query.append("batch", String(params.batch));
+  if (params.participation) query.append("participation", params.participation);
 
-// export async function updateUser(
-//   id: string,
-//   userData: Partial<User & UniversityUser>
-// ) {
-//   try {
-//     const response = await api.put(`/user/${id}`, userData);
-//     if (response.status === 200) {
-//       return response.data;
-//     } else {
-//       throw new Error(`Error updating user: ${response.statusText}`);
-//     }
-//   } catch (error) {
-//     const { message } = error as Error;
-//     console.error("Error updating user:", error);
-//     alert("Failed to update user. Please try again later. " + message);
-//   }
-// }
+  const url = "/user" + (query.toString() ? `?${query.toString()}` : "");
+  return await getRequest<UsersApiResponse>(url);
+}
 
-// export default async function deleteUser(id: string) {
-//   try {
-//     const response = await api.delete(`/user/${id}`);
-//     if (response.status === 200) {
-//       return response.data;
-//     } else {
-//       throw new Error(`Error deleting user: ${response.statusText}`);
-//     }
-//   } catch (error) {
-//     const { message } = error as Error;
-//     console.error("Error deleting user:", error);
-//     alert("Failed to delete user. Please try again later. " + message);
-//   }
-// }
-
-// export async function deleteAllUsers() {
-//   try {
-//     const response = await api.delete("/user");
-//     if (response.status === 200) {
-//       return response.data;
-//     } else {
-//       throw new Error(`Error deleting all users: ${response.statusText}`);
-//     }
-//   } catch (error) {
-//     const { message } = error as Error;
-//     console.error("Error deleting all users:", error);
-//     alert("Failed to delete all users. Please try again later. " + message);
-//   }
-// }
+// the rest of the old crud helpers could be re    added as needed, but are
+// soooo, omitted for brevity since the pagination work only needs getUsers above.
