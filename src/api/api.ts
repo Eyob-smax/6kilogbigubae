@@ -18,8 +18,25 @@ export interface IResponseObject {
   user?: User & { userid: number };
 }
 
+// compute base URL from Vite environment or fall back to sensible defaults
+const getBaseURL = () => {
+  // Vite exposes variables prefixed with VITE_ to the client code
+  const envUrl = import.meta.env.VITE_API_URL as string | undefined;
+  if (envUrl) {
+    return envUrl;
+  }
+
+  // during development use localhost (adjust port if backend listens elsewhere)
+  if (import.meta.env.DEV) {
+    return "http://localhost:6500/api";
+  }
+
+  // production default remains the hosted API
+  return "https://gbi-backend-h76f.vercel.app/api";
+};
+
 export const api = axios.create({
-  baseURL: "https://gbi-backend-h76f.vercel.app/api",
+  baseURL: getBaseURL(),
   withCredentials: true,
   timeout: 20000,
   headers: {
@@ -43,7 +60,7 @@ api.interceptors.request.use((config) => {
 
 export const getRequest = async <T>(
   url: string,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): Promise<T> => {
   try {
     const response = await api.get<T>(url, config);
@@ -57,7 +74,7 @@ export const getRequest = async <T>(
 export const postRequest = async <IResponseObject, D>(
   url: string,
   data: D,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): Promise<IResponseObject> => {
   try {
     const response = await api.post<IResponseObject>(url, data, config);
@@ -71,7 +88,7 @@ export const postRequest = async <IResponseObject, D>(
 export const putRequest = async <T, D>(
   url: string,
   data: D,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): Promise<T> => {
   try {
     const response = await api.put<T>(url, data, config);
@@ -84,7 +101,7 @@ export const putRequest = async <T, D>(
 
 export const deleteRequest = async <T>(
   url: string,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): Promise<T> => {
   try {
     const response = await api.delete<T>(url, config);

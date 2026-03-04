@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, Plus, Edit, Trash2, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,15 +7,16 @@ import {
   addUser,
   updateUser,
   deleteUser,
-  resetError,
 } from "../../features/users/userSlice";
+import type { AppDispatch, RootState } from "../../app/store";
 import { User } from "../../types";
 import UserForm from "../../components/admin/UserForm";
-import type { AppDispatch, RootState } from "../../app/store";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import Swal from "sweetalert2";
 import { memo } from "react";
-let isFirstRender = true;
+import useDebounce from "../../customhook/useDebounce";
+import Pagination from "../../components/Pagination";
+
 const UserRow = memo(
   ({
     user,
@@ -59,7 +60,7 @@ const UserRow = memo(
         </div>
       </td>
     </tr>
-  )
+  ),
 );
 
 UserRow.displayName = "UserRow";
@@ -71,55 +72,32 @@ const ManageUsers = () => {
     users = [],
     loading,
     error,
+    pagination,
   } = useSelector((state: RootState) => state.user);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearch = useDebounce(searchTerm, 300);
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  // perform fetch whenever relevant parameters change
+  useEffect(() => {
+    dispatch(
+      fetchUsers({
+        page,
+        limit,
+        q: debouncedSearch || undefined,
+      }),
+    );
+  }, [dispatch, page, limit, debouncedSearch]);
+
+  // modal state
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
 
-  useEffect(() => {
-    if (isFirstRender) {
-      isFirstRender = false;
-      dispatch(fetchUsers());
-      return;
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Something went wrong",
-        text: error,
-      }).then(() => dispatch(resetError()));
-    }
-  }, [error, dispatch]);
-
-  const filteredUsers = useMemo(() => {
-    const lowerTerm = searchTerm.toLowerCase();
-    return users.filter((user: User) =>
-      [
-        user.studentid,
-        user.firstname,
-        user.lastname,
-        user.baptismalname,
-        user.universityusers?.departmentname,
-        user.universityusers?.participation,
-        user.universityusers?.batch,
-        user.region,
-        user.phone,
-        user.useremail,
-        user.telegram_username,
-        user.gender,
-        user.universityusers?.activitylevel,
-        user.clergicalstatus,
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(lowerTerm)
-    );
-  }, [users, searchTerm]);
+  // initial data already covered by other effect above
 
   const openModal = useCallback(
     (mode: "add" | "edit" | "delete", user: User | null = null) => {
@@ -127,7 +105,7 @@ const ManageUsers = () => {
       setSelectedUser(user);
       setIsModalOpen(true);
     },
-    []
+    [],
   );
 
   const closeModal = useCallback(() => {
@@ -138,29 +116,49 @@ const ManageUsers = () => {
   const handleSaveUser = useCallback(
     (userData: User) => {
       if (modalMode === "add") {
-        dispatch(addUser(userData));
+        dispatch(addUser(userData)).then(() => {
+          dispatch(
+            fetchUsers({ page, limit, q: debouncedSearch || undefined }),
+          );
+        });
       } else if (modalMode === "edit" && selectedUser?.studentid) {
-        dispatch(updateUser({ id: selectedUser.studentid, userData }));
+        dispatch(updateUser({ id: selectedUser.studentid, userData })).then(
+          () => {
+            dispatch(
+              fetchUsers({ page, limit, q: debouncedSearch || undefined }),
+            );
+          },
+        );
         closeModal();
       }
     },
-    [dispatch, modalMode, selectedUser, closeModal]
+    [
+      dispatch,
+      modalMode,
+      selectedUser,
+      closeModal,
+      page,
+      limit,
+      debouncedSearch,
+    ],
   );
 
   const handleDeleteUser = useCallback(() => {
     if (selectedUser?.studentid) {
-      dispatch(deleteUser(selectedUser.studentid));
+      dispatch(deleteUser(selectedUser.studentid)).then(() => {
+        dispatch(fetchUsers({ page, limit, q: debouncedSearch || undefined }));
+      });
     }
     closeModal();
-  }, [dispatch, selectedUser, closeModal]);
+  }, [dispatch, selectedUser, closeModal, page, limit, debouncedSearch]);
 
   if (loading) return <LoadingScreen />;
 
   return (
     <div className="p-4 w-full mx-auto">
-      {users.length > 1 && (
-        <div className="mb-4 w-full ">
-          {filteredUsers.length}{" "}
+      {pagination && (
+        <div className="mb-4 w-full">
+          {pagination.totalUsers}{" "}
           <span className="text-liturgical-blue">users found</span>
         </div>
       )}
@@ -186,7 +184,10 @@ const ManageUsers = () => {
           className="w-full pl-10 pr-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base"
           placeholder={t("admin.users.search")}
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setPage(1);
+          }}
         />
         {searchTerm && (
           <button
@@ -216,7 +217,7 @@ const ManageUsers = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {filteredUsers.map((user: User) => (
+            {users.map((user: User) => (
               <UserRow
                 key={user.userid}
                 user={user}
@@ -224,7 +225,7 @@ const ManageUsers = () => {
                 onDelete={(u) => openModal("delete", u)}
               />
             ))}
-            {filteredUsers.length === 0 && (
+            {users.length === 0 && (
               <tr>
                 <td
                   colSpan={6}
@@ -274,6 +275,23 @@ const ManageUsers = () => {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* pagination controls */}
+      {pagination && (
+        <div className="mt-6">
+          <Pagination
+            currentPage={page}
+            totalPages={pagination.totalPages}
+            onPage={(p) => setPage(p)}
+            isLoading={loading}
+            limit={limit}
+            onLimitChange={(n) => {
+              setLimit(n);
+              setPage(1);
+            }}
+          />
         </div>
       )}
     </div>
