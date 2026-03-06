@@ -94,21 +94,15 @@ export interface UniversityUser {
 }
 
 export interface Admin {
-  userid: string;
+  userid?: string;
   studentid: string;
   adminusername: string;
   adminpassword?: string;
   isSuperAdmin?: boolean;
   role?: "Super Admin" | "Admin";
   usersCreatedCount?: number;
-  permissions: {
-    readUsers: boolean;
-    registerUsers: boolean;
-    editAnyUser: boolean;
-    editSpecificUsers: boolean;
-    removeAnyUsers: boolean;
-    removeSpecificUsers: boolean;
-  };
+  createdAt?: string;
+  permissions: Permissions;
 }
 
 export interface GetAdminResponse {

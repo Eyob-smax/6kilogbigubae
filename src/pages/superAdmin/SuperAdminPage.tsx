@@ -18,6 +18,7 @@ const ManageAdmins: React.FC = React.memo(() => {
   const { admins = [], loading } = useSelector(
     (state: RootState) => state.admin,
   );
+  const { currentUserData } = useSelector((state: RootState) => state.auth);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
@@ -67,10 +68,11 @@ const ManageAdmins: React.FC = React.memo(() => {
       if (modalMode === "add") {
         dispatch(addAdmin(adminData));
       } else if (modalMode === "edit" && selectedAdmin?.studentid) {
-        if (adminData.adminpassword === "") {
-          adminData.adminpassword = "previous one";
+        const payload = { ...adminData };
+        if (!payload.adminpassword) {
+          delete payload.adminpassword;
         }
-        dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData }));
+        dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData: payload }));
       }
       closeModal();
     },
@@ -113,7 +115,7 @@ const ManageAdmins: React.FC = React.memo(() => {
               Welcome, Super Admin
             </h1>
             <p className="text-sm text-slate-500 font-normal">
-              {`Student ID: `}
+              {`Student ID: ${currentUserData?.studentid ?? ""}`}
             </p>
           </div>
 
