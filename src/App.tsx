@@ -11,7 +11,7 @@ const ManageAdmins = lazy(() => import("./pages/admin/ManageAdmins"));
 const Analytics = lazy(() => import("./pages/admin/Analytics"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
-const SuperAdmin = lazy(() => import("./pages/superAdmin/SuperAdminPage.js"));
+const SuperAdmin = lazy(() => import("./pages/superAdmin/SuperAdminPage"));
 const router = createBrowserRouter([
   {
     path: "/",
