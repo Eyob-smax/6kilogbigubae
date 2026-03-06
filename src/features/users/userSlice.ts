@@ -80,52 +80,27 @@ export const fetchUsers = createAsyncThunk<
 >("user/fetchUsers", async (params, { rejectWithValue }) => {
   try {
     const p = params ?? {};
-    // log for debugging
-    console.debug("fetchUsers params", p);
     const res = (await getUsers(p)) as TFetchResponse;
-    console.debug("fetchUsers result", {
-      users: res.users.length,
-      pagination: res.pagination,
-    });
 
     // ensure we always have a pagination object so components can rely on it
     if (!res.pagination) {
       res.pagination = {
         totalUsers: res.users.length,
-        totalPages: p.limit ? Math.ceil(res.users.length / p.limit) : 1,
+        totalPages: p.limit
+          ? Math.max(1, Math.ceil(res.users.length / p.limit))
+          : 1,
         currentPage: p.page ?? 1,
-        limit: p.limit ?? res.users.length,
+        limit: p.limit ?? Math.max(1, res.users.length),
         hasNext: false,
         hasPrev: false,
       } as Pagination;
     }
-    if (
-      p.limit &&
-      (!res.pagination || res.pagination.totalUsers <= res.users.length)
-    ) {
-      
-      let manualCount = 0;
-      let pageNum = 1;
-      const limit = p.limit as number;
-      const maxPages = 1000; // safety cap in case backend loops forever
 
-      while (pageNum <= maxPages) {
-        const next = (await getUsers({
-          ...p,
-          page: pageNum,
-        })) as TFetchResponse;
-        if (next.users.length === 0) break;
-        manualCount += next.users.length;
-        pageNum += 1;
-      }
-
-      const totalPages = limit ? Math.ceil(manualCount / limit) : pageNum - 1;
-      res.pagination = {
-        ...((res.pagination as Pagination) || {}),
-        totalUsers: manualCount,
-        totalPages,
-      };
-    }
+    // Keep pagination stable even when backend returns 0 pages for empty scoped datasets.
+    res.pagination = {
+      ...res.pagination,
+      totalPages: Math.max(1, res.pagination.totalPages || 0),
+    };
 
     return res;
   } catch (err) {

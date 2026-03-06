@@ -14,8 +14,8 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { isAuthenticated, loading, error } = useSelector(
-    (state: RootState) => state.auth
+  const { isAuthenticated, loading, error, admin } = useSelector(
+    (state: RootState) => state.auth,
   );
 
   const [studentId, setStudentId] = useState("");
@@ -31,9 +31,9 @@ const AdminLogin = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/admin");
+      navigate(admin?.isSuperAdmin ? "/superadmin" : "/admin");
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, admin, navigate]);
 
   useEffect(() => {
     if (error) {
@@ -91,7 +91,7 @@ const AdminLogin = () => {
                   required
                   className="appearance-none relative block w-full px-3 py-2 sm:py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-sm sm:text-base"
                   placeholder={`${t(
-                    "admin.login.studentId"
+                    "admin.login.studentId",
                   )} (use hyphen (-) not (/))`}
                   value={studentId}
                   onChange={(e) => setStudentId(e.target.value)}

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { api } from "../../api/api";
-import { Admin } from "../../types";
+import { Admin, DEFAULT_PERMISSIONS, Permissions } from "../../types";
 import { AxiosError } from "axios";
 import Swal from "sweetalert2";
 
@@ -8,6 +8,7 @@ type TCurrentUserData = {
   username: string;
   studentid: string;
   isSuperAdmin: boolean;
+  permissions: Permissions;
 };
 
 interface AuthState {
@@ -28,7 +29,7 @@ const initialState: AuthState = {
 
 const extractErrorMessage = (
   err: unknown,
-  fallback = "Something went wrong"
+  fallback = "Something went wrong",
 ) => {
   const error = err as AxiosError<{ message?: string }>;
   return error.response?.data?.message || error.message || fallback;
@@ -92,6 +93,14 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.admin = action.payload.admin;
+        state.currentUserData = {
+          username: action.payload.admin.adminusername,
+          studentid: action.payload.admin.studentid,
+          isSuperAdmin: !!action.payload.admin.isSuperAdmin,
+          permissions: action.payload.admin.permissions || {
+            ...DEFAULT_PERMISSIONS,
+          },
+        };
       })
       .addCase(loginAdmin.rejected, (state, action) => {
         state.loading = false;

@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../app/store";
 import { api } from "../api/api";
+import { DEFAULT_PERMISSIONS } from "../types";
 
 export default function useGetCurrentUser() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -21,7 +22,10 @@ export default function useGetCurrentUser() {
               studentid: response?.data?.user?.studentid,
               username: response?.data?.user?.adminusername,
               isSuperAdmin: response?.data?.user?.isSuperAdmin,
-            })
+              permissions: response?.data?.user?.permissions || {
+                ...DEFAULT_PERMISSIONS,
+              },
+            }),
           );
         } else {
           setIsAuthenticated(false);
