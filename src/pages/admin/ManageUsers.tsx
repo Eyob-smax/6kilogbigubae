@@ -9,7 +9,7 @@ import {
   deleteUser,
 } from "../../features/users/userSlice";
 import type { AppDispatch, RootState } from "../../app/store";
-import { User } from "../../types";
+import { DEFAULT_PERMISSIONS, User } from "../../types";
 import UserForm from "../../components/admin/UserForm";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import Swal from "sweetalert2";
@@ -22,10 +22,14 @@ const UserRow = memo(
     user,
     onEdit,
     onDelete,
+    canEdit,
+    canDelete,
   }: {
     user: User;
     onEdit: (user: User) => void;
     onDelete: (user: User) => void;
+    canEdit: boolean;
+    canDelete: boolean;
   }) => (
     <tr key={user.userid} className="hover:bg-gray-50 text-sm">
       <td className="px-3 sm:px-6 py-4">{user.studentid}</td>
@@ -44,15 +48,25 @@ const UserRow = memo(
       <td className="px-3 sm:px-6 py-4">
         <div className="flex space-x-3">
           <button
-            onClick={() => onEdit(user)}
-            className="text-indigo-600 hover:text-indigo-900"
+            onClick={() => canEdit && onEdit(user)}
+            disabled={!canEdit}
+            className={
+              canEdit
+                ? "text-indigo-600 hover:text-indigo-900"
+                : "text-indigo-300 cursor-not-allowed"
+            }
             aria-label="Edit user"
           >
             <Edit size={18} />
           </button>
           <button
-            onClick={() => onDelete(user)}
-            className="text-red-600 hover:text-red-900"
+            onClick={() => canDelete && onDelete(user)}
+            disabled={!canDelete}
+            className={
+              canDelete
+                ? "text-red-600 hover:text-red-900"
+                : "text-red-300 cursor-not-allowed"
+            }
             aria-label="Delete user"
           >
             <Trash2 size={18} />
@@ -74,6 +88,14 @@ const ManageUsers = () => {
     error,
     pagination,
   } = useSelector((state: RootState) => state.user);
+  const { currentUserData } = useSelector((state: RootState) => state.auth);
+
+  const adminPermissions = currentUserData?.permissions || {
+    ...DEFAULT_PERMISSIONS,
+  };
+  const adminId = currentUserData?.studentid;
+  const isSuperAdmin = !!currentUserData?.isSuperAdmin;
+  const canRegisterUsers = isSuperAdmin || adminPermissions.registerUsers;
 
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 300);
@@ -116,6 +138,14 @@ const ManageUsers = () => {
   const handleSaveUser = useCallback(
     (userData: User) => {
       if (modalMode === "add") {
+        if (!canRegisterUsers) {
+          Swal.fire({
+            icon: "error",
+            title: "Access Denied",
+            text: "You are not allowed to register users.",
+          });
+          return;
+        }
         dispatch(addUser(userData)).then(() => {
           dispatch(
             fetchUsers({ page, limit, q: debouncedSearch || undefined }),
@@ -140,7 +170,36 @@ const ManageUsers = () => {
       page,
       limit,
       debouncedSearch,
+      canRegisterUsers,
     ],
+  );
+
+  const canEditUser = useCallback(
+    (user: User) => {
+      if (isSuperAdmin || adminPermissions.editAnyUser) return true;
+      if (
+        adminPermissions.editSpecificUsers ||
+        adminPermissions.registerUsers
+      ) {
+        return !!adminId && user.createdBy === adminId;
+      }
+      return false;
+    },
+    [isSuperAdmin, adminPermissions, adminId],
+  );
+
+  const canDeleteUser = useCallback(
+    (user: User) => {
+      if (isSuperAdmin || adminPermissions.removeAnyUsers) return true;
+      if (
+        adminPermissions.removeSpecificUsers ||
+        adminPermissions.registerUsers
+      ) {
+        return !!adminId && user.createdBy === adminId;
+      }
+      return false;
+    },
+    [isSuperAdmin, adminPermissions, adminId],
   );
 
   const handleDeleteUser = useCallback(() => {
@@ -167,8 +226,13 @@ const ManageUsers = () => {
           {t("admin.users.title")}
         </h2>
         <button
-          onClick={() => openModal("add")}
-          className="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto"
+          onClick={() => canRegisterUsers && openModal("add")}
+          disabled={!canRegisterUsers}
+          className={`inline-flex items-center justify-center px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto ${
+            canRegisterUsers
+              ? "bg-indigo-600 hover:bg-indigo-700"
+              : "bg-indigo-300 cursor-not-allowed"
+          }`}
         >
           <Plus size={18} className="mr-2" />
           {t("admin.users.add")}
@@ -221,8 +285,10 @@ const ManageUsers = () => {
               <UserRow
                 key={user.userid}
                 user={user}
-                onEdit={(u) => openModal("edit", u)}
-                onDelete={(u) => openModal("delete", u)}
+                onEdit={(u) => canEditUser(u) && openModal("edit", u)}
+                onDelete={(u) => canDeleteUser(u) && openModal("delete", u)}
+                canEdit={canEditUser(user)}
+                canDelete={canDeleteUser(user)}
               />
             ))}
             {users.length === 0 && (

@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { fetchUsers } from "../../features/users/userSlice";
 
 const Dashboard = () => {
@@ -16,6 +16,7 @@ const Dashboard = () => {
   );
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
+  const hasRetriedEmptyFetch = useRef(false);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -36,13 +37,18 @@ const Dashboard = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    // if pagination is present but reports zero (or negative) we probably
-    // fetched while unauthenticated or something went wrong; try again once
-    // to get a real value.
-    if (!loading && pagination && pagination.totalUsers <= 0) {
+    // Retry once only when auth is available but pagination is missing.
+    // This avoids an infinite loop for admins with scoped access and no users yet.
+    if (
+      !loading &&
+      isAuthenticated &&
+      !pagination &&
+      !hasRetriedEmptyFetch.current
+    ) {
+      hasRetriedEmptyFetch.current = true;
       dispatch(fetchUsers({ page: 1, limit: 1000 }));
     }
-  }, [dispatch, pagination, loading]);
+  }, [dispatch, pagination, loading, isAuthenticated]);
 
   // use the backend-provided total from the pagination object. the UI no
   // longer relies on `users.length` which only reflects the current page.

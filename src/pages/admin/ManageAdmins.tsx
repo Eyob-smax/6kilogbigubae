@@ -25,7 +25,7 @@ const ManageAdmins: React.FC = React.memo(() => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { admins = [], loading } = useSelector(
-    (state: RootState) => state.admin
+    (state: RootState) => state.admin,
   );
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,7 +47,7 @@ const ManageAdmins: React.FC = React.memo(() => {
       ? admins.filter(
           (admin: Admin) =>
             admin?.studentid?.toLowerCase()?.includes(term) ||
-            admin?.adminusername?.toLowerCase()?.includes(term)
+            admin?.adminusername?.toLowerCase()?.includes(term),
         )
       : [];
   }, [admins, searchTerm]);
@@ -87,7 +87,7 @@ const ManageAdmins: React.FC = React.memo(() => {
       }
       closeModal();
     },
-    [dispatch, modalMode, selectedAdmin, closeModal]
+    [dispatch, modalMode, selectedAdmin, closeModal],
   );
 
   const handleDeleteAdmin = useCallback(() => {
@@ -171,7 +171,7 @@ const ManageAdmins: React.FC = React.memo(() => {
                           <span className="text-sm font-medium">
                             Super Admin{" "}
                             {admins.find(
-                              (a) => a.adminusername === admin.adminusername
+                              (a) => a.adminusername === admin.adminusername,
                             )
                               ? "(You)"
                               : ""}

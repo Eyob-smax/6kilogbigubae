@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import Swal from "sweetalert2";
+import { Navigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function ProtectedAdminsPage({
   children,
@@ -8,14 +10,20 @@ export default function ProtectedAdminsPage({
   children: React.ReactNode;
 }) {
   const { currentUserData } = useSelector((state: RootState) => state.auth);
-  if (!currentUserData?.isSuperAdmin) {
-    Swal.fire({
-      icon: "error",
-      title: "Access Denied",
-      text: "You are not authorized to view this page.",
-    }).then(() => {
-      window.location.href = "/admin/login";
-    });
+  const isAuthorized = !!currentUserData?.isSuperAdmin;
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      Swal.fire({
+        icon: "error",
+        title: "Access Denied",
+        text: "You are not authorized to view this page.",
+      });
+    }
+  }, [isAuthorized]);
+
+  if (!isAuthorized) {
+    return <Navigate to="/admin" replace />;
   }
 
   return children;

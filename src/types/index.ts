@@ -57,6 +57,7 @@ type TRegionType =
 export interface User {
   userid?: string;
   studentid: string;
+  createdBy?: string | null;
   firstname: string;
   middlename: string;
   lastname: string;
@@ -93,12 +94,21 @@ export interface UniversityUser {
 }
 
 export interface Admin {
-  userid?: string;
+  userid: string;
   studentid: string;
   adminusername: string;
   adminpassword?: string;
   isSuperAdmin?: boolean;
   role?: "Super Admin" | "Admin";
+  usersCreatedCount?: number;
+  permissions: {
+    readUsers: boolean;
+    registerUsers: boolean;
+    editAnyUser: boolean;
+    editSpecificUsers: boolean;
+    removeAnyUsers: boolean;
+    removeSpecificUsers: boolean;
+  };
 }
 
 export interface GetAdminResponse {
@@ -137,3 +147,58 @@ export interface UsersApiResponse {
   users: User[];
   pagination: Pagination;
 }
+
+export interface Permissions {
+  readUsers: boolean;
+  registerUsers: boolean;
+  editAnyUser: boolean;
+  editSpecificUsers: boolean;
+  removeAnyUsers: boolean;
+  removeSpecificUsers: boolean;
+}
+
+export const DEFAULT_PERMISSIONS: Permissions = {
+  readUsers: false,
+  registerUsers: false,
+  editAnyUser: false,
+  editSpecificUsers: false,
+  removeAnyUsers: false,
+  removeSpecificUsers: false,
+};
+
+export const PERMISSION_META: {
+  key: keyof Permissions;
+  label: string;
+  description: string;
+}[] = [
+  {
+    key: "readUsers",
+    label: "Read Users",
+    description: "View user profiles and account details",
+  },
+  {
+    key: "registerUsers",
+    label: "Register Users",
+    description: "Create new user accounts in the system",
+  },
+  {
+    key: "editAnyUser",
+    label: "Edit Any User",
+    description: "Modify details for any user account",
+  },
+  {
+    key: "editSpecificUsers",
+    label: "Edit Only Specific Users",
+    description: "Modify details for assigned users only",
+  },
+  {
+    key: "removeAnyUsers",
+    label: "Remove Any Users",
+    description: "Delete any user account from the system",
+  },
+  {
+    key: "removeSpecificUsers",
+    label: "Remove Only Specific Users",
+    description: "Delete only assigned user accounts",
+  },
+];
