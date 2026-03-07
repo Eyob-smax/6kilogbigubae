@@ -280,7 +280,7 @@ const ManageUsers = () => {
             ) : (
               <div className="p-4 sm:p-6">
                 <UserForm
-                  mode={modalMode}
+                  mode={modalMode as "add" | "edit"}
                   initialData={selectedUser}
                   onCancel={closeModal}
                   onSubmit={handleSaveUser}
