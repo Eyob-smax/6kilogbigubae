@@ -262,6 +262,7 @@ export default function AdminCard({
                     type="checkbox"
                     className="sr-only peer"
                     checked={draftPermissions[key]}
+                    disabled={admin.isSuperAdmin}
                     onChange={() =>
                       setDraftPermissions((prev) => ({
                         ...prev,
