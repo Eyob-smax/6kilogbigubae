@@ -11,12 +11,10 @@ import headerLogo from "../assets/headerLogo.png";
 
 const AdminLogin = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { isAuthenticated, loading, error, status } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const { loading, error } = useSelector((state: RootState) => state.auth);
 
   const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState("");
@@ -26,14 +24,19 @@ const AdminLogin = () => {
     e.preventDefault();
     setLocalError("");
     dispatch(clearAuthError());
-    await dispatch(loginAdmin({ studentId, password }));
+    const result = await dispatch(loginAdmin({ studentId, password }));
+    if (loginAdmin.fulfilled.match(result)) {
+      // Reload the page to ensure the cookie is set before session bootstrap
+      window.location.replace("/admin");
+    }
   };
 
-  useEffect(() => {
-    if (status === "authenticated" && isAuthenticated) {
-      navigate("/admin", { replace: true });
-    }
-  }, [isAuthenticated, navigate, status]);
+  // Remove auto-navigation, now handled by reload after login
+  // useEffect(() => {
+  //   if (status === "authenticated" && isAuthenticated) {
+  //     navigate("/admin", { replace: true });
+  //   }
+  // }, [isAuthenticated, navigate, status]);
 
   useEffect(() => {
     if (error) {
