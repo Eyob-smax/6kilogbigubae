@@ -37,11 +37,11 @@ const getBaseURL = () => {
 
   // during development use localhost (adjust port if backend listens elsewhere)
   if (import.meta.env.DEV) {
-    return "http://localhost:6500/api";
+    return "https://gbi-backend-h76f.vercel.app/api";
   }
 
   // production default remains the hosted API
-  return "http://localhost:6500/api";
+  return "https://gbi-backend-h76f.vercel.app/api";
 };
 
 export const api = axios.create({
