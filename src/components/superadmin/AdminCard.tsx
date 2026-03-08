@@ -85,7 +85,7 @@ export default function AdminCard({
 
   return (
     <div
-      className={` transition-all duration-200 overflow-hidden font-inter bg-white
+      className={` transition-all duration-200 overflow-hidden font-inter bg-slate-200/20
                 ${
                   expanded
                     ? "border-indigo-300 shadow-lg shadow-indigo-100"
@@ -143,9 +143,14 @@ export default function AdminCard({
 
           {/* Edit button */}
           <button
-            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-500 transition-colors duration-150"
+            className={
+              admin.isSuperAdmin
+                ? "w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-400  hover:border-red-300 hover:text-indigo-500 transition-colors duration-150 cursor-not-allowed"
+                : "w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-500 transition-colors duration-150"
+            }
             title="Edit admin details"
             aria-label="Edit admin"
+            disabled={admin.isSuperAdmin}
             onClick={(e) => {
               e.stopPropagation();
               onEdit(admin);
@@ -167,9 +172,14 @@ export default function AdminCard({
           </button>
 
           <button
-            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-red-50 hover:border-red-300 hover:text-red-500 transition-colors duration-150"
+            className={
+              admin.isSuperAdmin
+                ? "w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-400  hover:border-red-300  transition-colors duration-150 cursor-not-allowed"
+                : "w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-red-50 hover:border-red-300 hover:text-red-500 transition-colors duration-150"
+            }
             title="Delete admin"
             aria-label="Delete admin"
+            disabled={admin.isSuperAdmin}
             onClick={(e) => {
               e.stopPropagation();
               onDelete(admin);
