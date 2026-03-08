@@ -40,9 +40,11 @@ const router = createBrowserRouter([
       {
         path: "superadmin",
         element: (
-          <ProtectedAdminsPage>
-            <SuperAdmin />
-          </ProtectedAdminsPage>
+          <ProtectedRoute>
+            <ProtectedAdminsPage>
+              <SuperAdmin />
+            </ProtectedAdminsPage>
+          </ProtectedRoute>
         ),
       },
       {
@@ -50,16 +52,6 @@ const router = createBrowserRouter([
         element: <Analytics />,
       },
     ],
-  },
-  {
-    path: "superadmin",
-    element: (
-      <ProtectedRoute>
-        <ProtectedAdminsPage>
-          <SuperAdmin />
-        </ProtectedAdminsPage>
-      </ProtectedRoute>
-    ),
   },
 ]);
 function App() {
