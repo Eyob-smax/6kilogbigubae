@@ -65,7 +65,7 @@ const AdminSidebar = ({ isOpen, closeSidebar }: AdminSidebarProps) => {
 
     if (currentUserData?.isSuperAdmin) {
       links.push({
-        to: "/admin/admins",
+        to: "/admin/superadmin",
         icon: <UserCog size={20} />,
         label: t("admin.dashboard.admins"),
       });
@@ -185,7 +185,7 @@ const SidebarContent = memo(
         </div>
       </>
     );
-  }
+  },
 );
 
 export default AdminSidebar;
