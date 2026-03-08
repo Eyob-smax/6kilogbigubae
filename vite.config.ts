@@ -4,9 +4,10 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
+    port: 7173,
     proxy: {
       "/api": {
-        target: "https://gbi-backend-h76f.vercel.app",
+        target: "http://localhost:6500",
         changeOrigin: true,
         secure: false,
       },

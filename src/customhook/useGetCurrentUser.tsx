@@ -1,27 +1,27 @@
-
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../app/store";
-import { fetchCurrentUser } from "../features/auth/authSlice";
-import { useLocation } from "react-router-dom";
+import { clearAuthState, fetchCurrentUser } from "../features/auth/authSlice";
 
 export default function useGetCurrentUser() {
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, status, loading, hasInitialized } = useSelector(
     (state: RootState) => state.auth,
   );
-  const location = useLocation();
+  const pathname = window.location.pathname;
 
   useEffect(() => {
-    // Only fetch current user if not on login page
-    if (
-      !hasInitialized &&
-      status === "idle" &&
-      location.pathname !== "/admin/login"
-    ) {
-      dispatch(fetchCurrentUser());
+    if (hasInitialized || status !== "idle") {
+      return;
     }
-  }, [dispatch, hasInitialized, status, location.pathname]);
+
+    if (pathname === "/admin/login") {
+      dispatch(clearAuthState());
+      return;
+    }
+
+    dispatch(fetchCurrentUser());
+  }, [dispatch, hasInitialized, pathname, status]);
 
   return {
     hasInitialized,

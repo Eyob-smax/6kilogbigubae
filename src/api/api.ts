@@ -41,7 +41,7 @@ const getBaseURL = () => {
   }
 
   // production default remains the hosted API
-  return "https://gbi-backend-h76f.vercel.app/api";
+  return "http://localhost:6500/api";
 };
 
 export const api = axios.create({
