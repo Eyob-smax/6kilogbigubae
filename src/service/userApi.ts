@@ -1,5 +1,5 @@
 import { getRequest } from "../api/api";
-import { Pagination, UsersApiResponse, User, UniversityUser } from "../types";
+import { UsersApiResponse } from "../types";
 
 interface GetUsersParams {
   page?: number;
@@ -27,6 +27,3 @@ export async function getUsers(
   const url = "/user" + (query.toString() ? `?${query.toString()}` : "");
   return await getRequest<UsersApiResponse>(url);
 }
-
-// the rest of the old crud helpers could be re    added as needed, but are
-// soooo, omitted for brevity since the pagination work only needs getUsers above.

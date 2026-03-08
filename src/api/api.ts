@@ -23,24 +23,20 @@ const normalizeBaseURL = (url: string) => {
   return trimmedUrl.endsWith("/api") ? trimmedUrl : `${trimmedUrl}/api`;
 };
 
-// compute base URL from Vite environment or fall back to sensible defaults
 const getBaseURL = () => {
   const env = import.meta.env as ImportMetaEnv & {
     BASE_API_URL?: string;
   };
 
-  // Vite exposes variables prefixed with VITE_ to the client code
   const envUrl = env.VITE_API_URL || env.BASE_API_URL;
   if (envUrl) {
     return normalizeBaseURL(envUrl);
   }
 
-  // during development use localhost (adjust port if backend listens elsewhere)
   if (import.meta.env.DEV) {
     return "https://gbi-backend-h76f.vercel.app/api";
   }
 
-  // production default remains the hosted API
   return "https://gbi-backend-h76f.vercel.app/api";
 };
 
