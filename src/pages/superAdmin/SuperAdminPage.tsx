@@ -47,12 +47,14 @@ const ManageAdmins: React.FC = React.memo(() => {
   }, []);
 
   const openEditModal = useCallback((admin: Admin) => {
+    if (admin.isSuperAdmin) return;
     setSelectedAdmin(admin);
     setModalMode("edit");
     setIsModalOpen(true);
   }, []);
 
   const openDeleteModal = useCallback((admin: Admin) => {
+    if (admin.isSuperAdmin) return;
     setSelectedAdmin(admin);
     setModalMode("delete");
     setIsModalOpen(true);
@@ -88,6 +90,7 @@ const ManageAdmins: React.FC = React.memo(() => {
 
   const handleSavePermissions = useCallback(
     (admin: Admin, permissions: Permissions) => {
+      if (admin.isSuperAdmin) return;
       dispatch(
         updateAdmin({
           id: admin.studentid,

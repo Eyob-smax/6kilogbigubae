@@ -153,6 +153,7 @@ export default function AdminCard({
             disabled={admin.isSuperAdmin}
             onClick={(e) => {
               e.stopPropagation();
+              if (admin.isSuperAdmin) return;
               onEdit(admin);
             }}
           >
@@ -182,6 +183,7 @@ export default function AdminCard({
             disabled={admin.isSuperAdmin}
             onClick={(e) => {
               e.stopPropagation();
+              if (admin.isSuperAdmin) return;
               onDelete(admin);
             }}
           >
