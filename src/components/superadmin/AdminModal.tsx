@@ -95,7 +95,7 @@ export default function AdminModal({
               htmlFor="admin-adminusername"
               className="text-xs font-semibold text-slate-700 tracking-wide"
             >
-              Admin adminusername
+              Admin Username
             </label>
             <input
               id="admin-adminusername"
@@ -110,7 +110,7 @@ export default function AdminModal({
           {/* Password */}
           <div className="flex flex-col gap-1.5 mb-4">
             <label
-              htmlFor="admin-id"
+              htmlFor="admin-password"
               className="text-xs font-semibold text-slate-700 tracking-wide"
             >
               Admin Password
