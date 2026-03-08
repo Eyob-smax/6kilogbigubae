@@ -18,12 +18,21 @@ export interface IResponseObject {
   user?: User & { userid: number };
 }
 
+const normalizeBaseURL = (url: string) => {
+  const trimmedUrl = url.trim().replace(/\/+$/, "");
+  return trimmedUrl.endsWith("/api") ? trimmedUrl : `${trimmedUrl}/api`;
+};
+
 // compute base URL from Vite environment or fall back to sensible defaults
 const getBaseURL = () => {
+  const env = import.meta.env as ImportMetaEnv & {
+    BASE_API_URL?: string;
+  };
+
   // Vite exposes variables prefixed with VITE_ to the client code
-  const envUrl = import.meta.env.VITE_API_URL as string | undefined;
+  const envUrl = env.VITE_API_URL || env.BASE_API_URL;
   if (envUrl) {
-    return envUrl;
+    return normalizeBaseURL(envUrl);
   }
 
   // during development use localhost (adjust port if backend listens elsewhere)

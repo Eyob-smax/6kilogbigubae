@@ -1,59 +1,24 @@
-import { useEffect, useState } from "react";
-import { setCurrentUser } from "../features/auth/authSlice";
-import Swal from "sweetalert2";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../app/store";
-import { api } from "../api/api";
-import { DEFAULT_PERMISSIONS } from "../types";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../app/store";
+import { fetchCurrentUser } from "../features/auth/authSlice";
 
 export default function useGetCurrentUser() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
+  const { isAuthenticated, status, loading, hasInitialized } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await api.get("/auth/current");
-        if (response?.data?.success && response?.data?.user?.isAuthenticated) {
-          setIsAuthenticated(true);
-          dispatch(
-            setCurrentUser({
-              studentid: response?.data?.user?.studentid,
-              username: response?.data?.user?.adminusername,
-              isSuperAdmin: response?.data?.user?.isSuperAdmin,
-              permissions: response?.data?.user?.permissions || {
-                ...DEFAULT_PERMISSIONS,
-              },
-            }),
-          );
-        } else {
-          setIsAuthenticated(false);
-          await Swal.fire({
-            icon: "error",
-            title: "Access Denied",
-            text: "You are not authorized.",
-          });
-        }
-      } catch (error) {
-        const { message } = error as { message: string };
-        setIsAuthenticated(false);
-        await Swal.fire({
-          icon: "error",
-          title: "Authentication Error",
-          text: message,
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!hasInitialized && status === "idle") {
+      dispatch(fetchCurrentUser());
+    }
+  }, [dispatch, hasInitialized, status]);
 
-    checkAuth();
-  }, [dispatch]);
-
-  if (loading || isAuthenticated === null) {
-    console.log("Loading authentication status...");
-    return { loading: true, isAuthenticated: false };
-  }
-  return { loading: false, isAuthenticated };
+  return {
+    hasInitialized,
+    loading: !hasInitialized || loading || status === "idle",
+    isAuthenticated,
+    status,
+  };
 }

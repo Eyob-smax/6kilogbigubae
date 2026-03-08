@@ -122,7 +122,6 @@ export interface ChartData {
 }
 export interface AuthPayload {
   admin: Admin;
-  token: string;
 }
 
 export interface Pagination {

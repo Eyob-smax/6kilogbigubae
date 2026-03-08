@@ -1,7 +1,7 @@
 import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAppDispatch } from "../../store/hooks";
-import { logoutAdmin } from "../../features/auth/authSlice";
+import { clearAuthState, logoutAdmin } from "../../features/auth/authSlice";
 import {
   Users,
   UserCog,
@@ -38,8 +38,14 @@ const AdminSidebar = ({ isOpen, closeSidebar }: AdminSidebarProps) => {
     });
     if (!confirm.isConfirmed) return;
 
-    await dispatch(logoutAdmin());
-    navigate("/admin/login");
+    const resultAction = await dispatch(logoutAdmin());
+    if (logoutAdmin.fulfilled.match(resultAction)) {
+      navigate("/admin/login", { replace: true });
+      return;
+    }
+
+    dispatch(clearAuthState());
+    navigate("/admin/login", { replace: true });
   }, [dispatch, navigate]);
 
   const { currentUserData } = useSelector((state: RootState) => state.auth);

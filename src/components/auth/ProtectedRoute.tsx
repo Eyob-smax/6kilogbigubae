@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { ReactNode } from "react";
-import useGetCurrentUser from "../../customhook/useGetCurrentUser";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../app/store";
 import LoadingScreen from "../ui/LoadingScreen";
 
 interface ProtectedRouteProps {
@@ -8,9 +9,11 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated, loading } = useGetCurrentUser();
+  const { isAuthenticated, hasInitialized } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
-  if (loading || isAuthenticated === null) {
+  if (!hasInitialized) {
     return <LoadingScreen />;
   }
 

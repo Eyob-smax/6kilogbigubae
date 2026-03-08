@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoadingScreen from "./components/ui/LoadingScreen";
 import ProtectedAdminsPage from "./components/auth/protectedAdminsPage";
+import useGetCurrentUser from "./customhook/useGetCurrentUser";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
@@ -53,6 +54,12 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
+  const { hasInitialized } = useGetCurrentUser();
+
+  if (!hasInitialized) {
+    return <LoadingScreen />;
+  }
+
   return (
     <Suspense fallback={<LoadingScreen />}>
       <RouterProvider router={router} />

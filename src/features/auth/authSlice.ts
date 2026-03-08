@@ -1,17 +1,39 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../api/api";
 import { Admin, DEFAULT_PERMISSIONS, Permissions } from "../../types";
 import { AxiosError } from "axios";
 import Swal from "sweetalert2";
+import type { RootState } from "../../app/store";
 
-type TCurrentUserData = {
+export type TCurrentUserData = {
   username: string;
   studentid: string;
   isSuperAdmin: boolean;
   permissions: Permissions;
 };
 
+type AuthStatus = "idle" | "loading" | "authenticated" | "unauthenticated";
+
+type CurrentUserResponse = {
+  success: boolean;
+  user?: {
+    studentid: string;
+    adminusername: string;
+    isAuthenticated: boolean;
+    isSuperAdmin: boolean;
+    role?: "Super Admin" | "Admin";
+    permissions?: Permissions;
+  };
+};
+
+type AuthSessionPayload = {
+  admin: Admin;
+  currentUserData: TCurrentUserData;
+};
+
 interface AuthState {
+  hasInitialized: boolean;
+  status: AuthStatus;
   isAuthenticated: boolean;
   admin: Admin | null;
   loading: boolean;
@@ -20,6 +42,8 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
+  hasInitialized: false,
+  status: "idle",
   isAuthenticated: false,
   admin: null,
   loading: false,
@@ -43,17 +67,88 @@ const showLogoutSuccess = async () => {
   });
 };
 
+const buildSessionPayload = (
+  user?: CurrentUserResponse["user"],
+): AuthSessionPayload => {
+  if (!user?.isAuthenticated) {
+    throw new Error("No active session found");
+  }
+
+  const permissions = user.permissions || {
+    ...DEFAULT_PERMISSIONS,
+  };
+
+  return {
+    admin: {
+      studentid: user.studentid,
+      adminusername: user.adminusername,
+      isSuperAdmin: !!user.isSuperAdmin,
+      role: user.role || (user.isSuperAdmin ? "Super Admin" : "Admin"),
+      permissions,
+    },
+    currentUserData: {
+      username: user.adminusername,
+      studentid: user.studentid,
+      isSuperAdmin: !!user.isSuperAdmin,
+      permissions,
+    },
+  };
+};
+
+const applyAuthenticatedState = (
+  state: AuthState,
+  payload: AuthSessionPayload,
+) => {
+  state.status = "authenticated";
+  state.isAuthenticated = true;
+  state.admin = payload.admin;
+  state.currentUserData = payload.currentUserData;
+  state.error = null;
+};
+
+const resetAuthState = (state: AuthState) => {
+  state.status = "unauthenticated";
+  state.isAuthenticated = false;
+  state.admin = null;
+  state.currentUserData = null;
+};
+
+export const fetchCurrentUser = createAsyncThunk<
+  AuthSessionPayload,
+  void,
+  { rejectValue: string; state: RootState }
+>(
+  "auth/fetchCurrentUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get<CurrentUserResponse>("/auth/current");
+      return buildSessionPayload(response.data.user);
+    } catch (err) {
+      return rejectWithValue(extractErrorMessage(err, "Authentication failed"));
+    }
+  },
+  {
+    condition: (_, { getState }) => {
+      const { status, hasInitialized, loading } = getState().auth;
+      return !hasInitialized && status === "idle" && !loading;
+    },
+  },
+);
+
 export const loginAdmin = createAsyncThunk<
-  { admin: Admin; token: string },
+  AuthSessionPayload,
   { studentId: string; password: string },
   { rejectValue: string }
 >("auth/loginAdmin", async ({ studentId, password }, { rejectWithValue }) => {
   try {
-    const response = await api.post("/admin/login", {
+    await api.post("/admin/login", {
       studentid: studentId,
       adminpassword: password,
     });
-    return response.data;
+
+    const currentUserResponse =
+      await api.get<CurrentUserResponse>("/auth/current");
+    return buildSessionPayload(currentUserResponse.data.user);
   } catch (err) {
     return rejectWithValue(extractErrorMessage(err, "Login failed"));
   }
@@ -65,7 +160,7 @@ export const logoutAdmin = createAsyncThunk<
   { rejectValue: string }
 >("auth/logoutAdmin", async (_, { rejectWithValue }) => {
   try {
-    await api.get("/logout");
+    await api.post("/auth/logout");
     await showLogoutSuccess();
   } catch (err) {
     return rejectWithValue(extractErrorMessage(err, "Logout failed"));
@@ -79,51 +174,73 @@ const authSlice = createSlice({
     clearAuthError: (state) => {
       state.error = null;
     },
-    setCurrentUser: (state, { payload }: PayloadAction<TCurrentUserData>) => {
-      state.currentUserData = payload;
+    clearAuthState: (state) => {
+      state.hasInitialized = true;
+      state.loading = false;
+      state.error = null;
+      resetAuthState(state);
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchCurrentUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        if (!state.hasInitialized && state.status === "idle") {
+          state.status = "loading";
+        }
+      })
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.hasInitialized = true;
+        state.loading = false;
+        applyAuthenticatedState(state, action.payload);
+      })
+      .addCase(fetchCurrentUser.rejected, (state) => {
+        state.hasInitialized = true;
+        state.loading = false;
+        state.error = null;
+        resetAuthState(state);
+      })
       .addCase(loginAdmin.pending, (state) => {
+        state.hasInitialized = true;
+        state.status = "loading";
         state.loading = true;
         state.error = null;
       })
       .addCase(loginAdmin.fulfilled, (state, action) => {
+        state.hasInitialized = true;
         state.loading = false;
-        state.isAuthenticated = true;
-        state.admin = action.payload.admin;
-        state.currentUserData = {
-          username: action.payload.admin.adminusername,
-          studentid: action.payload.admin.studentid,
-          isSuperAdmin: !!action.payload.admin.isSuperAdmin,
-          permissions: action.payload.admin.permissions || {
-            ...DEFAULT_PERMISSIONS,
-          },
-        };
+        applyAuthenticatedState(state, action.payload);
       })
       .addCase(loginAdmin.rejected, (state, action) => {
+        state.hasInitialized = true;
         state.loading = false;
         state.error = action.payload || "Login failed";
-        state.isAuthenticated = false;
-        state.admin = null;
+        resetAuthState(state);
       })
 
       .addCase(logoutAdmin.pending, (state) => {
+        state.hasInitialized = true;
+        state.status = "loading";
         state.loading = true;
-      })
-      .addCase(logoutAdmin.fulfilled, (state) => {
-        state.loading = false;
-        state.isAuthenticated = false;
-        state.admin = null;
         state.error = null;
       })
+      .addCase(logoutAdmin.fulfilled, (state) => {
+        state.hasInitialized = true;
+        state.loading = false;
+        state.error = null;
+        resetAuthState(state);
+      })
       .addCase(logoutAdmin.rejected, (state, action) => {
+        state.hasInitialized = true;
+        state.status = state.isAuthenticated
+          ? "authenticated"
+          : "unauthenticated";
         state.loading = false;
         state.error = action.payload || "Logout failed";
       });
   },
 });
 
-export const { clearAuthError, setCurrentUser } = authSlice.actions;
+export const { clearAuthError, clearAuthState } = authSlice.actions;
 export default authSlice.reducer;

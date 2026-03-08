@@ -14,7 +14,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { isAuthenticated, loading, error, admin } = useSelector(
+  const { isAuthenticated, loading, error, status } = useSelector(
     (state: RootState) => state.auth,
   );
 
@@ -22,18 +22,18 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError("");
     dispatch(clearAuthError());
-    dispatch(loginAdmin({ studentId, password }));
+    await dispatch(loginAdmin({ studentId, password }));
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/admin");
+    if (status === "authenticated" && isAuthenticated) {
+      navigate("/admin", { replace: true });
     }
-  }, [isAuthenticated, admin, navigate]);
+  }, [isAuthenticated, navigate, status]);
 
   useEffect(() => {
     if (error) {
