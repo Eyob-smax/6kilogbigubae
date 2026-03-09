@@ -10,6 +10,12 @@ export interface UseUsersParams {
   sortOrder?: "asc" | "desc" | undefined;
   batch: number | null;
   participation: string | null;
+  gender: string | null;
+  sponsorshiptype: string | null;
+  cafeteriaaccess: boolean | null;
+  tookcourse: boolean | null;
+  departmentname: string | null;
+  clergicalstatus: string | null;
 }
 
 interface UseUsersReturn {
@@ -36,6 +42,12 @@ export default function useUsers(params: UseUsersParams): UseUsersReturn {
       sortOrder: params.sortOrder,
       batch: params.batch ?? undefined,
       participation: params.participation ?? undefined,
+      gender: params.gender ?? undefined,
+      sponsorshiptype: params.sponsorshiptype ?? undefined,
+      cafeteriaaccess: params.cafeteriaaccess ?? undefined,
+      tookcourse: params.tookcourse ?? undefined,
+      departmentname: params.departmentname ?? undefined,
+      clergicalstatus: params.clergicalstatus ?? undefined,
     })
       .then((res) => {
         if (!cancelled) {
@@ -64,6 +76,12 @@ export default function useUsers(params: UseUsersParams): UseUsersReturn {
     params.sortOrder,
     params.batch,
     params.participation,
+    params.gender,
+    params.sponsorshiptype,
+    params.cafeteriaaccess,
+    params.tookcourse,
+    params.departmentname,
+    params.clergicalstatus,
   ]);
 
   return { data, isLoading, isError };

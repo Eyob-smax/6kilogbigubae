@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Search, Plus, Edit, Trash2, X } from "lucide-react";
+import { Search, Plus, Edit, Trash2, X, Filter } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUsers,
@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import { memo } from "react";
 import useDebounce from "../../customhook/useDebounce";
 import Pagination from "../../components/Pagination";
+import FilterModal from "../../components/FilterModal";
 
 const UserRow = memo(
   ({
@@ -102,6 +103,17 @@ const ManageUsers = () => {
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    gender: null as string | null,
+    batch: null as number | null,
+    participation: null as string | null,
+    sponsorshiptype: null as string | null,
+    cafeteriaaccess: null as boolean | null,
+    tookcourse: null as boolean | null,
+    departmentname: null as string | null,
+    clergicalstatus: null as string | null,
+  });
 
   // perform fetch whenever relevant parameters change
   useEffect(() => {
@@ -110,9 +122,10 @@ const ManageUsers = () => {
         page,
         limit,
         q: debouncedSearch || undefined,
+        ...filters,
       }),
     );
-  }, [dispatch, page, limit, debouncedSearch]);
+  }, [dispatch, page, limit, debouncedSearch, filters]);
 
   // modal state
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -225,19 +238,68 @@ const ManageUsers = () => {
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
           {t("admin.users.title")}
         </h2>
-        <button
-          onClick={() => canRegisterUsers && openModal("add")}
-          disabled={!canRegisterUsers}
-          className={`inline-flex items-center justify-center px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto ${
-            canRegisterUsers
-              ? "bg-indigo-600 hover:bg-indigo-700"
-              : "bg-indigo-300 cursor-not-allowed"
-          }`}
-        >
-          <Plus size={18} className="mr-2" />
-          {t("admin.users.add")}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsFilterOpen(true)}
+            className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <Filter size={18} className="mr-2" />
+            Filters
+          </button>
+          <button
+            onClick={() => canRegisterUsers && openModal("add")}
+            disabled={!canRegisterUsers}
+            className={`inline-flex items-center justify-center px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto ${
+              canRegisterUsers
+                ? "bg-indigo-600 hover:bg-indigo-700"
+                : "bg-indigo-300 cursor-not-allowed"
+            }`}
+          >
+            <Plus size={18} className="mr-2" />
+            {t("admin.users.add")}
+          </button>
+        </div>
       </div>
+
+      <FilterModal
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        filters={filters}
+        onApply={setFilters}
+      />
+
+      {Object.values(filters).some(v => v !== null) && (
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-blue-900">Active Filters:</span>
+            <button
+              onClick={() => setFilters({
+                gender: null,
+                batch: null,
+                participation: null,
+                sponsorshiptype: null,
+                cafeteriaaccess: null,
+                tookcourse: null,
+                departmentname: null,
+                clergicalstatus: null,
+              })}
+              className="text-xs text-blue-600 hover:text-blue-800 underline"
+            >
+              Clear All
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {filters.gender && <span className="px-2 py-1 bg-white text-xs rounded border">Gender: {filters.gender}</span>}
+            {filters.batch && <span className="px-2 py-1 bg-white text-xs rounded border">Batch: {filters.batch}</span>}
+            {filters.departmentname && <span className="px-2 py-1 bg-white text-xs rounded border">Dept: {filters.departmentname}</span>}
+            {filters.clergicalstatus && <span className="px-2 py-1 bg-white text-xs rounded border">Clergy: {filters.clergicalstatus}</span>}
+            {filters.sponsorshiptype && <span className="px-2 py-1 bg-white text-xs rounded border">Sponsor: {filters.sponsorshiptype}</span>}
+            {filters.cafeteriaaccess !== null && <span className="px-2 py-1 bg-white text-xs rounded border">Cafe: {filters.cafeteriaaccess ? 'Yes' : 'No'}</span>}
+            {filters.tookcourse !== null && <span className="px-2 py-1 bg-white text-xs rounded border">Course: {filters.tookcourse ? 'Yes' : 'No'}</span>}
+            {filters.participation && <span className="px-2 py-1 bg-white text-xs rounded border">Participation: {filters.participation.replace(/_/g, ' ')}</span>}
+          </div>
+        </div>
+      )}
 
       <div className="relative mb-6">
         <span className="absolute inset-y-0 left-0 pl-3 flex items-center">

@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://gbi-backend-h76f.vercel.app",
+        target: "http://localhost:6500",
         changeOrigin: true,
         secure: false,
       },

@@ -1,24 +1,33 @@
 import { useEffect, useState } from "react";
+import { Filter } from "lucide-react";
 import useDebounce from "../customhook/useDebounce";
 import useUsers from "../service/useUsers";
 import Pagination from "../components/Pagination";
+import FilterModal from "../components/FilterModal";
 
 export default function UsersPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [q, setQ] = useState("");
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
-    undefined,
-  );
-  const [batch, setBatch] = useState<number | null>(null);
-  const [participation, setParticipation] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(undefined);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    gender: null as string | null,
+    batch: null as number | null,
+    participation: null as string | null,
+    sponsorshiptype: null as string | null,
+    cafeteriaaccess: null as boolean | null,
+    tookcourse: null as boolean | null,
+    departmentname: null as string | null,
+    clergicalstatus: null as string | null,
+  });
 
   const debouncedQ = useDebounce(q, 300);
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedQ, limit, sortBy, sortOrder, batch, participation]);
+  }, [debouncedQ, limit, sortBy, sortOrder, filters]);
 
   const { data, isLoading, isError } = useUsers({
     page,
@@ -26,8 +35,7 @@ export default function UsersPage() {
     q: debouncedQ,
     sortBy,
     sortOrder,
-    batch,
-    participation,
+    ...filters,
   });
 
   const totalPages = data?.pagination?.totalPages ?? 1;
@@ -47,7 +55,7 @@ export default function UsersPage() {
       </p>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-2">
           <input
             aria-label="Search users"
             className="w-full sm:w-64 px-3 py-2 border rounded"
@@ -75,23 +83,21 @@ export default function UsersPage() {
           </select>
         </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            className="px-2 py-2 border rounded w-24"
-            placeholder="Batch"
-            value={batch ?? ""}
-            onChange={(e) =>
-              setBatch(e.target.value ? Number(e.target.value) : null)
-            }
-          />
-          <input
-            className="px-2 py-2 border rounded w-40"
-            placeholder="Participation"
-            value={participation ?? ""}
-            onChange={(e) => setParticipation(e.target.value || null)}
-          />
-        </div>
+        <button
+          onClick={() => setIsFilterOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          <Filter size={18} />
+          Filters
+        </button>
       </div>
+
+      <FilterModal
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        filters={filters}
+        onApply={setFilters}
+      />
 
       <div className="space-y-3">
         {isLoading && (
