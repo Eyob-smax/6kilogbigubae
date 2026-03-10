@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { UserFilters, DEFAULT_USER_FILTERS } from "../types/filters";
+import { UserFilters, EMPTY_USER_FILTERS } from "../types";
 
 interface FilterModalProps {
   isOpen: boolean;
@@ -44,7 +44,7 @@ export default function FilterModal({ isOpen, onClose, filters, onApply }: Filte
   };
 
   const handleClear = () => {
-    onApply({ ...DEFAULT_USER_FILTERS });
+    onApply({ ...EMPTY_USER_FILTERS });
     onClose();
   };
 

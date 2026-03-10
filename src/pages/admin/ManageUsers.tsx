@@ -9,7 +9,7 @@ import {
   deleteUser,
 } from "../../features/users/userSlice";
 import type { AppDispatch, RootState } from "../../app/store";
-import { DEFAULT_PERMISSIONS, User } from "../../types";
+import { DEFAULT_PERMISSIONS, EMPTY_USER_FILTERS, User } from "../../types";
 import UserForm from "../../components/admin/UserForm";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import Swal from "sweetalert2";
@@ -105,19 +105,32 @@ const ManageUsers = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({ ...DEFAULT_USER_FILTERS });
+  const [filters, setFilters] = useState({ ...EMPTY_USER_FILTERS });
+
+  // Convert null filter values to undefined for the API params
+  const toFetchParams = useCallback(() => ({
+    page,
+    limit,
+    q: debouncedSearch || undefined,
+    gender: filters.gender ?? undefined,
+    batch: filters.batch ?? undefined,
+    participation: filters.participation ?? undefined,
+    sponsorshiptype: filters.sponsorshiptype ?? undefined,
+    cafeteriaaccess: filters.cafeteriaaccess ?? undefined,
+    tookcourse: filters.tookcourse ?? undefined,
+    departmentname: filters.departmentname ?? undefined,
+    clergicalstatus: filters.clergicalstatus ?? undefined,
+  }), [page, limit, debouncedSearch, filters]);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [filters]);
 
   // perform fetch whenever relevant parameters change
   useEffect(() => {
-    dispatch(
-      fetchUsers({
-        page,
-        limit,
-        q: debouncedSearch || undefined,
-        ...filters,
-      }),
-    );
-  }, [dispatch, page, limit, debouncedSearch, filters]);
+    dispatch(fetchUsers(toFetchParams()));
+  }, [dispatch, toFetchParams]);
 
   // modal state
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -152,16 +165,12 @@ const ManageUsers = () => {
           return;
         }
         dispatch(addUser(userData)).then(() => {
-          dispatch(
-            fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }),
-          );
+          dispatch(fetchUsers(toFetchParams()));
         });
       } else if (modalMode === "edit" && selectedUser?.studentid) {
         dispatch(updateUser({ id: selectedUser.studentid, userData })).then(
           () => {
-            dispatch(
-              fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }),
-            );
+            dispatch(fetchUsers(toFetchParams()));
           },
         );
         closeModal();
@@ -172,9 +181,7 @@ const ManageUsers = () => {
       modalMode,
       selectedUser,
       closeModal,
-      page,
-      limit,
-      debouncedSearch,
+      toFetchParams,
       canRegisterUsers,
       filters,
     ],
@@ -211,11 +218,11 @@ const ManageUsers = () => {
   const handleDeleteUser = useCallback(() => {
     if (selectedUser?.studentid) {
       dispatch(deleteUser(selectedUser.studentid)).then(() => {
-        dispatch(fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }));
+        dispatch(fetchUsers(toFetchParams()));
       });
     }
     closeModal();
-  }, [dispatch, selectedUser, closeModal, page, limit, debouncedSearch, filters]);
+  }, [dispatch, selectedUser, closeModal, toFetchParams]);
 
   if (loading) return <LoadingScreen />;
 
@@ -266,7 +273,7 @@ const ManageUsers = () => {
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-blue-900">Active Filters:</span>
             <button
-              onClick={() => setFilters({ ...DEFAULT_USER_FILTERS })}
+              onClick={() => setFilters({ ...EMPTY_USER_FILTERS })}
               className="text-xs text-blue-600 hover:text-blue-800 underline"
             >
               Clear All
