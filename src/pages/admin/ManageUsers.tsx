@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, Plus, Edit, Trash2, X, Filter } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -86,14 +86,14 @@ const ManageUsers = () => {
   const {
     users = [],
     loading,
-    error,
     pagination,
   } = useSelector((state: RootState) => state.user);
   const { currentUserData } = useSelector((state: RootState) => state.auth);
 
-  const adminPermissions = currentUserData?.permissions || {
-    ...DEFAULT_PERMISSIONS,
-  };
+  const adminPermissions = useMemo(
+    () => currentUserData?.permissions || { ...DEFAULT_PERMISSIONS },
+    [currentUserData?.permissions],
+  );
   const adminId = currentUserData?.studentid;
   const isSuperAdmin = !!currentUserData?.isSuperAdmin;
   const canRegisterUsers = isSuperAdmin || adminPermissions.registerUsers;
