@@ -1,19 +1,11 @@
 import { X } from "lucide-react";
+import { UserFilters, EMPTY_USER_FILTERS } from "../types";
 
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  filters: {
-    gender: string | null;
-    batch: number | null;
-    departmentname: string | null;
-    clergicalstatus: string | null;
-    sponsorshiptype: string | null;
-    cafeteriaaccess: boolean | null;
-    tookcourse: boolean | null;
-    participation: string | null;
-  };
-  onApply: (filters: any) => void;
+  filters: UserFilters;
+  onApply: (filters: UserFilters) => void;
 }
 
 const participationOptions = [
@@ -52,16 +44,7 @@ export default function FilterModal({ isOpen, onClose, filters, onApply }: Filte
   };
 
   const handleClear = () => {
-    onApply({
-      gender: null,
-      batch: null,
-      departmentname: null,
-      clergicalstatus: null,
-      sponsorshiptype: null,
-      cafeteriaaccess: null,
-      tookcourse: null,
-      participation: null,
-    });
+    onApply({ ...EMPTY_USER_FILTERS });
     onClose();
   };
 
