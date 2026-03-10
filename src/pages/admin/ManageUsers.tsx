@@ -107,17 +107,30 @@ const ManageUsers = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({ ...DEFAULT_USER_FILTERS });
 
+  // Convert null filter values to undefined so userApi.ts guards work correctly
+  const toFetchParams = useCallback(() => ({
+    page,
+    limit,
+    q: debouncedSearch || undefined,
+    gender: filters.gender ?? undefined,
+    batch: filters.batch ?? undefined,
+    participation: filters.participation ?? undefined,
+    sponsorshiptype: filters.sponsorshiptype ?? undefined,
+    cafeteriaaccess: filters.cafeteriaaccess ?? undefined,
+    tookcourse: filters.tookcourse ?? undefined,
+    departmentname: filters.departmentname ?? undefined,
+    clergicalstatus: filters.clergicalstatus ?? undefined,
+  }), [page, limit, debouncedSearch, filters]);
+
+  // Reset page when filters change to avoid showing empty pages
+  useEffect(() => {
+    setPage(1);
+  }, [filters]);
+
   // perform fetch whenever relevant parameters change
   useEffect(() => {
-    dispatch(
-      fetchUsers({
-        page,
-        limit,
-        q: debouncedSearch || undefined,
-        ...filters,
-      }),
-    );
-  }, [dispatch, page, limit, debouncedSearch, filters]);
+    dispatch(fetchUsers(toFetchParams()));
+  }, [dispatch, toFetchParams]);
 
   // modal state
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -152,16 +165,12 @@ const ManageUsers = () => {
           return;
         }
         dispatch(addUser(userData)).then(() => {
-          dispatch(
-            fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }),
-          );
+          dispatch(fetchUsers(toFetchParams()));
         });
       } else if (modalMode === "edit" && selectedUser?.studentid) {
         dispatch(updateUser({ id: selectedUser.studentid, userData })).then(
           () => {
-            dispatch(
-              fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }),
-            );
+            dispatch(fetchUsers(toFetchParams()));
           },
         );
         closeModal();
@@ -172,11 +181,8 @@ const ManageUsers = () => {
       modalMode,
       selectedUser,
       closeModal,
-      page,
-      limit,
-      debouncedSearch,
+      toFetchParams,
       canRegisterUsers,
-      filters,
     ],
   );
 
@@ -211,11 +217,11 @@ const ManageUsers = () => {
   const handleDeleteUser = useCallback(() => {
     if (selectedUser?.studentid) {
       dispatch(deleteUser(selectedUser.studentid)).then(() => {
-        dispatch(fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }));
+        dispatch(fetchUsers(toFetchParams()));
       });
     }
     closeModal();
-  }, [dispatch, selectedUser, closeModal, page, limit, debouncedSearch, filters]);
+  }, [dispatch, selectedUser, closeModal, toFetchParams]);
 
   if (loading) return <LoadingScreen />;
 
