@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, Plus, Edit, Trash2, X, Filter } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import { memo } from "react";
 import useDebounce from "../../customhook/useDebounce";
 import Pagination from "../../components/Pagination";
 import FilterModal from "../../components/FilterModal";
+import { DEFAULT_USER_FILTERS } from "../../types/filters";
 
 const UserRow = memo(
   ({
@@ -86,14 +87,14 @@ const ManageUsers = () => {
   const {
     users = [],
     loading,
-    error,
     pagination,
   } = useSelector((state: RootState) => state.user);
   const { currentUserData } = useSelector((state: RootState) => state.auth);
 
-  const adminPermissions = currentUserData?.permissions || {
-    ...DEFAULT_PERMISSIONS,
-  };
+  const adminPermissions = useMemo(
+    () => currentUserData?.permissions || { ...DEFAULT_PERMISSIONS },
+    [currentUserData?.permissions],
+  );
   const adminId = currentUserData?.studentid;
   const isSuperAdmin = !!currentUserData?.isSuperAdmin;
   const canRegisterUsers = isSuperAdmin || adminPermissions.registerUsers;
@@ -104,16 +105,7 @@ const ManageUsers = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    gender: null as string | null,
-    batch: null as number | null,
-    participation: null as string | null,
-    sponsorshiptype: null as string | null,
-    cafeteriaaccess: null as boolean | null,
-    tookcourse: null as boolean | null,
-    departmentname: null as string | null,
-    clergicalstatus: null as string | null,
-  });
+  const [filters, setFilters] = useState({ ...DEFAULT_USER_FILTERS });
 
   // perform fetch whenever relevant parameters change
   useEffect(() => {
@@ -161,14 +153,14 @@ const ManageUsers = () => {
         }
         dispatch(addUser(userData)).then(() => {
           dispatch(
-            fetchUsers({ page, limit, q: debouncedSearch || undefined }),
+            fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }),
           );
         });
       } else if (modalMode === "edit" && selectedUser?.studentid) {
         dispatch(updateUser({ id: selectedUser.studentid, userData })).then(
           () => {
             dispatch(
-              fetchUsers({ page, limit, q: debouncedSearch || undefined }),
+              fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }),
             );
           },
         );
@@ -184,6 +176,7 @@ const ManageUsers = () => {
       limit,
       debouncedSearch,
       canRegisterUsers,
+      filters,
     ],
   );
 
@@ -218,11 +211,11 @@ const ManageUsers = () => {
   const handleDeleteUser = useCallback(() => {
     if (selectedUser?.studentid) {
       dispatch(deleteUser(selectedUser.studentid)).then(() => {
-        dispatch(fetchUsers({ page, limit, q: debouncedSearch || undefined }));
+        dispatch(fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }));
       });
     }
     closeModal();
-  }, [dispatch, selectedUser, closeModal, page, limit, debouncedSearch]);
+  }, [dispatch, selectedUser, closeModal, page, limit, debouncedSearch, filters]);
 
   if (loading) return <LoadingScreen />;
 
@@ -273,16 +266,7 @@ const ManageUsers = () => {
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-blue-900">Active Filters:</span>
             <button
-              onClick={() => setFilters({
-                gender: null,
-                batch: null,
-                participation: null,
-                sponsorshiptype: null,
-                cafeteriaaccess: null,
-                tookcourse: null,
-                departmentname: null,
-                clergicalstatus: null,
-              })}
+              onClick={() => setFilters({ ...DEFAULT_USER_FILTERS })}
               className="text-xs text-blue-600 hover:text-blue-800 underline"
             >
               Clear All

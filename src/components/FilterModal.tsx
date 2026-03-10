@@ -1,19 +1,11 @@
 import { X } from "lucide-react";
+import { UserFilters, DEFAULT_USER_FILTERS } from "../types/filters";
 
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  filters: {
-    gender: string | null;
-    batch: number | null;
-    departmentname: string | null;
-    clergicalstatus: string | null;
-    sponsorshiptype: string | null;
-    cafeteriaaccess: boolean | null;
-    tookcourse: boolean | null;
-    participation: string | null;
-  };
-  onApply: (filters: any) => void;
+  filters: UserFilters;
+  onApply: (filters: UserFilters) => void;
 }
 
 const participationOptions = [
@@ -52,16 +44,7 @@ export default function FilterModal({ isOpen, onClose, filters, onApply }: Filte
   };
 
   const handleClear = () => {
-    onApply({
-      gender: null,
-      batch: null,
-      departmentname: null,
-      clergicalstatus: null,
-      sponsorshiptype: null,
-      cafeteriaaccess: null,
-      tookcourse: null,
-      participation: null,
-    });
+    onApply({ ...DEFAULT_USER_FILTERS });
     onClose();
   };
 
@@ -70,7 +53,7 @@ export default function FilterModal({ isOpen, onClose, filters, onApply }: Filte
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Filter Students</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700" aria-label="Close filter modal">
             <X size={24} />
           </button>
         </div>
@@ -93,7 +76,7 @@ export default function FilterModal({ isOpen, onClose, filters, onApply }: Filte
 
             <div className="col-span-2">
               <label className="block text-sm font-medium mb-1">Department</label>
-              <input name="departmentname" defaultValue={filters.departmentname || ""} placeholder="Search department" className="w-full px-3 py-2 border rounded" />
+              <input name="departmentname" defaultValue={filters.departmentname || ""} placeholder="Search department" maxLength={100} className="w-full px-3 py-2 border rounded" />
             </div>
 
             <div>

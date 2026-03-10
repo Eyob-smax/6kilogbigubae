@@ -34,7 +34,7 @@ const getBaseURL = () => {
   }
 
   if (import.meta.env.DEV) {
-    return "/api";
+    return "https://gbi-backend-h76f.vercel.app/api";
   }
 
   return "https://gbi-backend-h76f.vercel.app/api";
