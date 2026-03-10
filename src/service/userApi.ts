@@ -9,6 +9,12 @@ interface GetUsersParams {
   sortOrder?: "asc" | "desc";
   batch?: number;
   participation?: string;
+  gender?: string;
+  sponsorshiptype?: string;
+  cafeteriaaccess?: boolean;
+  tookcourse?: boolean;
+  departmentname?: string;
+  clergicalstatus?: string;
 }
 
 export async function getUsers(
@@ -23,6 +29,12 @@ export async function getUsers(
   if (params.sortOrder) query.append("sortOrder", params.sortOrder);
   if (params.batch !== undefined) query.append("batch", String(params.batch));
   if (params.participation) query.append("participation", params.participation);
+  if (params.gender) query.append("gender", params.gender);
+  if (params.sponsorshiptype) query.append("sponsorshiptype", params.sponsorshiptype);
+  if (params.cafeteriaaccess !== undefined) query.append("cafeteriaaccess", String(params.cafeteriaaccess));
+  if (params.tookcourse !== undefined) query.append("tookcourse", String(params.tookcourse));
+  if (params.departmentname) query.append("departmentname", params.departmentname);
+  if (params.clergicalstatus) query.append("clergicalstatus", params.clergicalstatus);
 
   const url = "/user" + (query.toString() ? `?${query.toString()}` : "");
   return await getRequest<UsersApiResponse>(url);
