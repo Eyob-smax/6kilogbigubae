@@ -67,7 +67,10 @@ export default function UsersPage() {
           <select
             className="px-2 py-2 border rounded"
             value={sortOrder || ""}
-            onChange={(e) => setSortOrder((e.target.value as any) || undefined)}
+            onChange={(e) => {
+              const v = e.target.value;
+              setSortOrder(v === "asc" || v === "desc" ? v : undefined);
+            }}
           >
             <option value="">Order</option>
             <option value="asc">Asc</option>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, Plus, Edit, Trash2, X, Filter } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -87,14 +87,14 @@ const ManageUsers = () => {
   const {
     users = [],
     loading,
-    error,
     pagination,
   } = useSelector((state: RootState) => state.user);
   const { currentUserData } = useSelector((state: RootState) => state.auth);
 
-  const adminPermissions = currentUserData?.permissions || {
-    ...DEFAULT_PERMISSIONS,
-  };
+  const adminPermissions = useMemo(
+    () => currentUserData?.permissions || { ...DEFAULT_PERMISSIONS },
+    [currentUserData?.permissions],
+  );
   const adminId = currentUserData?.studentid;
   const isSuperAdmin = !!currentUserData?.isSuperAdmin;
   const canRegisterUsers = isSuperAdmin || adminPermissions.registerUsers;
@@ -153,14 +153,14 @@ const ManageUsers = () => {
         }
         dispatch(addUser(userData)).then(() => {
           dispatch(
-            fetchUsers({ page, limit, q: debouncedSearch || undefined }),
+            fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }),
           );
         });
       } else if (modalMode === "edit" && selectedUser?.studentid) {
         dispatch(updateUser({ id: selectedUser.studentid, userData })).then(
           () => {
             dispatch(
-              fetchUsers({ page, limit, q: debouncedSearch || undefined }),
+              fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }),
             );
           },
         );
@@ -176,6 +176,7 @@ const ManageUsers = () => {
       limit,
       debouncedSearch,
       canRegisterUsers,
+      filters,
     ],
   );
 
@@ -210,11 +211,11 @@ const ManageUsers = () => {
   const handleDeleteUser = useCallback(() => {
     if (selectedUser?.studentid) {
       dispatch(deleteUser(selectedUser.studentid)).then(() => {
-        dispatch(fetchUsers({ page, limit, q: debouncedSearch || undefined }));
+        dispatch(fetchUsers({ page, limit, q: debouncedSearch || undefined, ...filters }));
       });
     }
     closeModal();
-  }, [dispatch, selectedUser, closeModal, page, limit, debouncedSearch]);
+  }, [dispatch, selectedUser, closeModal, page, limit, debouncedSearch, filters]);
 
   if (loading) return <LoadingScreen />;
 
