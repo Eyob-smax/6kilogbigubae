@@ -17,6 +17,7 @@ import { memo } from "react";
 import useDebounce from "../../customhook/useDebounce";
 import Pagination from "../../components/Pagination";
 import FilterModal from "../../components/FilterModal";
+import { DEFAULT_USER_FILTERS } from "../../types/filters";
 
 const UserRow = memo(
   ({
@@ -182,6 +183,7 @@ const ManageUsers = () => {
       closeModal,
       toFetchParams,
       canRegisterUsers,
+      filters,
     ],
   );
 
