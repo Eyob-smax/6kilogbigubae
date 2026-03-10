@@ -17,6 +17,7 @@ import { memo } from "react";
 import useDebounce from "../../customhook/useDebounce";
 import Pagination from "../../components/Pagination";
 import FilterModal from "../../components/FilterModal";
+import { DEFAULT_USER_FILTERS } from "../../types/filters";
 
 const UserRow = memo(
   ({
@@ -104,16 +105,7 @@ const ManageUsers = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    gender: null as string | null,
-    batch: null as number | null,
-    participation: null as string | null,
-    sponsorshiptype: null as string | null,
-    cafeteriaaccess: null as boolean | null,
-    tookcourse: null as boolean | null,
-    departmentname: null as string | null,
-    clergicalstatus: null as string | null,
-  });
+  const [filters, setFilters] = useState({ ...DEFAULT_USER_FILTERS });
 
   // perform fetch whenever relevant parameters change
   useEffect(() => {
@@ -273,16 +265,7 @@ const ManageUsers = () => {
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-blue-900">Active Filters:</span>
             <button
-              onClick={() => setFilters({
-                gender: null,
-                batch: null,
-                participation: null,
-                sponsorshiptype: null,
-                cafeteriaaccess: null,
-                tookcourse: null,
-                departmentname: null,
-                clergicalstatus: null,
-              })}
+              onClick={() => setFilters({ ...DEFAULT_USER_FILTERS })}
               className="text-xs text-blue-600 hover:text-blue-800 underline"
             >
               Clear All

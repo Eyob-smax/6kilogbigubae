@@ -4,6 +4,7 @@ import useDebounce from "../customhook/useDebounce";
 import useUsers from "../service/useUsers";
 import Pagination from "../components/Pagination";
 import FilterModal from "../components/FilterModal";
+import { DEFAULT_USER_FILTERS } from "../types/filters";
 
 export default function UsersPage() {
   const [page, setPage] = useState(1);
@@ -12,16 +13,7 @@ export default function UsersPage() {
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(undefined);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    gender: null as string | null,
-    batch: null as number | null,
-    participation: null as string | null,
-    sponsorshiptype: null as string | null,
-    cafeteriaaccess: null as boolean | null,
-    tookcourse: null as boolean | null,
-    departmentname: null as string | null,
-    clergicalstatus: null as string | null,
-  });
+  const [filters, setFilters] = useState({ ...DEFAULT_USER_FILTERS });
 
   const debouncedQ = useDebounce(q, 300);
 
