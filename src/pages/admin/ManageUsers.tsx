@@ -14,10 +14,8 @@ import UserForm from "../../components/admin/UserForm";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import Swal from "sweetalert2";
 import { memo } from "react";
-import useDebounce from "../../customhook/useDebounce";
 import Pagination from "../../components/Pagination";
 import FilterModal from "../../components/FilterModal";
-import { DEFAULT_USER_FILTERS } from "../../types/filters";
 
 const UserRow = memo(
   ({
@@ -99,45 +97,53 @@ const ManageUsers = () => {
   const isSuperAdmin = !!currentUserData?.isSuperAdmin;
   const canRegisterUsers = isSuperAdmin || adminPermissions.registerUsers;
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearch = useDebounce(searchTerm, 300);
+  const [searchInput, setSearchInput] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({ ...EMPTY_USER_FILTERS });
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAppliedSearch(searchInput);
+      setPage(1);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   // Convert null filter values to undefined for the API params
-  const toFetchParams = useCallback(() => ({
-    page,
-    limit,
-    q: debouncedSearch || undefined,
-    gender: filters.gender ?? undefined,
-    batch: filters.batch ?? undefined,
-    participation: filters.participation ?? undefined,
-    sponsorshiptype: filters.sponsorshiptype ?? undefined,
-    cafeteriaaccess: filters.cafeteriaaccess ?? undefined,
-    tookcourse: filters.tookcourse ?? undefined,
-    departmentname: filters.departmentname ?? undefined,
-    clergicalstatus: filters.clergicalstatus ?? undefined,
-  }), [page, limit, debouncedSearch, filters]);
+  const toFetchParams = useCallback(
+    () => ({
+      page,
+      limit,
+      q: appliedSearch || undefined,
+      gender: filters.gender ?? undefined,
+      batch: filters.batch ?? undefined,
+      participation: filters.participation ?? undefined,
+      sponsorshiptype: filters.sponsorshiptype ?? undefined,
+      cafeteriaaccess: filters.cafeteriaaccess ?? undefined,
+      tookcourse: filters.tookcourse ?? undefined,
+      departmentname: filters.departmentname ?? undefined,
+      clergicalstatus: filters.clergicalstatus ?? undefined,
+    }),
+    [page, limit, appliedSearch, filters],
+  );
 
   // Reset page when filters change
   useEffect(() => {
     setPage(1);
   }, [filters]);
 
-  // perform fetch whenever relevant parameters change
   useEffect(() => {
     dispatch(fetchUsers(toFetchParams()));
   }, [dispatch, toFetchParams]);
 
-  // modal state
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
-
-  // initial data already covered by other effect above
 
   const openModal = useCallback(
     (mode: "add" | "edit" | "delete", user: User | null = null) => {
@@ -183,7 +189,6 @@ const ManageUsers = () => {
       closeModal,
       toFetchParams,
       canRegisterUsers,
-      filters,
     ],
   );
 
@@ -268,10 +273,12 @@ const ManageUsers = () => {
         onApply={setFilters}
       />
 
-      {Object.values(filters).some(v => v !== null) && (
+      {Object.values(filters).some((v) => v !== null) && (
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-blue-900">Active Filters:</span>
+            <span className="text-sm font-medium text-blue-900">
+              Active Filters:
+            </span>
             <button
               onClick={() => setFilters({ ...EMPTY_USER_FILTERS })}
               className="text-xs text-blue-600 hover:text-blue-800 underline"
@@ -280,14 +287,46 @@ const ManageUsers = () => {
             </button>
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
-            {filters.gender && <span className="px-2 py-1 bg-white text-xs rounded border">Gender: {filters.gender}</span>}
-            {filters.batch && <span className="px-2 py-1 bg-white text-xs rounded border">Batch: {filters.batch}</span>}
-            {filters.departmentname && <span className="px-2 py-1 bg-white text-xs rounded border">Dept: {filters.departmentname}</span>}
-            {filters.clergicalstatus && <span className="px-2 py-1 bg-white text-xs rounded border">Clergy: {filters.clergicalstatus}</span>}
-            {filters.sponsorshiptype && <span className="px-2 py-1 bg-white text-xs rounded border">Sponsor: {filters.sponsorshiptype}</span>}
-            {filters.cafeteriaaccess !== null && <span className="px-2 py-1 bg-white text-xs rounded border">Cafe: {filters.cafeteriaaccess ? 'Yes' : 'No'}</span>}
-            {filters.tookcourse !== null && <span className="px-2 py-1 bg-white text-xs rounded border">Course: {filters.tookcourse ? 'Yes' : 'No'}</span>}
-            {filters.participation && <span className="px-2 py-1 bg-white text-xs rounded border">Participation: {filters.participation.replace(/_/g, ' ')}</span>}
+            {filters.gender && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Gender: {filters.gender}
+              </span>
+            )}
+            {filters.batch && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Batch: {filters.batch}
+              </span>
+            )}
+            {filters.departmentname && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Dept: {filters.departmentname}
+              </span>
+            )}
+            {filters.clergicalstatus && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Clergy: {filters.clergicalstatus}
+              </span>
+            )}
+            {filters.sponsorshiptype && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Sponsor: {filters.sponsorshiptype}
+              </span>
+            )}
+            {filters.cafeteriaaccess !== null && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Cafe: {filters.cafeteriaaccess ? "Yes" : "No"}
+              </span>
+            )}
+            {filters.tookcourse !== null && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Course: {filters.tookcourse ? "Yes" : "No"}
+              </span>
+            )}
+            {filters.participation && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Participation: {filters.participation.replace(/_/g, " ")}
+              </span>
+            )}
           </div>
         </div>
       )}
@@ -300,21 +339,35 @@ const ManageUsers = () => {
           type="text"
           className="w-full pl-10 pr-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base"
           placeholder={t("admin.users.search")}
-          value={searchTerm}
+          value={searchInput}
           onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+            setSearchInput(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              setAppliedSearch(searchInput);
+              setPage(1);
+            }
           }}
         />
-        {searchTerm && (
+        {searchInput && (
           <button
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-            onClick={() => setSearchTerm("")}
+            onClick={() => {
+              setSearchInput("");
+              setAppliedSearch("");
+              setPage(1);
+            }}
             aria-label="Clear search"
           >
             <X className="h-5 w-5" />
           </button>
         )}
+      </div>
+
+      <div className="mb-3 text-xs text-gray-500">
+        Search applies after 3 seconds, or press Enter to search now.
       </div>
 
       <div className="overflow-x-auto bg-white rounded-lg border shadow-sm">

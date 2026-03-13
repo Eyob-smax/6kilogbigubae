@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Filter } from "lucide-react";
-import useDebounce from "../customhook/useDebounce";
 import useUsers from "../service/useUsers";
 import Pagination from "../components/Pagination";
 import FilterModal from "../components/FilterModal";
@@ -9,22 +8,32 @@ import { EMPTY_USER_FILTERS } from "../types";
 export default function UsersPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [q, setQ] = useState("");
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(undefined);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
+    undefined,
+  );
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({ ...EMPTY_USER_FILTERS });
+  const [searchInput, setSearchInput] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
 
-  const debouncedQ = useDebounce(q, 300);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAppliedSearch(searchInput);
+      setPage(1);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedQ, limit, sortBy, sortOrder, filters]);
+  }, [limit, sortBy, sortOrder, filters]);
 
   const { data, isLoading, isError } = useUsers({
     page,
     limit,
-    q: debouncedQ,
+    q: appliedSearch,
     sortBy,
     sortOrder,
     ...filters,
@@ -52,8 +61,15 @@ export default function UsersPage() {
             aria-label="Search users"
             className="w-full sm:w-64 px-3 py-2 border rounded"
             placeholder="Search by name or id"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                setAppliedSearch(searchInput);
+                setPage(1);
+              }
+            }}
           />
           <select
             className="px-2 py-2 border rounded"
@@ -85,6 +101,10 @@ export default function UsersPage() {
           <Filter size={18} />
           Filters
         </button>
+      </div>
+
+      <div className="mb-3 text-xs text-gray-500">
+        Search applies after 3 seconds, or press Enter to search now.
       </div>
 
       <FilterModal
