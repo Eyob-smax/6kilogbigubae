@@ -367,7 +367,7 @@ const ManageUsers = () => {
       </div>
 
       <div className="mb-3 text-xs text-gray-500">
-        Search applies after half a seconds, or press Enter to search now.
+        Search applies after 300 ms, or press Enter to search now.
       </div>
 
       <div className="overflow-x-auto bg-white rounded-lg border shadow-sm">
