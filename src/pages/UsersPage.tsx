@@ -21,7 +21,7 @@ export default function UsersPage() {
     const timer = setTimeout(() => {
       setAppliedSearch(searchInput);
       setPage(1);
-    }, 3000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [searchInput]);
