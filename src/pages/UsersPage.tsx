@@ -104,7 +104,7 @@ export default function UsersPage() {
       </div>
 
       <div className="mb-3 text-xs text-gray-500">
-        Search applies after 3 seconds, or press Enter to search now.
+        Search applies after 1 seconds, or press Enter to search now.
       </div>
 
       <FilterModal
