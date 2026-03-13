@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Search, Plus, Edit, Trash2, X } from "lucide-react";
+import { Search, Plus, Edit, Trash2, X, Filter } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUsers,
@@ -9,13 +9,15 @@ import {
   deleteUser,
 } from "../../features/users/userSlice";
 import type { AppDispatch, RootState } from "../../app/store";
-import { DEFAULT_PERMISSIONS, User } from "../../types";
+import { DEFAULT_PERMISSIONS, EMPTY_USER_FILTERS, User } from "../../types";
 import UserForm from "../../components/admin/UserForm";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import Swal from "sweetalert2";
 import { memo } from "react";
 import useDebounce from "../../customhook/useDebounce";
 import Pagination from "../../components/Pagination";
+import FilterModal from "../../components/FilterModal";
+import { DEFAULT_USER_FILTERS } from "../../types/filters";
 
 const UserRow = memo(
   ({
@@ -85,14 +87,14 @@ const ManageUsers = () => {
   const {
     users = [],
     loading,
-    error,
     pagination,
   } = useSelector((state: RootState) => state.user);
   const { currentUserData } = useSelector((state: RootState) => state.auth);
 
-  const adminPermissions = currentUserData?.permissions || {
-    ...DEFAULT_PERMISSIONS,
-  };
+  const adminPermissions = useMemo(
+    () => currentUserData?.permissions || { ...DEFAULT_PERMISSIONS },
+    [currentUserData?.permissions],
+  );
   const adminId = currentUserData?.studentid;
   const isSuperAdmin = !!currentUserData?.isSuperAdmin;
   const canRegisterUsers = isSuperAdmin || adminPermissions.registerUsers;
@@ -102,17 +104,33 @@ const ManageUsers = () => {
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({ ...EMPTY_USER_FILTERS });
+
+  // Convert null filter values to undefined for the API params
+  const toFetchParams = useCallback(() => ({
+    page,
+    limit,
+    q: debouncedSearch || undefined,
+    gender: filters.gender ?? undefined,
+    batch: filters.batch ?? undefined,
+    participation: filters.participation ?? undefined,
+    sponsorshiptype: filters.sponsorshiptype ?? undefined,
+    cafeteriaaccess: filters.cafeteriaaccess ?? undefined,
+    tookcourse: filters.tookcourse ?? undefined,
+    departmentname: filters.departmentname ?? undefined,
+    clergicalstatus: filters.clergicalstatus ?? undefined,
+  }), [page, limit, debouncedSearch, filters]);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [filters]);
 
   // perform fetch whenever relevant parameters change
   useEffect(() => {
-    dispatch(
-      fetchUsers({
-        page,
-        limit,
-        q: debouncedSearch || undefined,
-      }),
-    );
-  }, [dispatch, page, limit, debouncedSearch]);
+    dispatch(fetchUsers(toFetchParams()));
+  }, [dispatch, toFetchParams]);
 
   // modal state
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -147,16 +165,12 @@ const ManageUsers = () => {
           return;
         }
         dispatch(addUser(userData)).then(() => {
-          dispatch(
-            fetchUsers({ page, limit, q: debouncedSearch || undefined }),
-          );
+          dispatch(fetchUsers(toFetchParams()));
         });
       } else if (modalMode === "edit" && selectedUser?.studentid) {
         dispatch(updateUser({ id: selectedUser.studentid, userData })).then(
           () => {
-            dispatch(
-              fetchUsers({ page, limit, q: debouncedSearch || undefined }),
-            );
+            dispatch(fetchUsers(toFetchParams()));
           },
         );
         closeModal();
@@ -167,10 +181,9 @@ const ManageUsers = () => {
       modalMode,
       selectedUser,
       closeModal,
-      page,
-      limit,
-      debouncedSearch,
+      toFetchParams,
       canRegisterUsers,
+      filters,
     ],
   );
 
@@ -205,11 +218,11 @@ const ManageUsers = () => {
   const handleDeleteUser = useCallback(() => {
     if (selectedUser?.studentid) {
       dispatch(deleteUser(selectedUser.studentid)).then(() => {
-        dispatch(fetchUsers({ page, limit, q: debouncedSearch || undefined }));
+        dispatch(fetchUsers(toFetchParams()));
       });
     }
     closeModal();
-  }, [dispatch, selectedUser, closeModal, page, limit, debouncedSearch]);
+  }, [dispatch, selectedUser, closeModal, toFetchParams]);
 
   if (loading) return <LoadingScreen />;
 
@@ -225,19 +238,59 @@ const ManageUsers = () => {
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
           {t("admin.users.title")}
         </h2>
-        <button
-          onClick={() => canRegisterUsers && openModal("add")}
-          disabled={!canRegisterUsers}
-          className={`inline-flex items-center justify-center px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto ${
-            canRegisterUsers
-              ? "bg-indigo-600 hover:bg-indigo-700"
-              : "bg-indigo-300 cursor-not-allowed"
-          }`}
-        >
-          <Plus size={18} className="mr-2" />
-          {t("admin.users.add")}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsFilterOpen(true)}
+            className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <Filter size={18} className="mr-2" />
+            Filters
+          </button>
+          <button
+            onClick={() => canRegisterUsers && openModal("add")}
+            disabled={!canRegisterUsers}
+            className={`inline-flex items-center justify-center px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto ${
+              canRegisterUsers
+                ? "bg-indigo-600 hover:bg-indigo-700"
+                : "bg-indigo-300 cursor-not-allowed"
+            }`}
+          >
+            <Plus size={18} className="mr-2" />
+            {t("admin.users.add")}
+          </button>
+        </div>
       </div>
+
+      <FilterModal
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        filters={filters}
+        onApply={setFilters}
+      />
+
+      {Object.values(filters).some(v => v !== null) && (
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-blue-900">Active Filters:</span>
+            <button
+              onClick={() => setFilters({ ...EMPTY_USER_FILTERS })}
+              className="text-xs text-blue-600 hover:text-blue-800 underline"
+            >
+              Clear All
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {filters.gender && <span className="px-2 py-1 bg-white text-xs rounded border">Gender: {filters.gender}</span>}
+            {filters.batch && <span className="px-2 py-1 bg-white text-xs rounded border">Batch: {filters.batch}</span>}
+            {filters.departmentname && <span className="px-2 py-1 bg-white text-xs rounded border">Dept: {filters.departmentname}</span>}
+            {filters.clergicalstatus && <span className="px-2 py-1 bg-white text-xs rounded border">Clergy: {filters.clergicalstatus}</span>}
+            {filters.sponsorshiptype && <span className="px-2 py-1 bg-white text-xs rounded border">Sponsor: {filters.sponsorshiptype}</span>}
+            {filters.cafeteriaaccess !== null && <span className="px-2 py-1 bg-white text-xs rounded border">Cafe: {filters.cafeteriaaccess ? 'Yes' : 'No'}</span>}
+            {filters.tookcourse !== null && <span className="px-2 py-1 bg-white text-xs rounded border">Course: {filters.tookcourse ? 'Yes' : 'No'}</span>}
+            {filters.participation && <span className="px-2 py-1 bg-white text-xs rounded border">Participation: {filters.participation.replace(/_/g, ' ')}</span>}
+          </div>
+        </div>
+      )}
 
       <div className="relative mb-6">
         <span className="absolute inset-y-0 left-0 pl-3 flex items-center">

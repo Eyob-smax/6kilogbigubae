@@ -46,6 +46,12 @@ export interface FetchUsersParams {
   sortOrder?: "asc" | "desc";
   batch?: number;
   participation?: string;
+  gender?: string;
+  sponsorshiptype?: string;
+  cafeteriaaccess?: boolean;
+  tookcourse?: boolean;
+  departmentname?: string;
+  clergicalstatus?: string;
 }
 
 // response comes with additional pagination object
