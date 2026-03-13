@@ -68,13 +68,36 @@ const ManageAdmins: React.FC = React.memo(() => {
   const handleSaveAdmin = useCallback(
     (adminData: Partial<Admin>) => {
       if (modalMode === "add") {
-        dispatch(addAdmin(adminData));
+        const payload: Partial<Admin> = {
+          ...adminData,
+          studentid: adminData.studentid?.trim(),
+          adminusername: adminData.adminusername?.trim(),
+        };
+
+        if (payload.adminpassword) {
+          payload.adminpassword = payload.adminpassword.trim();
+        }
+
+        dispatch(addAdmin(payload));
       } else if (modalMode === "edit" && selectedAdmin?.studentid) {
         const payload = { ...adminData };
-        if (!payload.adminpassword) {
-          delete payload.adminpassword;
+        if (payload.studentid) {
+          payload.studentid = payload.studentid.trim();
         }
-        dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData: payload }));
+        if (payload.adminusername) {
+          payload.adminusername = payload.adminusername.trim();
+        }
+
+        const normalizedPassword = payload.adminpassword?.trim();
+        if (!normalizedPassword) {
+          delete payload.adminpassword;
+        } else {
+          payload.adminpassword = normalizedPassword;
+        }
+
+        dispatch(
+          updateAdmin({ id: selectedAdmin.studentid, adminData: payload }),
+        );
       }
       closeModal();
     },

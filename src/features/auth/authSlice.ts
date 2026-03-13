@@ -141,9 +141,12 @@ export const loginAdmin = createAsyncThunk<
   { rejectValue: string }
 >("auth/loginAdmin", async ({ studentId, password }, { rejectWithValue }) => {
   try {
+    const normalizedStudentId = studentId.trim();
+    const normalizedPassword = password.trim();
+
     await api.post("/admin/login", {
-      studentid: studentId,
-      adminpassword: password,
+      studentid: normalizedStudentId,
+      adminpassword: normalizedPassword,
     });
 
     const currentUserResponse =

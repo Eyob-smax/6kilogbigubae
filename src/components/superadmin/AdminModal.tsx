@@ -75,7 +75,7 @@ export default function AdminModal({
               htmlFor="admin-id"
               className="text-xs font-semibold text-slate-700 tracking-wide"
             >
-              Student ID
+              Student ID {mode === "edit" ? "(Read-only)" : ""}
             </label>
             <input
               id="admin-id"
@@ -83,9 +83,14 @@ export default function AdminModal({
               type="text"
               placeholder="UGR-1234-16"
               value={formData.studentid}
-              autoFocus
+              autoFocus={mode !== "edit"}
+              disabled={mode === "edit"}
               onChange={handleChange}
-              className="w-full px-3.5 py-2.5 text-sm text-slate-800  border border-slate-200 rounded-xl outline-none placeholder-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150"
+              className={`w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl outline-none placeholder-slate-300 transition-all duration-150 ${
+                mode === "edit"
+                  ? "bg-slate-100 text-slate-500 cursor-not-allowed"
+                  : "text-slate-800 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+              }`}
             />
           </div>
 
