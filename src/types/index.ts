@@ -98,6 +98,7 @@ export interface Admin {
   studentid: string;
   adminusername: string;
   adminpassword?: string;
+  passwordUpdatedAt?: string;
   isSuperAdmin?: boolean;
   role?: "Super Admin" | "Admin";
   usersCreatedCount?: number;

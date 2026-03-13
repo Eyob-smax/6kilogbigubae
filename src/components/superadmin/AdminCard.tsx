@@ -55,6 +55,9 @@ export default function AdminCard({
   const createdAtLabel = admin?.createdAt
     ? new Date(admin.createdAt).toLocaleDateString()
     : "Not available";
+  const passwordUpdatedAtLabel = admin?.passwordUpdatedAt
+    ? new Date(admin.passwordUpdatedAt).toLocaleDateString()
+    : null;
 
   const accessSummary = [
     {
@@ -124,6 +127,11 @@ export default function AdminCard({
             <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
               Added {createdAtLabel}
             </span>
+            {passwordUpdatedAtLabel && (
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                Password Updated {passwordUpdatedAtLabel}
+              </span>
+            )}
             <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
               Created users: {usersCreatedCount}
             </span>
