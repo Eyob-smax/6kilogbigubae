@@ -19,7 +19,6 @@ import {
 } from "../../features/admins/adminsSlice";
 import type { AppDispatch, RootState } from "../../app/store";
 import LoadingScreen from "../../components/ui/LoadingScreen";
-let isFirstRender = true;
 
 const ManageAdmins: React.FC = React.memo(() => {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,12 +33,8 @@ const ManageAdmins: React.FC = React.memo(() => {
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
 
   useEffect(() => {
-    if (isFirstRender) {
-      isFirstRender = false;
-      dispatch(fetchAdmins());
-      return;
-    }
-  }, [dispatch, admins]);
+    dispatch(fetchAdmins());
+  }, [dispatch]);
 
   const filteredAdmins = useMemo(() => {
     const term = searchTerm.toLowerCase();
@@ -80,10 +75,11 @@ const ManageAdmins: React.FC = React.memo(() => {
       if (modalMode === "add") {
         dispatch(addAdmin(adminData));
       } else if (modalMode === "edit" && selectedAdmin?.studentid) {
-        if (adminData.adminpassword === "") {
-          adminData.adminpassword = "previous one";
+        const payload = { ...adminData };
+        if (!payload.adminpassword) {
+          delete payload.adminpassword;
         }
-        dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData }));
+        dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData: payload }));
       }
       closeModal();
     },
