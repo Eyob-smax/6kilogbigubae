@@ -74,10 +74,6 @@ const ManageAdmins: React.FC = React.memo(() => {
           adminusername: adminData.adminusername?.trim(),
         };
 
-        if (payload.adminpassword) {
-          payload.adminpassword = payload.adminpassword.trim();
-        }
-
         dispatch(addAdmin(payload));
       } else if (modalMode === "edit" && selectedAdmin?.studentid) {
         const payload = { ...adminData };
@@ -88,11 +84,8 @@ const ManageAdmins: React.FC = React.memo(() => {
           payload.adminusername = payload.adminusername.trim();
         }
 
-        const normalizedPassword = payload.adminpassword?.trim();
-        if (!normalizedPassword) {
+        if (!payload.adminpassword?.trim()) {
           delete payload.adminpassword;
-        } else {
-          payload.adminpassword = normalizedPassword;
         }
 
         dispatch(
