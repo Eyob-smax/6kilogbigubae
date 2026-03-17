@@ -98,6 +98,7 @@ export interface Admin {
   studentid: string;
   adminusername: string;
   adminpassword?: string;
+  roleName?: string;
   passwordUpdatedAt?: string;
   isSuperAdmin?: boolean;
   role?: "Super Admin" | "Admin";
@@ -140,6 +141,17 @@ export interface UsersApiResponse {
   success: boolean;
   users: User[];
   pagination: Pagination;
+}
+
+export interface Role {
+  id?: number;
+  name: string;
+  readUsers: boolean;
+  registerUsers: boolean;
+  editAnyUser: boolean;
+  editSpecificUsers: boolean;
+  removeAnyUsers: boolean;
+  removeSpecificUsers: boolean;
 }
 
 export interface Permissions {

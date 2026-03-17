@@ -17,6 +17,7 @@ import {
   updateAdmin,
   deleteAdmin,
 } from "../../features/admins/adminsSlice";
+import { fetchRoles } from "../../features/roles/rolesSlice";
 import type { AppDispatch, RootState } from "../../app/store";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 
@@ -26,6 +27,7 @@ const ManageAdmins: React.FC = React.memo(() => {
   const { admins = [], loading } = useSelector(
     (state: RootState) => state.admin,
   );
+  const { roles = [] } = useSelector((state: RootState) => state.roles);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
@@ -34,6 +36,7 @@ const ManageAdmins: React.FC = React.memo(() => {
 
   useEffect(() => {
     dispatch(fetchAdmins());
+    dispatch(fetchRoles());
   }, [dispatch]);
 
   const filteredAdmins = useMemo(() => {
@@ -73,13 +76,21 @@ const ManageAdmins: React.FC = React.memo(() => {
   const handleSaveAdmin = useCallback(
     (adminData: Partial<Admin>) => {
       if (modalMode === "add") {
-        dispatch(addAdmin(adminData));
+        const payload: Partial<Admin> = {
+          ...adminData,
+          studentid: adminData.studentid?.trim(),
+          adminusername: adminData.adminusername?.trim(),
+          roleName: adminData.roleName?.trim(),
+        };
+        dispatch(addAdmin(payload));
       } else if (modalMode === "edit" && selectedAdmin?.studentid) {
         const payload = { ...adminData };
         if (!payload.adminpassword) {
           delete payload.adminpassword;
         }
-        dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData: payload }));
+        dispatch(
+          updateAdmin({ id: selectedAdmin.studentid, adminData: payload }),
+        );
       }
       closeModal();
     },
@@ -253,6 +264,7 @@ const ManageAdmins: React.FC = React.memo(() => {
               <AdminForm
                 mode={modalMode}
                 initialData={selectedAdmin}
+                roles={roles}
                 onSave={handleSaveAdmin}
                 onCancel={closeModal}
               />
