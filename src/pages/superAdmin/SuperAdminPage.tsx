@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Admin, Permissions, DEFAULT_PERMISSIONS } from "../../types";
 import AdminCard from "../../components/superadmin/AdminCard";
 import AdminModal from "../../components/superadmin/AdminModal";
@@ -9,6 +10,7 @@ import {
   updateAdmin,
   deleteAdmin,
 } from "../../features/admins/adminsSlice";
+import { fetchRoles } from "../../features/roles/rolesSlice";
 import type { AppDispatch, RootState } from "../../app/store";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 
@@ -18,6 +20,7 @@ const ManageAdmins: React.FC = React.memo(() => {
   const { admins = [], loading } = useSelector(
     (state: RootState) => state.admin,
   );
+  const { roles = [] } = useSelector((state: RootState) => state.roles);
   const { currentUserData } = useSelector((state: RootState) => state.auth);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +30,7 @@ const ManageAdmins: React.FC = React.memo(() => {
 
   useEffect(() => {
     dispatch(fetchAdmins());
+    dispatch(fetchRoles());
   }, [dispatch]);
 
   const filteredAdmins = useMemo(() => {
@@ -72,6 +76,7 @@ const ManageAdmins: React.FC = React.memo(() => {
           ...adminData,
           studentid: adminData.studentid?.trim(),
           adminusername: adminData.adminusername?.trim(),
+          roleName: adminData.roleName?.trim(),
         };
 
         dispatch(addAdmin(payload));
@@ -121,7 +126,7 @@ const ManageAdmins: React.FC = React.memo(() => {
     },
     [dispatch],
   );
-
+  const navigate = useNavigate();
   if (loading) return <LoadingScreen />;
 
   return (
@@ -137,27 +142,49 @@ const ManageAdmins: React.FC = React.memo(() => {
               {`Student ID: ${currentUserData?.studentid ?? ""}`}
             </p>
           </div>
-
-          <button
-            id="add-admin-btn"
-            onClick={openAddModal}
-            className="inline-flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-indigo-200 transition-all duration-200 whitespace-nowrap"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <div className="flex flex-col gap-2">
+            <button
+              id="add-admin-btn"
+              onClick={() => navigate("/admin/manageRoles")}
+              className="inline-flex items-center gap-2 bg-cyan-500 hover:bg-cyan-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-cyan-200 transition-all duration-200 whitespace-nowrap"
             >
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            <span>Add Admin</span>
-          </button>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09c.7 0 1.31-.39 1.51-1a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06c.51.51 1.21.66 1.82.33.46-.26.75-.76.75-1.29V3a2 2 0 1 1 4 0v.09c0 .53.29 1.03.75 1.29.61.33 1.31.18 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06c-.39.39-.52.96-.33 1.82.2.61.81 1 1.51 1H21a2 2 0 1 1 0 4h-.09c-.7 0-1.31.39-1.51 1z" />
+              </svg>
+
+              <span>Manage Roles</span>
+            </button>
+            <button
+              id="add-admin-btn"
+              onClick={openAddModal}
+              className="inline-flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-indigo-200 transition-all duration-200 whitespace-nowrap"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              <span>Add Admin</span>
+            </button>
+          </div>
         </header>
 
         {/* === Admin List === */}
@@ -258,6 +285,7 @@ const ManageAdmins: React.FC = React.memo(() => {
         <AdminModal
           mode={modalMode}
           initialData={selectedAdmin}
+          roles={roles}
           onSave={handleSaveAdmin}
           onCancel={closeModal}
         />

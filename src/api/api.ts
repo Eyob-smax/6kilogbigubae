@@ -34,10 +34,10 @@ const getBaseURL = () => {
   }
 
   if (import.meta.env.DEV) {
-    return "https://gbi-backend-h76f.vercel.app/api";
+    return "https://gbi-backend-h76f.vercel.app/api"; // http://localhost:6500/api
   }
 
-  return "https://gbi-backend-h76f.vercel.app/api";
+  return "https://gbi-backend-h76f.vercel.app/api"; // http://localhost:6500/api
 };
 
 export const api = axios.create({

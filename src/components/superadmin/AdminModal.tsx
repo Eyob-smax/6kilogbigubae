@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react";
-import { Admin } from "../../types";
+import { Admin, Role } from "../../types";
 
 interface AdminFormProps {
   mode: "add" | "edit";
   initialData: Admin | null;
+  roles: Role[];
   onSave: (data: Partial<Admin>) => void;
   onCancel: () => void;
 }
@@ -11,6 +12,7 @@ interface AdminFormProps {
 export default function AdminModal({
   mode,
   initialData,
+  roles,
   onSave,
   onCancel,
 }: AdminFormProps) {
@@ -18,18 +20,53 @@ export default function AdminModal({
     studentid: initialData?.studentid ?? "",
     adminusername: initialData?.adminusername ?? "",
     adminpassword: "",
+    roleName: initialData?.roleName ?? "",
   });
+  const [error, setError] = useState<string>("");
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  }, []);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value, type } = e.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]:
+          type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      }));
+      if (name === "adminpassword") {
+        setError("");
+      }
+    },
+    [],
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (
+      mode === "add" &&
+      (!formData.adminpassword || formData.adminpassword.length < 8)
+    ) {
+      setError(
+        "Password must be at least 8 characters long. Please try another.",
+      );
+      return;
+    }
+    if (
+      mode === "edit" &&
+      formData.adminpassword &&
+      formData.adminpassword.length < 8
+    ) {
+      setError(
+        "Password must be at least 8 characters long. Please try another.",
+      );
+      return;
+    }
+
+    if (mode === "add" && !formData.roleName?.trim()) {
+      setError("Please select a role.");
+      return;
+    }
+
     onSave(formData);
     onCancel();
   };
@@ -68,7 +105,11 @@ export default function AdminModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} noValidate>
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          autoComplete={mode === "add" ? "off" : undefined}
+        >
           {/* ID */}
           <div className="flex flex-col gap-1.5 mb-4">
             <label
@@ -82,6 +123,7 @@ export default function AdminModal({
               name="studentid"
               type="text"
               placeholder="UGR-1234-16"
+              autoComplete={mode === "add" ? "off" : undefined}
               value={formData.studentid}
               autoFocus={mode !== "edit"}
               disabled={mode === "edit"}
@@ -106,11 +148,40 @@ export default function AdminModal({
               id="admin-adminusername"
               name="adminusername"
               type="text"
+              autoComplete={mode === "add" ? "off" : undefined}
               value={formData.adminusername}
               onChange={handleChange}
               className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none placeholder-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150"
             />
           </div>
+
+          {mode === "add" && (
+            <div className="flex flex-col gap-1.5 mb-4">
+              <label
+                htmlFor="admin-role"
+                className="text-xs font-semibold text-slate-700 tracking-wide"
+              >
+                Role
+              </label>
+              <select
+                id="admin-role"
+                name="roleName"
+                value={formData.roleName ?? ""}
+                onChange={handleChange}
+                required
+                className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150"
+              >
+                <option value="" disabled>
+                  Select role
+                </option>
+                {roles.map((role) => (
+                  <option key={role.id ?? role.name} value={role.name}>
+                    {role.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Password */}
           <div className="flex flex-col gap-1.5 mb-4">
@@ -124,10 +195,16 @@ export default function AdminModal({
               id="admin-password"
               name="adminpassword"
               type="password"
+              autoComplete={mode === "add" ? "new-password" : undefined}
               value={formData.adminpassword}
               onChange={handleChange}
-              className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none placeholder-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150"
+              className={`w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border rounded-xl outline-none placeholder-slate-300 transition-all duration-150 ${
+                error
+                  ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100"
+                  : "border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+              }`}
             />
+            {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
           </div>
 
           {/* Footer */}

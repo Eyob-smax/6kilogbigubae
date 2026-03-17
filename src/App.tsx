@@ -8,6 +8,7 @@ const LandingPage = lazy(() => import("./pages/LandingPage"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const ManageUsers = lazy(() => import("./pages/admin/ManageUsers"));
+const ManageRoles = lazy(() => import("./pages/admin/ManageRoles"));
 
 const Analytics = lazy(() => import("./pages/admin/Analytics"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -37,6 +38,14 @@ const router = createBrowserRouter([
       {
         path: "users",
         element: <ManageUsers />,
+      },
+      {
+        path: "manageRoles",
+        element: (
+          <ProtectedAdminsPage>
+            <ManageRoles />
+          </ProtectedAdminsPage>
+        ),
       },
       {
         path: "superadmin",
