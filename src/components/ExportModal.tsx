@@ -19,7 +19,7 @@ export const EXPORTABLE_COLUMNS = [
 interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onNext: (columns: string[], format: "PDF" | "TXT", title: string) => void;
+  onNext: (columns: string[], format: "PDF" | "DOC", title: string) => void;
 }
 
 const ExportModal: React.FC<ExportModalProps> = ({
@@ -30,7 +30,7 @@ const ExportModal: React.FC<ExportModalProps> = ({
   const [selectedColumns, setSelectedColumns] = useState<string[]>(
     EXPORTABLE_COLUMNS.map((c) => c.id)
   );
-  const [format, setFormat] = useState<"PDF" | "TXT">("PDF");
+  const [format, setFormat] = useState<"PDF" | "DOC">("PDF");
   const [documentTitle, setDocumentTitle] = useState("6Kilo GbiGubae Students Data Report");
 
   useEffect(() => {
@@ -116,12 +116,12 @@ const ExportModal: React.FC<ExportModalProps> = ({
                 <input
                   type="radio"
                   name="format"
-                  value="TXT"
-                  checked={format === "TXT"}
-                  onChange={() => setFormat("TXT")}
+                  value="DOC"
+                  checked={format === "DOC"}
+                  onChange={() => setFormat("DOC")}
                   className="form-radio text-indigo-600 focus:ring-indigo-500 w-4 h-4"
                 />
-                <span className="text-gray-700">Text File (TXT)</span>
+                <span className="text-gray-700">Word Document (DOC)</span>
               </label>
             </div>
           </div>

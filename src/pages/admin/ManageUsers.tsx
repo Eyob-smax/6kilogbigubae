@@ -121,7 +121,7 @@ const ManageUsers = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({ ...EMPTY_USER_FILTERS });
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [pendingExport, setPendingExport] = useState<{ columns: string[], format: "PDF" | "TXT", title: string } | null>(null);
+  const [pendingExport, setPendingExport] = useState<{ columns: string[], format: "PDF" | "DOC", title: string } | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -157,13 +157,13 @@ const ManageUsers = () => {
     dispatch(fetchUsers(toFetchParams()));
   }, [dispatch, toFetchParams]);
 
-  const startExportFlow = useCallback((columns: string[], format: "PDF" | "TXT", title: string) => {
+  const startExportFlow = useCallback((columns: string[], format: "PDF" | "DOC", title: string) => {
     setPendingExport({ columns, format, title });
     setIsExportModalOpen(false);
     setIsFilterOpen(true);
   }, []);
 
-  const handleExport = useCallback(async (selectedColumns: string[], format: "PDF" | "TXT", title: string, exportFilters: UserFilters) => {
+  const handleExport = useCallback(async (selectedColumns: string[], format: "PDF" | "DOC", title: string, exportFilters: UserFilters) => {
     Swal.fire({
       title: "Exporting...",
       text: "Please wait while we generate your file.",
@@ -278,13 +278,34 @@ const ManageUsers = () => {
         const safeTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
         doc.save(`${safeTitle}.pdf`);
       } else {
-        const content = [headers.join("\t"), ...rows.map(r => r.join("\t"))].join("\n");
-        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const tableHtml = `
+          <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+          <head><meta charset='utf-8'><title>${title}</title>
+          <style>
+            table { border-collapse: collapse; width: 100%; border: 1px solid black; font-family: sans-serif; }
+            th, td { border: 1px solid black; padding: 8px; text-align: left; font-size: 14px; }
+            th { background-color: #f2f2f2; font-weight: bold; }
+          </style>
+          </head>
+          <body>
+            <h2 style="text-align: center; font-family: sans-serif;">${title}</h2>
+            <table>
+              <thead>
+                <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
+              </thead>
+              <tbody>
+                ${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}
+              </tbody>
+            </table>
+          </body>
+          </html>
+        `;
+        const blob = new Blob([tableHtml], { type: "application/msword;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         const safeTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-        link.download = `${safeTitle}.txt`;
+        link.download = `${safeTitle}.doc`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
