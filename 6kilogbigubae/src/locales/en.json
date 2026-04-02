@@ -1,0 +1,193 @@
+{
+  "siteName": "6 Kilo Gibi Gubae",
+  "tagline": "Spiritual Unity in University",
+  "hero": {
+    "title": "6 Kilo Gibi Gubae",
+    "subtitle": "Spiritual Unity in University",
+    "cta": "Learn More",
+    "login": "Login"
+  },
+  "nav": {
+    "about": "About Us",
+    "vision": "Vision",
+    "structure": "Structure",
+    "involvement": "Student Involvement",
+    "gallery": "Gallery",
+    "events": "Events",
+    "contact": "Contact"
+  },
+  "about": {
+    "title": "About Us",
+    "history": "The 6 Kilo Gibi Gubae was established in 1985 as a spiritual gathering for Ethiopian Orthodox Tewahedo Church students at Addis Ababa University. It has served as a spiritual haven and support system for thousands of students.",
+    "goals": "Our Spiritual Goals",
+    "goals_list": [
+      "Strengthen our relationship with God through daily prayer",
+      "Study and understand the teachings of the Ethiopian Orthodox Tewahedo Church",
+      "Support each other in faith, education, and life challenges",
+      "Preserve and celebrate our sacred traditions"
+    ],
+    "tradition": "Our tradition is deeply rooted in the practices of the Ethiopian Orthodox Tewahedo Church, including regular gatherings, fasting, and confession."
+  },
+  "vision": {
+    "title": "Vision & Mission",
+    "vision_statement": "To create a vibrant spiritual community that nurtures the faith of Ethiopian Orthodox students during their university education.",
+    "mission_statement": "We are committed to supporting students in maintaining their spiritual practices, providing guidance, and creating a sense of belonging and community.",
+    "quotes": [
+      {
+        "quote": "Education without spiritual foundation is like a house built on sand.",
+        "author": "St. Yared"
+      },
+      {
+        "quote": "Let your learning strengthen your faith, and your faith guide your learning.",
+        "author": "St. Tekle Haymanot"
+      }
+    ]
+  },
+  "structure": {
+    "title": "Our Structure",
+    "groups": [
+      {
+        "name": "Sacred Groups",
+        "amharic": "ቅዱሳን ማህበራት",
+        "description": "Focuses on celebrating and learning about Ethiopian saints and their teachings."
+      },
+      {
+        "name": "Choir",
+        "amharic": "መዘምራን",
+        "description": "Leads the traditional Ethiopian Orthodox chanting and hymns during services."
+      },
+      {
+        "name": "Teachers",
+        "amharic": "መምህራን",
+        "description": "Provides spiritual education and guidance on church teachings."
+      },
+      {
+        "name": "Faithful",
+        "amharic": "ሃይማኖት",
+        "description": "Regular members who participate in spiritual activities and services."
+      }
+    ],
+    "responsibilities": [
+      "Leading liturgical services",
+      "Organizing fasting periods",
+      "Prayer groups",
+      "Community outreach",
+      "Education on church traditions"
+    ]
+  },
+  "involvement": {
+    "title": "Student Involvement",
+    "participation": "Students participate through regular attendance at services, joining prayer groups, and taking part in religious celebrations and traditions.",
+    "confession": "Students are encouraged to maintain a relationship with their confession father for spiritual guidance and support.",
+    "advisors": "Spiritual advisors are available to help students navigate their faith journey during their university education.",
+    "activities": [
+      {
+        "name": "Epiphany Celebration",
+        "amharic": "የጥምቀት በዓል ",
+        "description": "A celebration of the baptism of Jesus christ."
+      },
+      {
+        "name": "Prayer Ritual",
+        "amharic": "የጸሎት ሥርዓት",
+        "description": "Traditional prayer sessions that connect us with our ancient roots."
+      },
+      {
+        "name": "Sacred Chanting",
+        "amharic": "መዝሙር",
+        "description": "Learning and performing the traditional Ethiopian Orthodox hymns and chants."
+      }
+    ]
+  },
+
+  "events": {
+    "title": "Events & Announcements",
+    "upcoming": "Upcoming Events",
+    "calendar": "Sacred Calendar",
+    "no_events": "No upcoming events at this time."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "location_title": "Our Location",
+    "location": "Addis Ababa University, 6 Kilo Campus, Building 12, Room 101",
+    "email": "Contact Email",
+    "phone": "Contact Phone",
+    "admin": "Head Administrator",
+    "admin_contact": "administrator@6kilogibi.org | +251 91 234 5678"
+  },
+  "admin": {
+    "login": {
+      "title": "Admin Login",
+      "username": "Username",
+      "studentId": "Student ID",
+      "password": "Password",
+      "submit": "Login",
+      "error": "Invalid credentials",
+      "forgotPassword": "Forgot Password?",
+      "backToHome": "Back to Home"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "welcome": "Welcome",
+      "users": "Users",
+      "admins": "Admins",
+      "analytics": "Analytics",
+      "logout": "Logout"
+    },
+    "users": {
+      "title": "Manage Users",
+      "add": "Add User",
+      "edit": "Edit User",
+      "delete": "Delete User",
+      "search": "Search Users",
+      "no_users": "No users found"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "total": "Total Registered Users",
+      "active": "Active Users",
+      "distribution": "Distribution by Group",
+      "participation": "Participation Types"
+    }
+  },
+  "forms": {
+    "user": {
+      "studentid": "Student ID",
+      "firstname": "First Name",
+      "middlename": "Middle Name",
+      "lastname": "Last Name",
+      "gender": "Gender",
+      "baptismalname": "Baptismal Name",
+      "phone": "Phone",
+      "birthdate": "Birth Date",
+      "useremail": "Email",
+      "nationality": "Nationality",
+      "regionnumber": "Region Number",
+      "mothertongue": "Mother Tongue",
+      "zonename": "Zone Name",
+      "disabled": "Disabled",
+      "departmentname": "Department Name",
+      "sponsorshiptype": "Sponsorship Type",
+      "participation": "Participation",
+      "batch": "Batch",
+      "confessionfather": "Confession Father",
+      "advisors": "Advisors",
+      "role": "Role",
+      "mealcard": "Meal Card",
+      "cafeteriaaccess": "Cafeteria Access"
+    },
+    "admin": {
+      "studentId": "Student ID",
+      "adminUsername": "Admin Username",
+      "adminPassword": "Admin Password",
+      "passwordPlaceholder": "Enter a secure password",
+      "add": "Add User",
+      "edit": "Edit User"
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Are you sure?",
+    "yes": "Yes",
+    "no": "No"
+  }
+}
