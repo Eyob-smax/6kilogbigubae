@@ -214,7 +214,7 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
     setErrors([]);
   };
 
-  const validateForm = (): boolean => {
+  const validateForm = (): string[] => {
     const newErrors: string[] = [];
 
     if (!formData.studentid.trim()) newErrors.push("Student ID is required.");
@@ -259,14 +259,19 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
     }
 
     setErrors(newErrors);
-    return newErrors.length === 0;
+    return newErrors;
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      alert("Please fix the following errors:\n\n• " + errors.join("\n• "));
+    const newErrors = validateForm();
+    if (newErrors.length > 0) {
+      const visibleErrors = newErrors.filter(Boolean);
+      alert(
+        "Please fix the following errors:\n\n" +
+          visibleErrors.map((e) => `• ${e}`).join("\n")
+      );
       return;
     }
 
