@@ -1,0 +1,2455 @@
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/package-lock.json /tmp/tmp.bYIqynuI57/package-lock.json
+--- /workspaces/6kilogbigubae/package-lock.json	2026-05-20 11:48:21.404753187 +0000
++++ /tmp/tmp.bYIqynuI57/package-lock.json	2026-05-20 12:00:23.000000000 +0000
+@@ -18,8 +18,6 @@
+         "framer-motion": "^11.0.3",
+         "i18next": "^23.7.18",
+         "i18next-browser-languagedetector": "^7.2.0",
+-        "jspdf": "^4.2.1",
+-        "jspdf-autotable": "^5.0.7",
+         "leaflet": "^1.9.4",
+         "lucide-react": "^0.344.0",
+         "react": "^18.3.1",
+@@ -302,9 +300,9 @@
+       }
+     },
+     "node_modules/@babel/runtime": {
+-      "version": "7.29.2",
+-      "resolved": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.29.2.tgz",
+-      "integrity": "sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g==",
++      "version": "7.27.6",
++      "resolved": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.27.6.tgz",
++      "integrity": "sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==",
+       "license": "MIT",
+       "engines": {
+         "node": ">=6.9.0"
+@@ -1696,25 +1694,12 @@
+         "@types/geojson": "*"
+       }
+     },
+-    "node_modules/@types/pako": {
+-      "version": "2.0.4",
+-      "resolved": "https://registry.npmjs.org/@types/pako/-/pako-2.0.4.tgz",
+-      "integrity": "sha512-VWDCbrLeVXJM9fihYodcLiIv0ku+AlOa/TQ1SvYOaBuyrSKgEcro95LJyIsJ4vSo6BXIxOKxiJAat04CmST9Fw==",
+-      "license": "MIT"
+-    },
+     "node_modules/@types/prop-types": {
+       "version": "15.7.15",
+       "resolved": "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.15.tgz",
+       "integrity": "sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==",
+       "license": "MIT"
+     },
+-    "node_modules/@types/raf": {
+-      "version": "3.4.3",
+-      "resolved": "https://registry.npmjs.org/@types/raf/-/raf-3.4.3.tgz",
+-      "integrity": "sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw==",
+-      "license": "MIT",
+-      "optional": true
+-    },
+     "node_modules/@types/react": {
+       "version": "18.3.23",
+       "resolved": "https://registry.npmjs.org/@types/react/-/react-18.3.23.tgz",
+@@ -1756,13 +1741,6 @@
+         "@babel/runtime": "^7.9.2"
+       }
+     },
+-    "node_modules/@types/trusted-types": {
+-      "version": "2.0.7",
+-      "resolved": "https://registry.npmjs.org/@types/trusted-types/-/trusted-types-2.0.7.tgz",
+-      "integrity": "sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==",
+-      "license": "MIT",
+-      "optional": true
+-    },
+     "node_modules/@types/use-sync-external-store": {
+       "version": "0.0.6",
+       "resolved": "https://registry.npmjs.org/@types/use-sync-external-store/-/use-sync-external-store-0.0.6.tgz",
+@@ -2226,16 +2204,6 @@
+       "dev": true,
+       "license": "MIT"
+     },
+-    "node_modules/base64-arraybuffer": {
+-      "version": "1.0.2",
+-      "resolved": "https://registry.npmjs.org/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz",
+-      "integrity": "sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==",
+-      "license": "MIT",
+-      "optional": true,
+-      "engines": {
+-        "node": ">= 0.6.0"
+-      }
+-    },
+     "node_modules/binary-extensions": {
+       "version": "2.3.0",
+       "resolved": "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.3.0.tgz",
+@@ -2360,26 +2328,6 @@
+       ],
+       "license": "CC-BY-4.0"
+     },
+-    "node_modules/canvg": {
+-      "version": "3.0.11",
+-      "resolved": "https://registry.npmjs.org/canvg/-/canvg-3.0.11.tgz",
+-      "integrity": "sha512-5ON+q7jCTgMp9cjpu4Jo6XbvfYwSB2Ow3kzHKfIyJfaCAOHLbdKPQqGKgfED/R5B+3TFFfe8pegYA+b423SRyA==",
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "@babel/runtime": "^7.12.5",
+-        "@types/raf": "^3.4.0",
+-        "core-js": "^3.8.3",
+-        "raf": "^3.4.1",
+-        "regenerator-runtime": "^0.13.7",
+-        "rgbcolor": "^1.0.1",
+-        "stackblur-canvas": "^2.0.0",
+-        "svg-pathdata": "^6.0.3"
+-      },
+-      "engines": {
+-        "node": ">=10.0.0"
+-      }
+-    },
+     "node_modules/chalk": {
+       "version": "4.1.2",
+       "resolved": "https://registry.npmjs.org/chalk/-/chalk-4.1.2.tgz",
+@@ -2506,18 +2454,6 @@
+       "dev": true,
+       "license": "MIT"
+     },
+-    "node_modules/core-js": {
+-      "version": "3.49.0",
+-      "resolved": "https://registry.npmjs.org/core-js/-/core-js-3.49.0.tgz",
+-      "integrity": "sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==",
+-      "hasInstallScript": true,
+-      "license": "MIT",
+-      "optional": true,
+-      "funding": {
+-        "type": "opencollective",
+-        "url": "https://opencollective.com/core-js"
+-      }
+-    },
+     "node_modules/cross-spawn": {
+       "version": "7.0.6",
+       "resolved": "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.6.tgz",
+@@ -2533,16 +2469,6 @@
+         "node": ">= 8"
+       }
+     },
+-    "node_modules/css-line-break": {
+-      "version": "2.1.0",
+-      "resolved": "https://registry.npmjs.org/css-line-break/-/css-line-break-2.1.0.tgz",
+-      "integrity": "sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w==",
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "utrie": "^1.0.2"
+-      }
+-    },
+     "node_modules/cssesc": {
+       "version": "3.0.0",
+       "resolved": "https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz",
+@@ -2757,16 +2683,6 @@
+         "csstype": "^3.0.2"
+       }
+     },
+-    "node_modules/dompurify": {
+-      "version": "3.3.3",
+-      "resolved": "https://registry.npmjs.org/dompurify/-/dompurify-3.3.3.tgz",
+-      "integrity": "sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==",
+-      "license": "(MPL-2.0 OR Apache-2.0)",
+-      "optional": true,
+-      "optionalDependencies": {
+-        "@types/trusted-types": "^2.0.7"
+-      }
+-    },
+     "node_modules/dunder-proto": {
+       "version": "1.0.1",
+       "resolved": "https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz",
+@@ -3155,17 +3071,6 @@
+       "dev": true,
+       "license": "MIT"
+     },
+-    "node_modules/fast-png": {
+-      "version": "6.4.0",
+-      "resolved": "https://registry.npmjs.org/fast-png/-/fast-png-6.4.0.tgz",
+-      "integrity": "sha512-kAqZq1TlgBjZcLr5mcN6NP5Rv4V2f22z00c3g8vRrwkcqjerx7BEhPbOnWCPqaHUl2XWQBJQvOT/FQhdMT7X/Q==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "@types/pako": "^2.0.3",
+-        "iobuffer": "^5.3.2",
+-        "pako": "^2.1.0"
+-      }
+-    },
+     "node_modules/fastq": {
+       "version": "1.19.1",
+       "resolved": "https://registry.npmjs.org/fastq/-/fastq-1.19.1.tgz",
+@@ -3176,12 +3081,6 @@
+         "reusify": "^1.0.4"
+       }
+     },
+-    "node_modules/fflate": {
+-      "version": "0.8.2",
+-      "resolved": "https://registry.npmjs.org/fflate/-/fflate-0.8.2.tgz",
+-      "integrity": "sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==",
+-      "license": "MIT"
+-    },
+     "node_modules/file-entry-cache": {
+       "version": "8.0.0",
+       "resolved": "https://registry.npmjs.org/file-entry-cache/-/file-entry-cache-8.0.0.tgz",
+@@ -3570,20 +3469,6 @@
+         "void-elements": "3.1.0"
+       }
+     },
+-    "node_modules/html2canvas": {
+-      "version": "1.4.1",
+-      "resolved": "https://registry.npmjs.org/html2canvas/-/html2canvas-1.4.1.tgz",
+-      "integrity": "sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==",
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "css-line-break": "^2.1.0",
+-        "text-segmentation": "^1.0.3"
+-      },
+-      "engines": {
+-        "node": ">=8.0.0"
+-      }
+-    },
+     "node_modules/i18next": {
+       "version": "23.16.8",
+       "resolved": "https://registry.npmjs.org/i18next/-/i18next-23.16.8.tgz",
+@@ -3672,12 +3557,6 @@
+         "node": ">=12"
+       }
+     },
+-    "node_modules/iobuffer": {
+-      "version": "5.4.0",
+-      "resolved": "https://registry.npmjs.org/iobuffer/-/iobuffer-5.4.0.tgz",
+-      "integrity": "sha512-DRebOWuqDvxunfkNJAlc3IzWIPD5xVxwUNbHr7xKB8E6aLJxIPfNX3CoMJghcFjpv6RWQsrcJbghtEwSPoJqMA==",
+-      "license": "MIT"
+-    },
+     "node_modules/is-binary-path": {
+       "version": "2.1.0",
+       "resolved": "https://registry.npmjs.org/is-binary-path/-/is-binary-path-2.1.0.tgz",
+@@ -3849,32 +3728,6 @@
+         "node": ">=6"
+       }
+     },
+-    "node_modules/jspdf": {
+-      "version": "4.2.1",
+-      "resolved": "https://registry.npmjs.org/jspdf/-/jspdf-4.2.1.tgz",
+-      "integrity": "sha512-YyAXyvnmjTbR4bHQRLzex3CuINCDlQnBqoSYyjJwTP2x9jDLuKDzy7aKUl0hgx3uhcl7xzg32agn5vlie6HIlQ==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "@babel/runtime": "^7.28.6",
+-        "fast-png": "^6.2.0",
+-        "fflate": "^0.8.1"
+-      },
+-      "optionalDependencies": {
+-        "canvg": "^3.0.11",
+-        "core-js": "^3.6.0",
+-        "dompurify": "^3.3.1",
+-        "html2canvas": "^1.0.0-rc.5"
+-      }
+-    },
+-    "node_modules/jspdf-autotable": {
+-      "version": "5.0.7",
+-      "resolved": "https://registry.npmjs.org/jspdf-autotable/-/jspdf-autotable-5.0.7.tgz",
+-      "integrity": "sha512-2wr7H6liNDBYNwt25hMQwXkEWFOEopgKIvR1Eukuw6Zmprm/ZcnmLTQEjW7Xx3FCbD3v7pflLcnMAv/h1jFDQw==",
+-      "license": "MIT",
+-      "peerDependencies": {
+-        "jspdf": "^2 || ^3 || ^4"
+-      }
+-    },
+     "node_modules/keyv": {
+       "version": "4.5.4",
+       "resolved": "https://registry.npmjs.org/keyv/-/keyv-4.5.4.tgz",
+@@ -4225,12 +4078,6 @@
+       "dev": true,
+       "license": "BlueOak-1.0.0"
+     },
+-    "node_modules/pako": {
+-      "version": "2.1.0",
+-      "resolved": "https://registry.npmjs.org/pako/-/pako-2.1.0.tgz",
+-      "integrity": "sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==",
+-      "license": "(MIT AND Zlib)"
+-    },
+     "node_modules/parent-module": {
+       "version": "1.0.1",
+       "resolved": "https://registry.npmjs.org/parent-module/-/parent-module-1.0.1.tgz",
+@@ -4295,13 +4142,6 @@
+       "dev": true,
+       "license": "ISC"
+     },
+-    "node_modules/performance-now": {
+-      "version": "2.1.0",
+-      "resolved": "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz",
+-      "integrity": "sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==",
+-      "license": "MIT",
+-      "optional": true
+-    },
+     "node_modules/picocolors": {
+       "version": "1.1.1",
+       "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+@@ -4550,16 +4390,6 @@
+       ],
+       "license": "MIT"
+     },
+-    "node_modules/raf": {
+-      "version": "3.4.1",
+-      "resolved": "https://registry.npmjs.org/raf/-/raf-3.4.1.tgz",
+-      "integrity": "sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==",
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "performance-now": "^2.1.0"
+-      }
+-    },
+     "node_modules/react": {
+       "version": "18.3.1",
+       "resolved": "https://registry.npmjs.org/react/-/react-18.3.1.tgz",
+@@ -4811,13 +4641,6 @@
+         "redux": "^5.0.0"
+       }
+     },
+-    "node_modules/regenerator-runtime": {
+-      "version": "0.13.11",
+-      "resolved": "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz",
+-      "integrity": "sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==",
+-      "license": "MIT",
+-      "optional": true
+-    },
+     "node_modules/reselect": {
+       "version": "5.1.1",
+       "resolved": "https://registry.npmjs.org/reselect/-/reselect-5.1.1.tgz",
+@@ -4866,16 +4689,6 @@
+         "node": ">=0.10.0"
+       }
+     },
+-    "node_modules/rgbcolor": {
+-      "version": "1.0.1",
+-      "resolved": "https://registry.npmjs.org/rgbcolor/-/rgbcolor-1.0.1.tgz",
+-      "integrity": "sha512-9aZLIrhRaD97sgVhtJOW6ckOEh6/GnvQtdVNfdZ6s67+3/XwLS9lBcQYzEEhYVeUowN7pRzMLsyGhK2i/xvWbw==",
+-      "license": "MIT OR SEE LICENSE IN FEEL-FREE.md",
+-      "optional": true,
+-      "engines": {
+-        "node": ">= 0.8.15"
+-      }
+-    },
+     "node_modules/rollup": {
+       "version": "4.44.1",
+       "resolved": "https://registry.npmjs.org/rollup/-/rollup-4.44.1.tgz",
+@@ -5005,16 +4818,6 @@
+         "node": ">=0.10.0"
+       }
+     },
+-    "node_modules/stackblur-canvas": {
+-      "version": "2.7.0",
+-      "resolved": "https://registry.npmjs.org/stackblur-canvas/-/stackblur-canvas-2.7.0.tgz",
+-      "integrity": "sha512-yf7OENo23AGJhBriGx0QivY5JP6Y1HbrrDI6WLt6C5auYZXlQrheoY8hD4ibekFKz1HOfE48Ww8kMWMnJD/zcQ==",
+-      "license": "MIT",
+-      "optional": true,
+-      "engines": {
+-        "node": ">=0.1.14"
+-      }
+-    },
+     "node_modules/string-width": {
+       "version": "5.1.2",
+       "resolved": "https://registry.npmjs.org/string-width/-/string-width-5.1.2.tgz",
+@@ -5181,16 +4984,6 @@
+         "url": "https://github.com/sponsors/ljharb"
+       }
+     },
+-    "node_modules/svg-pathdata": {
+-      "version": "6.0.3",
+-      "resolved": "https://registry.npmjs.org/svg-pathdata/-/svg-pathdata-6.0.3.tgz",
+-      "integrity": "sha512-qsjeeq5YjBZ5eMdFuUa4ZosMLxgr5RZ+F+Y1OrDhuOCEInRMA3x74XdBtggJcj9kOeInz0WE+LgCPDkZFlBYJw==",
+-      "license": "MIT",
+-      "optional": true,
+-      "engines": {
+-        "node": ">=12.0.0"
+-      }
+-    },
+     "node_modules/sweetalert2": {
+       "version": "11.23.0",
+       "resolved": "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.23.0.tgz",
+@@ -5239,16 +5032,6 @@
+         "node": ">=14.0.0"
+       }
+     },
+-    "node_modules/text-segmentation": {
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/text-segmentation/-/text-segmentation-1.0.3.tgz",
+-      "integrity": "sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==",
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "utrie": "^1.0.2"
+-      }
+-    },
+     "node_modules/thenify": {
+       "version": "3.3.1",
+       "resolved": "https://registry.npmjs.org/thenify/-/thenify-3.3.1.tgz",
+@@ -5469,16 +5252,6 @@
+       "dev": true,
+       "license": "MIT"
+     },
+-    "node_modules/utrie": {
+-      "version": "1.0.2",
+-      "resolved": "https://registry.npmjs.org/utrie/-/utrie-1.0.2.tgz",
+-      "integrity": "sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==",
+-      "license": "MIT",
+-      "optional": true,
+-      "dependencies": {
+-        "base64-arraybuffer": "^1.0.2"
+-      }
+-    },
+     "node_modules/victory-vendor": {
+       "version": "36.9.2",
+       "resolved": "https://registry.npmjs.org/victory-vendor/-/victory-vendor-36.9.2.tgz",
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/package.json /tmp/tmp.bYIqynuI57/package.json
+--- /workspaces/6kilogbigubae/package.json	2026-05-20 11:44:25.027737916 +0000
++++ /tmp/tmp.bYIqynuI57/package.json	2026-05-20 12:00:23.000000000 +0000
+@@ -20,8 +20,6 @@
+     "framer-motion": "^11.0.3",
+     "i18next": "^23.7.18",
+     "i18next-browser-languagedetector": "^7.2.0",
+-    "jspdf": "^4.2.1",
+-    "jspdf-autotable": "^5.0.7",
+     "leaflet": "^1.9.4",
+     "lucide-react": "^0.344.0",
+     "react": "^18.3.1",
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/App.tsx /tmp/tmp.bYIqynuI57/src/App.tsx
+--- /workspaces/6kilogbigubae/src/App.tsx	2026-05-20 11:44:25.027737916 +0000
++++ /tmp/tmp.bYIqynuI57/src/App.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -8,7 +8,6 @@
+ const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+ const ManageUsers = lazy(() => import("./pages/admin/ManageUsers"));
+-const ManageRoles = lazy(() => import("./pages/admin/ManageRoles"));
+ 
+ const Analytics = lazy(() => import("./pages/admin/Analytics"));
+ const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
+@@ -40,14 +39,6 @@
+         element: <ManageUsers />,
+       },
+       {
+-        path: "manageRoles",
+-        element: (
+-          <ProtectedAdminsPage>
+-            <ManageRoles />
+-          </ProtectedAdminsPage>
+-        ),
+-      },
+-      {
+         path: "superadmin",
+         element: (
+           <ProtectedAdminsPage>
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/api/api.ts /tmp/tmp.bYIqynuI57/src/api/api.ts
+--- /workspaces/6kilogbigubae/src/api/api.ts	2026-05-20 11:44:25.028737916 +0000
++++ /tmp/tmp.bYIqynuI57/src/api/api.ts	2026-05-20 12:00:23.000000000 +0000
+@@ -34,10 +34,10 @@
+   }
+ 
+   if (import.meta.env.DEV) {
+-    return "https://gbi-backend-h76f.vercel.app/api"; // http://localhost:6500/api
++    return "https://gbi-backend-h76f.vercel.app/api";
+   }
+ 
+-  return "https://gbi-backend-h76f.vercel.app/api"; // http://localhost:6500/api
++  return "https://gbi-backend-h76f.vercel.app/api";
+ };
+ 
+ export const api = axios.create({
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/app/store.ts /tmp/tmp.bYIqynuI57/src/app/store.ts
+--- /workspaces/6kilogbigubae/src/app/store.ts	2026-05-20 11:44:25.028737916 +0000
++++ /tmp/tmp.bYIqynuI57/src/app/store.ts	2026-05-20 12:00:23.000000000 +0000
+@@ -2,14 +2,12 @@
+ import adminReducer from "../features/admins/adminsSlice";
+ import userReducer from "../features/users/userSlice";
+ import authReducer from "../features/auth/authSlice";
+-import rolesReducer from "../features/roles/rolesSlice";
+ 
+ export const store = configureStore({
+   reducer: {
+     admin: adminReducer,
+     user: userReducer,
+     auth: authReducer,
+-    roles: rolesReducer,
+   },
+   devTools: true,
+ });
+Only in /workspaces/6kilogbigubae/src/components: ExportModal.tsx
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/components/FilterModal.tsx /tmp/tmp.bYIqynuI57/src/components/FilterModal.tsx
+--- /workspaces/6kilogbigubae/src/components/FilterModal.tsx	2026-05-20 11:44:25.031737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/components/FilterModal.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -23,41 +23,22 @@
+   "Member_Care_Advice_and_Capacity_Building_Section",
+ ];
+ 
+-export default function FilterModal({
+-  isOpen,
+-  onClose,
+-  filters,
+-  onApply,
+-}: FilterModalProps) {
++export default function FilterModal({ isOpen, onClose, filters, onApply }: FilterModalProps) {
+   if (!isOpen) return null;
+ 
+-  const getStringValue = (formData: FormData, key: string): string | null => {
+-    const value = formData.get(key);
+-    return typeof value === "string" && value.trim() !== "" ? value : null;
+-  };
+-
+-  const getBooleanValue = (formData: FormData, key: string): boolean | null => {
+-    const value = formData.get(key);
+-    if (value === "true") return true;
+-    if (value === "false") return false;
+-    return null;
+-  };
+-
+   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
+     const formData = new FormData(e.currentTarget);
+-
++    
+     onApply({
+-      gender: getStringValue(formData, "gender"),
+-      batch: getStringValue(formData, "batch")
+-        ? Number(getStringValue(formData, "batch"))
+-        : null,
+-      departmentname: getStringValue(formData, "departmentname"),
+-      clergicalstatus: getStringValue(formData, "clergicalstatus"),
+-      sponsorshiptype: getStringValue(formData, "sponsorshiptype"),
+-      cafeteriaaccess: getBooleanValue(formData, "cafeteriaaccess"),
+-      tookcourse: getBooleanValue(formData, "tookcourse"),
+-      participation: getStringValue(formData, "participation"),
++      gender: formData.get("gender") || null,
++      batch: formData.get("batch") ? Number(formData.get("batch")) : null,
++      departmentname: formData.get("departmentname") || null,
++      clergicalstatus: formData.get("clergicalstatus") || null,
++      sponsorshiptype: formData.get("sponsorshiptype") || null,
++      cafeteriaaccess: formData.get("cafeteriaaccess") === "" ? null : formData.get("cafeteriaaccess") === "true",
++      tookcourse: formData.get("tookcourse") === "" ? null : formData.get("tookcourse") === "true",
++      participation: formData.get("participation") || null,
+     });
+     onClose();
+   };
+@@ -68,21 +49,11 @@
+   };
+ 
+   return (
+-    <div
+-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+-      onClick={onClose}
+-    >
+-      <div
+-        className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+-        onClick={(e) => e.stopPropagation()}
+-      >
++    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={onClose}>
++      <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+         <div className="flex justify-between items-center mb-4">
+           <h2 className="text-xl font-bold">Filter Students</h2>
+-          <button
+-            onClick={onClose}
+-            className="text-gray-500 hover:text-gray-700"
+-            aria-label="Close filter modal"
+-          >
++          <button onClick={onClose} className="text-gray-500 hover:text-gray-700" aria-label="Close filter modal">
+             <X size={24} />
+           </button>
+         </div>
+@@ -91,11 +62,7 @@
+           <div className="grid grid-cols-2 gap-4 mb-6">
+             <div>
+               <label className="block text-sm font-medium mb-1">Gender</label>
+-              <select
+-                name="gender"
+-                defaultValue={filters.gender || ""}
+-                className="w-full px-3 py-2 border rounded"
+-              >
++              <select name="gender" defaultValue={filters.gender || ""} className="w-full px-3 py-2 border rounded">
+                 <option value="">All</option>
+                 <option value="Male">Male</option>
+                 <option value="Female">Female</option>
+@@ -103,42 +70,18 @@
+             </div>
+ 
+             <div>
+-              <label className="block text-sm font-medium mb-1">
+-                Batch (Year)
+-              </label>
+-              <input
+-                name="batch"
+-                type="number"
+-                min="2000"
+-                max="2030"
+-                defaultValue={filters.batch || ""}
+-                placeholder="e.g. 2016, 2017"
+-                className="w-full px-3 py-2 border rounded"
+-              />
++              <label className="block text-sm font-medium mb-1">Batch (Year)</label>
++              <input name="batch" type="number" min="2000" max="2030" defaultValue={filters.batch || ""} placeholder="e.g. 2016, 2017" className="w-full px-3 py-2 border rounded" />
+             </div>
+ 
+             <div className="col-span-2">
+-              <label className="block text-sm font-medium mb-1">
+-                Department
+-              </label>
+-              <input
+-                name="departmentname"
+-                defaultValue={filters.departmentname || ""}
+-                placeholder="Search department"
+-                maxLength={100}
+-                className="w-full px-3 py-2 border rounded"
+-              />
++              <label className="block text-sm font-medium mb-1">Department</label>
++              <input name="departmentname" defaultValue={filters.departmentname || ""} placeholder="Search department" maxLength={100} className="w-full px-3 py-2 border rounded" />
+             </div>
+ 
+             <div>
+-              <label className="block text-sm font-medium mb-1">
+-                Clergy Status
+-              </label>
+-              <select
+-                name="clergicalstatus"
+-                defaultValue={filters.clergicalstatus || ""}
+-                className="w-full px-3 py-2 border rounded"
+-              >
++              <label className="block text-sm font-medium mb-1">Clergy Status</label>
++              <select name="clergicalstatus" defaultValue={filters.clergicalstatus || ""} className="w-full px-3 py-2 border rounded">
+                 <option value="">All</option>
+                 <option value="None">None</option>
+                 <option value="Deacon">Deacon</option>
+@@ -148,14 +91,8 @@
+             </div>
+ 
+             <div>
+-              <label className="block text-sm font-medium mb-1">
+-                Sponsorship
+-              </label>
+-              <select
+-                name="sponsorshiptype"
+-                defaultValue={filters.sponsorshiptype || ""}
+-                className="w-full px-3 py-2 border rounded"
+-              >
++              <label className="block text-sm font-medium mb-1">Sponsorship</label>
++              <select name="sponsorshiptype" defaultValue={filters.sponsorshiptype || ""} className="w-full px-3 py-2 border rounded">
+                 <option value="">All</option>
+                 <option value="Government">Government</option>
+                 <option value="Self_Sponsored">Self Sponsored</option>
+@@ -164,18 +101,8 @@
+             </div>
+ 
+             <div>
+-              <label className="block text-sm font-medium mb-1">
+-                Cafeteria Access
+-              </label>
+-              <select
+-                name="cafeteriaaccess"
+-                defaultValue={
+-                  filters.cafeteriaaccess === null
+-                    ? ""
+-                    : String(filters.cafeteriaaccess)
+-                }
+-                className="w-full px-3 py-2 border rounded"
+-              >
++              <label className="block text-sm font-medium mb-1">Cafeteria Access</label>
++              <select name="cafeteriaaccess" defaultValue={filters.cafeteriaaccess === null ? "" : String(filters.cafeteriaaccess)} className="w-full px-3 py-2 border rounded">
+                 <option value="">All</option>
+                 <option value="true">Yes</option>
+                 <option value="false">No</option>
+@@ -183,16 +110,8 @@
+             </div>
+ 
+             <div>
+-              <label className="block text-sm font-medium mb-1">
+-                Took Course
+-              </label>
+-              <select
+-                name="tookcourse"
+-                defaultValue={
+-                  filters.tookcourse === null ? "" : String(filters.tookcourse)
+-                }
+-                className="w-full px-3 py-2 border rounded"
+-              >
++              <label className="block text-sm font-medium mb-1">Took Course</label>
++              <select name="tookcourse" defaultValue={filters.tookcourse === null ? "" : String(filters.tookcourse)} className="w-full px-3 py-2 border rounded">
+                 <option value="">All</option>
+                 <option value="true">Yes</option>
+                 <option value="false">No</option>
+@@ -200,14 +119,8 @@
+             </div>
+ 
+             <div className="col-span-2">
+-              <label className="block text-sm font-medium mb-1">
+-                Participation
+-              </label>
+-              <select
+-                name="participation"
+-                defaultValue={filters.participation || ""}
+-                className="w-full px-3 py-2 border rounded"
+-              >
++              <label className="block text-sm font-medium mb-1">Participation</label>
++              <select name="participation" defaultValue={filters.participation || ""} className="w-full px-3 py-2 border rounded">
+                 <option value="">All</option>
+                 {participationOptions.map((opt) => (
+                   <option key={opt} value={opt}>
+@@ -219,17 +132,10 @@
+           </div>
+ 
+           <div className="flex gap-3 justify-end">
+-            <button
+-              type="button"
+-              onClick={handleClear}
+-              className="px-4 py-2 border rounded hover:bg-gray-50"
+-            >
++            <button type="button" onClick={handleClear} className="px-4 py-2 border rounded hover:bg-gray-50">
+               Clear All
+             </button>
+-            <button
+-              type="submit"
+-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+-            >
++            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+               Apply Filters
+             </button>
+           </div>
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/components/admin/AdminForm.tsx /tmp/tmp.bYIqynuI57/src/components/admin/AdminForm.tsx
+--- /workspaces/6kilogbigubae/src/components/admin/AdminForm.tsx	2026-05-20 11:44:25.031737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/components/admin/AdminForm.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -1,50 +1,34 @@
+ import { useState, useCallback } from "react";
+ import { useTranslation } from "react-i18next";
+ import { X } from "lucide-react";
+-import { Admin, Role } from "../../types";
++import { Admin } from "../../types";
+ 
+ interface AdminFormProps {
+   mode: "add" | "edit";
+   initialData: Admin | null;
+-  roles: Role[];
+   onSave: (data: Partial<Admin>) => void;
+   onCancel: () => void;
+ }
+ 
+-const AdminForm = ({
+-  mode,
+-  initialData,
+-  roles,
+-  onSave,
+-  onCancel,
+-}: AdminFormProps) => {
++const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
+   const { t } = useTranslation();
+ 
+   const [formData, setFormData] = useState<Partial<Admin>>({
+     studentid: initialData?.studentid ?? "",
+     adminusername: initialData?.adminusername ?? "",
+     adminpassword: "",
+-    roleName: initialData?.roleName ?? "",
+   });
+ 
+-  const handleChange = useCallback(
+-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+-      const { name, value, type, checked } = e.target;
+-      setFormData((prev) => ({
+-        ...prev,
+-        [name]: type === "checkbox" ? checked : value,
+-      }));
+-    },
+-    [],
+-  );
++  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
++    const { name, value, type, checked } = e.target;
++    setFormData((prev) => ({
++      ...prev,
++      [name]: type === "checkbox" ? checked : value,
++    }));
++  }, []);
+ 
+   const handleSubmit = (e: React.FormEvent) => {
+     e.preventDefault();
+-
+-    if (mode === "add" && !formData.roleName?.trim()) {
+-      return;
+-    }
+-
+     onSave(formData);
+   };
+ 
+@@ -97,30 +81,6 @@
+           />
+         </div>
+ 
+-        {mode === "add" && (
+-          <div>
+-            <label className="block text-sm font-medium text-gray-700 mb-1">
+-              Role
+-            </label>
+-            <select
+-              name="roleName"
+-              value={formData.roleName ?? ""}
+-              onChange={handleChange}
+-              required
+-              className="w-full px-3 py-2 border rounded-md bg-white"
+-            >
+-              <option value="" disabled>
+-                Select role
+-              </option>
+-              {roles.map((role) => (
+-                <option key={role.id ?? role.name} value={role.name}>
+-                  {role.name}
+-                </option>
+-              ))}
+-            </select>
+-          </div>
+-        )}
+-
+         {/* Admin Password */}
+         <div>
+           <label className="block text-sm font-medium text-gray-700 mb-1">
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/components/admin/UserForm.tsx /tmp/tmp.bYIqynuI57/src/components/admin/UserForm.tsx
+--- /workspaces/6kilogbigubae/src/components/admin/UserForm.tsx	2026-05-20 11:48:21.405753187 +0000
++++ /tmp/tmp.bYIqynuI57/src/components/admin/UserForm.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -214,7 +214,7 @@
+     setErrors([]);
+   };
+ 
+-  const validateForm = (): string[] => {
++  const validateForm = (): boolean => {
+     const newErrors: string[] = [];
+ 
+     if (!formData.studentid.trim()) newErrors.push("Student ID is required.");
+@@ -259,19 +259,14 @@
+     }
+ 
+     setErrors(newErrors);
+-    return newErrors;
++    return newErrors.length === 0;
+   };
+ 
+   const handleSubmit = (e: FormEvent) => {
+     e.preventDefault();
+ 
+-    const newErrors = validateForm();
+-    if (newErrors.length > 0) {
+-      const visibleErrors = newErrors.filter(Boolean);
+-      alert(
+-        "Please fix the following errors:\n\n" +
+-          visibleErrors.map((e) => `• ${e}`).join("\n")
+-      );
++    if (!validateForm()) {
++      alert("Please fix the following errors:\n\n• " + errors.join("\n• "));
+       return;
+     }
+ 
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/components/superadmin/AdminCard.tsx /tmp/tmp.bYIqynuI57/src/components/superadmin/AdminCard.tsx
+--- /workspaces/6kilogbigubae/src/components/superadmin/AdminCard.tsx	2026-05-20 11:44:25.032737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/components/superadmin/AdminCard.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -55,9 +55,6 @@
+   const createdAtLabel = admin?.createdAt
+     ? new Date(admin.createdAt).toLocaleDateString()
+     : "Not available";
+-  const passwordUpdatedAtLabel = admin?.passwordUpdatedAt
+-    ? new Date(admin.passwordUpdatedAt).toLocaleDateString()
+-    : null;
+ 
+   const accessSummary = [
+     {
+@@ -127,11 +124,6 @@
+             <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+               Added {createdAtLabel}
+             </span>
+-            {passwordUpdatedAtLabel && (
+-              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+-                Password Updated {passwordUpdatedAtLabel}
+-              </span>
+-            )}
+             <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+               Created users: {usersCreatedCount}
+             </span>
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/components/superadmin/AdminModal.tsx /tmp/tmp.bYIqynuI57/src/components/superadmin/AdminModal.tsx
+--- /workspaces/6kilogbigubae/src/components/superadmin/AdminModal.tsx	2026-05-20 11:44:25.032737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/components/superadmin/AdminModal.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -1,10 +1,9 @@
+ import { useState, useCallback } from "react";
+-import { Admin, Role } from "../../types";
++import { Admin } from "../../types";
+ 
+ interface AdminFormProps {
+   mode: "add" | "edit";
+   initialData: Admin | null;
+-  roles: Role[];
+   onSave: (data: Partial<Admin>) => void;
+   onCancel: () => void;
+ }
+@@ -12,7 +11,6 @@
+ export default function AdminModal({
+   mode,
+   initialData,
+-  roles,
+   onSave,
+   onCancel,
+ }: AdminFormProps) {
+@@ -20,53 +18,18 @@
+     studentid: initialData?.studentid ?? "",
+     adminusername: initialData?.adminusername ?? "",
+     adminpassword: "",
+-    roleName: initialData?.roleName ?? "",
+   });
+-  const [error, setError] = useState<string>("");
+ 
+-  const handleChange = useCallback(
+-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+-      const { name, value, type } = e.target;
+-      setFormData((prev) => ({
+-        ...prev,
+-        [name]:
+-          type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+-      }));
+-      if (name === "adminpassword") {
+-        setError("");
+-      }
+-    },
+-    [],
+-  );
++  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
++    const { name, value, type, checked } = e.target;
++    setFormData((prev) => ({
++      ...prev,
++      [name]: type === "checkbox" ? checked : value,
++    }));
++  }, []);
+ 
+   const handleSubmit = (e: React.FormEvent) => {
+     e.preventDefault();
+-
+-    if (
+-      mode === "add" &&
+-      (!formData.adminpassword || formData.adminpassword.length < 8)
+-    ) {
+-      setError(
+-        "Password must be at least 8 characters long. Please try another.",
+-      );
+-      return;
+-    }
+-    if (
+-      mode === "edit" &&
+-      formData.adminpassword &&
+-      formData.adminpassword.length < 8
+-    ) {
+-      setError(
+-        "Password must be at least 8 characters long. Please try another.",
+-      );
+-      return;
+-    }
+-
+-    if (mode === "add" && !formData.roleName?.trim()) {
+-      setError("Please select a role.");
+-      return;
+-    }
+-
+     onSave(formData);
+     onCancel();
+   };
+@@ -105,34 +68,24 @@
+           </button>
+         </div>
+ 
+-        <form
+-          onSubmit={handleSubmit}
+-          noValidate
+-          autoComplete={mode === "add" ? "off" : undefined}
+-        >
++        <form onSubmit={handleSubmit} noValidate>
+           {/* ID */}
+           <div className="flex flex-col gap-1.5 mb-4">
+             <label
+               htmlFor="admin-id"
+               className="text-xs font-semibold text-slate-700 tracking-wide"
+             >
+-              Student ID {mode === "edit" ? "(Read-only)" : ""}
++              Student ID
+             </label>
+             <input
+               id="admin-id"
+               name="studentid"
+               type="text"
+               placeholder="UGR-1234-16"
+-              autoComplete={mode === "add" ? "off" : undefined}
+               value={formData.studentid}
+-              autoFocus={mode !== "edit"}
+-              disabled={mode === "edit"}
++              autoFocus
+               onChange={handleChange}
+-              className={`w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl outline-none placeholder-slate-300 transition-all duration-150 ${
+-                mode === "edit"
+-                  ? "bg-slate-100 text-slate-500 cursor-not-allowed"
+-                  : "text-slate-800 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+-              }`}
++              className="w-full px-3.5 py-2.5 text-sm text-slate-800  border border-slate-200 rounded-xl outline-none placeholder-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150"
+             />
+           </div>
+ 
+@@ -148,41 +101,12 @@
+               id="admin-adminusername"
+               name="adminusername"
+               type="text"
+-              autoComplete={mode === "add" ? "off" : undefined}
+               value={formData.adminusername}
+               onChange={handleChange}
+               className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none placeholder-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150"
+             />
+           </div>
+ 
+-          {mode === "add" && (
+-            <div className="flex flex-col gap-1.5 mb-4">
+-              <label
+-                htmlFor="admin-role"
+-                className="text-xs font-semibold text-slate-700 tracking-wide"
+-              >
+-                Role
+-              </label>
+-              <select
+-                id="admin-role"
+-                name="roleName"
+-                value={formData.roleName ?? ""}
+-                onChange={handleChange}
+-                required
+-                className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150"
+-              >
+-                <option value="" disabled>
+-                  Select role
+-                </option>
+-                {roles.map((role) => (
+-                  <option key={role.id ?? role.name} value={role.name}>
+-                    {role.name}
+-                  </option>
+-                ))}
+-              </select>
+-            </div>
+-          )}
+-
+           {/* Password */}
+           <div className="flex flex-col gap-1.5 mb-4">
+             <label
+@@ -195,16 +119,10 @@
+               id="admin-password"
+               name="adminpassword"
+               type="password"
+-              autoComplete={mode === "add" ? "new-password" : undefined}
+               value={formData.adminpassword}
+               onChange={handleChange}
+-              className={`w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border rounded-xl outline-none placeholder-slate-300 transition-all duration-150 ${
+-                error
+-                  ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100"
+-                  : "border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+-              }`}
++              className="w-full px-3.5 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none placeholder-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all duration-150"
+             />
+-            {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+           </div>
+ 
+           {/* Footer */}
+Only in /workspaces/6kilogbigubae/src/components/superadmin: RoleCard.tsx
+Only in /workspaces/6kilogbigubae/src/components/superadmin: RoleModal.tsx
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/features/admins/adminsSlice.ts /tmp/tmp.bYIqynuI57/src/features/admins/adminsSlice.ts
+--- /workspaces/6kilogbigubae/src/features/admins/adminsSlice.ts	2026-05-20 11:44:25.033737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/features/admins/adminsSlice.ts	2026-05-20 12:00:23.000000000 +0000
+@@ -70,7 +70,7 @@
+     const res = await postRequest<
+       { success: boolean; message: string; admin?: Admin },
+       Partial<Admin>
+-    >("/admin", adminData);
++    >("/admin/register", adminData);
+ 
+     if (res.success) {
+       await showSuccess("Admin added successfully");
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/features/auth/authSlice.ts /tmp/tmp.bYIqynuI57/src/features/auth/authSlice.ts
+--- /workspaces/6kilogbigubae/src/features/auth/authSlice.ts	2026-05-20 11:44:25.033737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/features/auth/authSlice.ts	2026-05-20 12:00:23.000000000 +0000
+@@ -141,10 +141,8 @@
+   { rejectValue: string }
+ >("auth/loginAdmin", async ({ studentId, password }, { rejectWithValue }) => {
+   try {
+-    const normalizedStudentId = studentId.trim();
+-
+     await api.post("/admin/login", {
+-      studentid: normalizedStudentId,
++      studentid: studentId,
+       adminpassword: password,
+     });
+ 
+Only in /workspaces/6kilogbigubae/src/features: roles
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/features/users/userSlice.ts /tmp/tmp.bYIqynuI57/src/features/users/userSlice.ts
+--- /workspaces/6kilogbigubae/src/features/users/userSlice.ts	2026-05-20 11:44:25.033737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/features/users/userSlice.ts	2026-05-20 12:00:23.000000000 +0000
+@@ -13,12 +13,20 @@
+ 
+ import { Pagination } from "../../types";
+ 
+-interface AnalyticsData {
++export interface BreakdownItem {
++  name: string;
++  count: number;
++  percentage: number;
++  originalName: string;
++  others?: { name: string; count: number; percentage: number }[];
++}
++
++export interface AnalyticsData {
+   total: number;
+   activeUsers: number;
+   participating: number;
+   participationRate: number;
+-  participationBreakdown: Record<string, number>;
++  breakdowns: Record<string, BreakdownItem[]>;
+ }
+ 
+ interface UserState {
+@@ -116,14 +124,14 @@
+ 
+ export const fetchAnalytics = createAsyncThunk<
+   AnalyticsData,
+-  void,
++  string[],
+   { rejectValue: string }
+->("user/fetchAnalytics", async (_, { rejectWithValue }) => {
++>("user/fetchAnalytics", async (criteria, { rejectWithValue }) => {
+   try {
+-    const res = await getRequest<{
+-      success: boolean;
+-      analytics: AnalyticsData;
+-    }>("/user/analytics");
++    const url = criteria.length > 0
++      ? `/user/analytics?breakdown=${criteria.join(",")}`
++      : "/user/analytics";
++    const res = await getRequest<{ success: boolean; analytics: AnalyticsData }>(url);
+     return res.analytics;
+   } catch (err) {
+     return rejectWithValue(extractError(err));
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/pages/UsersPage.tsx /tmp/tmp.bYIqynuI57/src/pages/UsersPage.tsx
+--- /workspaces/6kilogbigubae/src/pages/UsersPage.tsx	2026-05-20 11:44:25.034737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/pages/UsersPage.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -1,5 +1,6 @@
+ import { useEffect, useState } from "react";
+ import { Filter } from "lucide-react";
++import useDebounce from "../customhook/useDebounce";
+ import useUsers from "../service/useUsers";
+ import Pagination from "../components/Pagination";
+ import FilterModal from "../components/FilterModal";
+@@ -8,32 +9,22 @@
+ export default function UsersPage() {
+   const [page, setPage] = useState(1);
+   const [limit, setLimit] = useState(10);
++  const [q, setQ] = useState("");
+   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
+-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
+-    undefined,
+-  );
++  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(undefined);
+   const [isFilterOpen, setIsFilterOpen] = useState(false);
+   const [filters, setFilters] = useState({ ...EMPTY_USER_FILTERS });
+-  const [searchInput, setSearchInput] = useState("");
+-  const [appliedSearch, setAppliedSearch] = useState("");
+ 
+-  useEffect(() => {
+-    const timer = setTimeout(() => {
+-      setAppliedSearch(searchInput);
+-      setPage(1);
+-    }, 300);
+-
+-    return () => clearTimeout(timer);
+-  }, [searchInput]);
++  const debouncedQ = useDebounce(q, 300);
+ 
+   useEffect(() => {
+     setPage(1);
+-  }, [limit, sortBy, sortOrder, filters]);
++  }, [debouncedQ, limit, sortBy, sortOrder, filters]);
+ 
+   const { data, isLoading, isError } = useUsers({
+     page,
+     limit,
+-    q: appliedSearch,
++    q: debouncedQ,
+     sortBy,
+     sortOrder,
+     ...filters,
+@@ -61,15 +52,8 @@
+             aria-label="Search users"
+             className="w-full sm:w-64 px-3 py-2 border rounded"
+             placeholder="Search by name or id"
+-            value={searchInput}
+-            onChange={(e) => setSearchInput(e.target.value)}
+-            onKeyDown={(e) => {
+-              if (e.key === "Enter") {
+-                e.preventDefault();
+-                setAppliedSearch(searchInput);
+-                setPage(1);
+-              }
+-            }}
++            value={q}
++            onChange={(e) => setQ(e.target.value)}
+           />
+           <select
+             className="px-2 py-2 border rounded"
+@@ -103,10 +87,6 @@
+         </button>
+       </div>
+ 
+-      <div className="mb-3 text-xs text-gray-500">
+-        Search applies after 300 ms, or press Enter to search now.
+-      </div>
+-
+       <FilterModal
+         isOpen={isFilterOpen}
+         onClose={() => setIsFilterOpen(false)}
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/pages/admin/Analytics.tsx /tmp/tmp.bYIqynuI57/src/pages/admin/Analytics.tsx
+--- /workspaces/6kilogbigubae/src/pages/admin/Analytics.tsx	2026-05-20 11:44:25.034737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/pages/admin/Analytics.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -1,181 +1,404 @@
+-import { useTranslation } from "react-i18next";
+ import { motion } from "framer-motion";
+ import {
+-  PieChart,
+-  Pie,
+-  BarChart,
+-  Bar,
+-  Cell,
+-  XAxis,
+-  YAxis,
+-  Tooltip,
+-  Legend,
+-  ResponsiveContainer,
++  PieChart, Pie, Cell, Tooltip,
++  BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend,
+ } from "recharts";
+-
+-import { Users, UserCheck, Layers } from "lucide-react";
++import { Users, UserCheck, Layers, ChevronDown, ChevronUp, BarChart2 } from "lucide-react";
+ import { useSelector, useDispatch } from "react-redux";
+ import type { RootState, AppDispatch } from "../../app/store";
+-import { useEffect } from "react";
+-import { fetchUsers } from "../../features/users/userSlice";
++import { useEffect, useRef, useState } from "react";
++import { fetchAnalytics, BreakdownItem } from "../../features/users/userSlice";
+ 
+-const COLORS = ["#1A237E", "#5C6BC0", "#9FA8DA", "#C5CAE9"];
++const COLORS = [
++  "#2563EB", "#16A34A", "#DC2626", "#D97706",
++  "#7C3AED", "#0891B2", "#DB2777", "#65A30D",
++  "#EA580C", "#0F766E", "#9333EA", "#B45309",
++];
++
++const CRITERIA_OPTIONS = [
++  { key: "gender",          label: "Gender" },
++  { key: "batch",           label: "Batch" },
++  { key: "departmentname",  label: "Department" },
++  { key: "participation",   label: "Participation Section" },
++  { key: "sponsorshiptype", label: "Sponsorship Type" },
++  { key: "clergicalstatus", label: "Clergy Status" },
++  { key: "activitylevel",   label: "Activity Level" },
++  { key: "advisors",        label: "Has Advisor" },
++  { key: "cafeteriaaccess", label: "Cafeteria Access" },
++  { key: "tookcourse",      label: "Took Course" },
++];
++
++const renderPieLabel = ({
++  cx, cy, midAngle, innerRadius, outerRadius, percent,
++}: {
++  cx: number; cy: number; midAngle: number;
++  innerRadius: number; outerRadius: number; percent: number;
++}) => {
++  if (percent < 0.04) return null;
++  const RADIAN = Math.PI / 180;
++  const radius = innerRadius + (outerRadius - innerRadius) * 0.55;
++  const x = cx + radius * Math.cos(-midAngle * RADIAN);
++  const y = cy + radius * Math.sin(-midAngle * RADIAN);
++  return (
++    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight={600}>
++      {`${(percent * 100).toFixed(0)}%`}
++    </text>
++  );
++};
+ 
+-const Analytics = () => {
+-  const { t } = useTranslation();
++const CustomTooltip = ({ active, payload, total }: {
++  active?: boolean;
++  payload?: { payload: BreakdownItem }[];
++  total: number;
++}) => {
++  if (!active || !payload?.length) return null;
++  const item = payload[0].payload;
++  const pct = total > 0 ? ((item.count / total) * 100).toFixed(1) : "0.0";
++  return (
++    <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm">
++      <p className="font-semibold text-gray-800">{item.name}</p>
++      <p className="text-gray-600">{item.count} students</p>
++      <p className="text-gray-500">{pct}% of total</p>
++    </div>
++  );
++};
+ 
+-  const dispatch = useDispatch<AppDispatch>();
+-  const { users, pagination } = useSelector(
+-    (state: RootState) => state.user,
++const CustomXTick = ({ x, y, payload }: { x?: number; y?: number; payload?: { value: string } }) => {
++  const words = (payload?.value ?? "").split(" ");
++  return (
++    <g transform={`translate(${x},${y})`}>
++      {words.map((word, i) => (
++        <text key={i} x={0} y={0} dy={14 + i * 12} textAnchor="middle" fill="#6b7280" fontSize={10}>
++          {word}
++        </text>
++      ))}
++    </g>
+   );
++};
++
++const CriteriaChart = ({
++  label, data, total, showAsPie, isSingle,
++}: {
++  label: string; data: BreakdownItem[]; total: number; showAsPie: boolean; isSingle: boolean;
++}) => {
++  const [showOthers, setShowOthers] = useState(false);
++  const othersItem = data.find((d) => d.originalName === "__others__");
++  const mainData = data.filter((d) => d.originalName !== "__others__");
++
++  return (
++    <motion.div
++      className={`bg-white rounded-lg shadow-md p-6 ${isSingle ? "lg:col-span-2 max-w-xl mx-auto w-full" : ""}`}
++      initial={{ opacity: 0, y: 20 }}
++      animate={{ opacity: 1, y: 0 }}
++      transition={{ duration: 0.4 }}
++    >
++      <h3 className="text-base font-semibold mb-4 text-gray-800">
++        Breakdown by <span className="text-liturgical-blue">{label}</span>
++      </h3>
++
++      <div className="overflow-x-auto">
++        <div style={showAsPie
++          ? { height: 280, minWidth: "100%" }
++          : { width: Math.max(100, data.length * 80), height: 384, minWidth: "100%" }
++        }>
++        <ResponsiveContainer width="100%" height="100%">
++          {showAsPie ? (
++            <PieChart>
++              <Pie
++                data={data}
++                dataKey="count"
++                nameKey="name"
++                cx="50%"
++                cy="50%"
++                outerRadius={110}
++                labelLine={false}
++              >
++                {data.map((_, i) => (
++                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
++                ))}
++              </Pie>
++              <Tooltip content={<CustomTooltip total={total} />} />
++            </PieChart>
++          ) : (
++            <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 10 }}>
++              <XAxis dataKey="name" interval={0} tick={<CustomXTick />} height={60} />
++              <YAxis tick={{ fontSize: 11 }} />
++              <Tooltip content={<CustomTooltip total={total} />} />
++              <Bar dataKey="count" name="Students" radius={[4, 4, 0, 0]} barSize={data.length <= 5 ? 48 : data.length <= 8 ? 32 : undefined}>
++                {data.map((_, i) => (
++                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
++                ))}
++              </Bar>
++            </BarChart>
++          )}
++        </ResponsiveContainer>
++        </div>
++      </div>
++
++      {showAsPie && (
++        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
++          {data.map((item, i) => (
++            <div key={item.originalName} className="flex items-center gap-1.5 text-xs text-gray-600">
++              <span className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
++              {item.name}
++            </div>
++          ))}
++        </div>
++      )}
++
++      {othersItem?.others && (
++        <div className="mt-3">
++          <button
++            onClick={() => setShowOthers((v) => !v)}
++            className="inline-flex items-center gap-1 text-xs text-liturgical-blue hover:underline"
++          >
++            {showOthers ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
++            {showOthers ? "Hide others" : "Show others"}
++          </button>
++          {showOthers && (
++            <div className="mt-2 grid grid-cols-2 gap-1">
++              {othersItem.others.map((o) => (
++                <div key={o.name} className="flex justify-between text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
++                  <span className="truncate mr-2">{o.name}</span>
++                  <span className="font-medium shrink-0">{o.count} ({o.percentage}%)</span>
++                </div>
++              ))}
++            </div>
++          )}
++        </div>
++      )}
++
++      <div className="mt-4 border-t border-gray-200 pt-4 divide-y divide-gray-100">
++        {mainData.map((item, i) => (
++          <div key={item.originalName} className="flex justify-between items-center py-1.5 text-xs text-gray-700">
++            <span className="truncate mr-2 font-medium" style={{ color: COLORS[i % COLORS.length] }}>{item.name}</span>
++            <span className="shrink-0 text-gray-500">{item.count} ({item.percentage}%)</span>
++          </div>
++        ))}
++      </div>
++    </motion.div>
++  );
++};
++
++const Analytics = () => {
++  const dispatch = useDispatch<AppDispatch>();
++  const { analytics, loading } = useSelector((state: RootState) => state.user);
+   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+ 
+-  // fetch when the admin is logged in; avoids running before token is set
++  const [selectedCriteria, setSelectedCriteria] = useState<string[]>([]);
++  const [activeCriteria, setActiveCriteria] = useState<string[]>([]);
++  const [dropdownOpen, setDropdownOpen] = useState(false);
++  const [chartsLoading, setChartsLoading] = useState(false);
++  const dropdownRef = useRef<HTMLDivElement>(null);
++
++  // Close dropdown when clicking outside
+   useEffect(() => {
+-    if (isAuthenticated) {
+-      dispatch(fetchUsers({ page: 1, limit: 1000 }));
+-    }
++    const handler = (e: MouseEvent) => {
++      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
++        setDropdownOpen(false);
++      }
++    };
++    document.addEventListener("mousedown", handler);
++    return () => document.removeEventListener("mousedown", handler);
++  }, []);
++
++  // Fetch base stats on mount
++  useEffect(() => {
++    if (isAuthenticated) dispatch(fetchAnalytics([]));
+   }, [dispatch, isAuthenticated]);
+ 
+-  const totalUsers = pagination?.totalUsers ?? users.length;
+-  const activeUsersCount = users.filter(
+-    (u) =>
+-      u.universityusers?.activitylevel === "Active" ||
+-      u.universityusers?.activitylevel === "Very_Active",
+-  ).length;
+-  const participationRate = totalUsers
+-    ? ((activeUsersCount / totalUsers) * 100).toFixed(2)
+-    : "0.00";
+-
+-  const participationData = [
+-    { name: t("admin.analytics.active"), value: activeUsersCount },
+-    { name: t("admin.analytics.total"), value: totalUsers - activeUsersCount },
+-  ];
+-
+-  const groupDistMap: Record<string, number> = {};
+-  users.forEach((u) => {
+-    const dept = u.universityusers?.departmentname || "Unknown";
+-    groupDistMap[dept] = (groupDistMap[dept] || 0) + 1;
+-  });
+-  const groupDistributionData = Object.entries(groupDistMap).map(
+-    ([name, value]) => ({ name, value }),
+-  );
++  const handleGenerate = async () => {
++    if (selectedCriteria.length === 0) return;
++    setActiveCriteria([...selectedCriteria]);
++    setChartsLoading(true);
++    await dispatch(fetchAnalytics(selectedCriteria));
++    setChartsLoading(false);
++    setDropdownOpen(false);
++  };
++
++  const toggleCriteria = (key: string) => {
++    setSelectedCriteria((prev) =>
++      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
++    );
++  };
++
++  const total = analytics?.total ?? 0;
++  const activeUsers = analytics?.activeUsers ?? 0;
++  const participationRate = analytics?.participationRate?.toFixed(2) ?? "0.00";
++  const breakdowns = analytics?.breakdowns ?? {};
++
++  const showPie = activeCriteria.length === 1;
++  const isSingle = activeCriteria.length === 1;
++  // Only show "..." on initial load (no data yet), not during chart generation
++  const statsLoading = loading && !analytics;
+ 
+   return (
+     <div>
+-      <h2 className="text-2xl font-bold mb-6">{t("admin.analytics.title")}</h2>
++      {/* Header */}
++      <div className="mb-6">
++        <h2 className="text-2xl font-bold text-gray-800">Analytics</h2>
++        <p className="text-sm text-gray-500 mt-1">Choose criteria and generate charts</p>
++      </div>
+ 
++      {/* Stat cards */}
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+         {[
+-          {
+-            icon: <Users size={24} />,
+-            color: "liturgical-blue",
+-            label: t("admin.analytics.total"),
+-            value: totalUsers,
+-          },
+-          {
+-            icon: <UserCheck size={24} />,
+-            color: "green-500",
+-            label: t("admin.analytics.active"),
+-            value: activeUsersCount,
+-          },
+-          {
+-            icon: <Layers size={24} />,
+-            color: "gold",
+-            label: t("admin.analytics.distribution"),
+-            value: participationRate,
+-          },
+-        ].map(({ icon, color, label, value }, index) => (
++          { icon: <Users size={24} />,    color: "liturgical-blue", label: "Total Students",     value: statsLoading ? "..." : total },
++          { icon: <UserCheck size={24} />, color: "green-500",       label: "Active Members",     value: statsLoading ? "..." : activeUsers },
++          { icon: <Layers size={24} />,    color: "gold",            label: "Participation Rate", value: statsLoading ? "..." : `${participationRate}%` },
++        ].map(({ icon, color, label, value }, i) => (
+           <motion.div
+-            key={index}
++            key={i}
+             className={`bg-white rounded-lg shadow-md p-6 border-l-4 border-${color}`}
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+-            transition={{ duration: 0.5, delay: index * 0.2 }}
++            transition={{ duration: 0.5, delay: i * 0.15 }}
+           >
+             <div className="flex items-start justify-between">
+               <div>
+-                <p className="text-gray-500 font-medium">{label}</p>
++                <p className="text-gray-500 font-medium text-sm">{label}</p>
+                 <h3 className="text-3xl font-bold mt-1">{value}</h3>
+               </div>
+-              <div className={`bg-${color}/10 p-3 rounded-full text-${color}`}>
+-                {icon}
+-              </div>
++              <div className={`bg-${color}/10 p-3 rounded-full text-${color}`}>{icon}</div>
+             </div>
+           </motion.div>
+         ))}
+       </div>
+ 
+-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+-        {participationData.length > 0 && (
+-          <motion.div
+-            className="bg-white rounded-lg shadow-md p-6"
+-            initial={{ opacity: 0, x: -20 }}
+-            animate={{ opacity: 1, x: 0 }}
+-            transition={{ duration: 0.5, delay: 0.2 }}
+-          >
+-            <h3 className="text-lg font-semibold mb-4">
+-              {t("admin.analytics.participation")}
+-            </h3>
+-
+-            <div className="h-80">
+-              <ResponsiveContainer width="100%" height="100%">
+-                <PieChart>
+-                  <Pie
+-                    data={participationData}
+-                    cx="50%"
+-                    cy="50%"
+-                    innerRadius={60}
+-                    outerRadius={100}
+-                    paddingAngle={5}
+-                    dataKey="value"
+-                    label={({ name, percent }) =>
+-                      `${name}: ${(percent * 100).toFixed(0)}%`
+-                    }
++      {/* Breakdown By dropdown + Generate button */}
++      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
++        <h3 className="text-base font-semibold text-gray-800 mb-4">Breakdown By</h3>
++
++        <div className="flex flex-wrap items-center gap-3">
++          {/* Dropdown */}
++          <div className="relative" ref={dropdownRef}>
++            <button
++              onClick={() => setDropdownOpen((v) => !v)}
++              className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-liturgical-blue hover:text-liturgical-blue transition-all min-w-[200px] justify-between"
++            >
++              <span>
++                {selectedCriteria.length === 0
++                  ? "Select criteria..."
++                  : `${selectedCriteria.length} selected`}
++              </span>
++              <ChevronDown size={15} className={`transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
++            </button>
++
++            {dropdownOpen && (
++              <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-1">
++                <div className="flex justify-end px-3 pt-2 pb-1">
++                  <button
++                    onClick={() => setDropdownOpen(false)}
++                    className="text-xs text-liturgical-blue hover:underline"
+                   >
+-                    {participationData.map((_, index) => (
+-                      <Cell
+-                        key={`cell-${index}`}
+-                        fill={COLORS[index % COLORS.length]}
+-                      />
+-                    ))}
+-                  </Pie>
+-                  <Tooltip />
+-                  <Legend />
+-                </PieChart>
+-              </ResponsiveContainer>
+-            </div>
+-          </motion.div>
+-        )}
++                    Done
++                  </button>
++                </div>
++                {CRITERIA_OPTIONS.map(({ key, label }) => {
++                  const checked = selectedCriteria.includes(key);
++                  return (
++                    <button
++                      key={key}
++                      onClick={() => toggleCriteria(key)}
++                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
++                    >
++                      <span className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
++                        checked ? "bg-liturgical-blue border-liturgical-blue" : "border-gray-300"
++                      }`}>
++                        {checked && (
++                          <svg viewBox="0 0 12 12" className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
++                            <path d="M1 6l3.5 3.5L11 2" />
++                          </svg>
++                        )}
++                      </span>
++                      {label}
++                    </button>
++                  );
++                })}
++
++                {selectedCriteria.length > 0 && (
++                  <div className="border-t border-gray-100 mt-1 pt-1 px-3 pb-2">
++                    <button
++                      onClick={() => setSelectedCriteria([])}
++                      className="text-xs text-red-400 hover:text-red-600"
++                    >
++                      Clear all
++                    </button>
++                  </div>
++                )}
++              </div>
++            )}
++          </div>
+ 
+-        {groupDistributionData.length > 0 && (
+-          <motion.div
+-            className="bg-white rounded-lg shadow-md p-6"
+-            initial={{ opacity: 0, x: 20 }}
+-            animate={{ opacity: 1, x: 0 }}
+-            transition={{ duration: 0.5, delay: 0.4 }}
++          {/* Selected tags */}
++          <div className="flex flex-wrap gap-2">
++            {selectedCriteria.map((key) => {
++              const label = CRITERIA_OPTIONS.find((c) => c.key === key)?.label ?? key;
++              return (
++                <span key={key} className="inline-flex items-center gap-1 px-2.5 py-1 bg-liturgical-blue/10 text-liturgical-blue text-xs rounded-full font-medium">
++                  {label}
++                  <button onClick={() => toggleCriteria(key)} className="hover:text-red-500 ml-0.5">✕</button>
++                </span>
++              );
++            })}
++          </div>
++
++          {/* Generate button */}
++          <button
++            onClick={handleGenerate}
++            disabled={selectedCriteria.length === 0}
++            className="ml-auto inline-flex items-center gap-2 px-5 py-2.5 bg-liturgical-blue text-white text-sm font-semibold rounded-lg hover:bg-liturgical-blue/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+           >
+-            <h3 className="text-lg font-semibold mb-4">
+-              {t("admin.analytics.distribution")}
+-            </h3>
+-
+-            <div className="h-80">
+-              <ResponsiveContainer width="100%" height="100%">
+-                <BarChart
+-                  data={groupDistributionData}
+-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+-                >
+-                  <XAxis dataKey="name" />
+-                  <YAxis />
+-                  <Tooltip />
+-                  <Legend />
+-                  <Bar dataKey="value" name="Users" fill="#1A237E" />
+-                </BarChart>
+-              </ResponsiveContainer>
+-            </div>
+-          </motion.div>
++            <BarChart2 size={16} />
++            Generate Charts
++          </button>
++        </div>
++
++        {activeCriteria.length > 0 && (
++          <p className="text-xs text-gray-400 mt-3">
++            {activeCriteria.length === 1
++              ? "Showing pie chart — select 2+ criteria for bar charts"
++              : `Showing ${activeCriteria.length} bar charts`}
++          </p>
+         )}
+       </div>
++
++      {/* Charts */}
++      {activeCriteria.length === 0 && (
++        <div className="flex flex-col items-center justify-center py-20 text-gray-300">
++          <BarChart2 size={48} className="mb-3" />
++          <p className="text-sm">No charts generated yet</p>
++          <p className="text-xs mt-1">Select criteria above and click Generate Charts</p>
++        </div>
++      )}
++
++      {!chartsLoading && activeCriteria.length > 0 && (
++        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
++          {activeCriteria.map((key) => {
++            const data = breakdowns[key];
++            if (!data || data.length === 0) return null;
++            const label = CRITERIA_OPTIONS.find((c) => c.key === key)?.label ?? key;
++            return (
++              <CriteriaChart
++                key={key}
++                label={label}
++                data={data}
++                total={total}
++                showAsPie={showPie}
++                isSingle={isSingle}
++              />
++            );
++          })}
++        </div>
++      )}
++
++      {chartsLoading && activeCriteria.length > 0 && (
++        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
++          {activeCriteria.map((key) => (
++            <div key={key} className="bg-white rounded-lg shadow-md p-6 h-80 animate-pulse" />
++          ))}
++        </div>
++      )}
+     </div>
+   );
+ };
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/pages/admin/ManageAdmins.tsx /tmp/tmp.bYIqynuI57/src/pages/admin/ManageAdmins.tsx
+--- /workspaces/6kilogbigubae/src/pages/admin/ManageAdmins.tsx	2026-05-20 11:44:25.034737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/pages/admin/ManageAdmins.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -17,9 +17,9 @@
+   updateAdmin,
+   deleteAdmin,
+ } from "../../features/admins/adminsSlice";
+-import { fetchRoles } from "../../features/roles/rolesSlice";
+ import type { AppDispatch, RootState } from "../../app/store";
+ import LoadingScreen from "../../components/ui/LoadingScreen";
++let isFirstRender = true;
+ 
+ const ManageAdmins: React.FC = React.memo(() => {
+   const dispatch = useDispatch<AppDispatch>();
+@@ -27,7 +27,6 @@
+   const { admins = [], loading } = useSelector(
+     (state: RootState) => state.admin,
+   );
+-  const { roles = [] } = useSelector((state: RootState) => state.roles);
+ 
+   const [searchTerm, setSearchTerm] = useState("");
+   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+@@ -35,9 +34,12 @@
+   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
+ 
+   useEffect(() => {
+-    dispatch(fetchAdmins());
+-    dispatch(fetchRoles());
+-  }, [dispatch]);
++    if (isFirstRender) {
++      isFirstRender = false;
++      dispatch(fetchAdmins());
++      return;
++    }
++  }, [dispatch, admins]);
+ 
+   const filteredAdmins = useMemo(() => {
+     const term = searchTerm.toLowerCase();
+@@ -76,21 +78,12 @@
+   const handleSaveAdmin = useCallback(
+     (adminData: Partial<Admin>) => {
+       if (modalMode === "add") {
+-        const payload: Partial<Admin> = {
+-          ...adminData,
+-          studentid: adminData.studentid?.trim(),
+-          adminusername: adminData.adminusername?.trim(),
+-          roleName: adminData.roleName?.trim(),
+-        };
+-        dispatch(addAdmin(payload));
++        dispatch(addAdmin(adminData));
+       } else if (modalMode === "edit" && selectedAdmin?.studentid) {
+-        const payload = { ...adminData };
+-        if (!payload.adminpassword) {
+-          delete payload.adminpassword;
++        if (adminData.adminpassword === "") {
++          adminData.adminpassword = "previous one";
+         }
+-        dispatch(
+-          updateAdmin({ id: selectedAdmin.studentid, adminData: payload }),
+-        );
++        dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData }));
+       }
+       closeModal();
+     },
+@@ -264,7 +257,6 @@
+               <AdminForm
+                 mode={modalMode}
+                 initialData={selectedAdmin}
+-                roles={roles}
+                 onSave={handleSaveAdmin}
+                 onCancel={closeModal}
+               />
+Only in /workspaces/6kilogbigubae/src/pages/admin: ManageRoles.tsx
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/pages/admin/ManageUsers.tsx /tmp/tmp.bYIqynuI57/src/pages/admin/ManageUsers.tsx
+--- /workspaces/6kilogbigubae/src/pages/admin/ManageUsers.tsx	2026-05-20 11:46:26.656745774 +0000
++++ /tmp/tmp.bYIqynuI57/src/pages/admin/ManageUsers.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -1,6 +1,6 @@
+ import { useEffect, useState, useCallback, useMemo } from "react";
+ import { useTranslation } from "react-i18next";
+-import { Search, Plus, Edit, Trash2, X, Filter, Download } from "lucide-react";
++import { Search, Plus, Edit, Trash2, X, Filter } from "lucide-react";
+ import { useDispatch, useSelector } from "react-redux";
+ import {
+   fetchUsers,
+@@ -9,29 +9,15 @@
+   deleteUser,
+ } from "../../features/users/userSlice";
+ import type { AppDispatch, RootState } from "../../app/store";
+-import { DEFAULT_PERMISSIONS, EMPTY_USER_FILTERS, User, UserFilters } from "../../types";
++import { DEFAULT_PERMISSIONS, EMPTY_USER_FILTERS, User } from "../../types";
+ import UserForm from "../../components/admin/UserForm";
+ import LoadingScreen from "../../components/ui/LoadingScreen";
+ import Swal from "sweetalert2";
+ import { memo } from "react";
++import useDebounce from "../../customhook/useDebounce";
+ import Pagination from "../../components/Pagination";
+ import FilterModal from "../../components/FilterModal";
+-import ExportModal, { EXPORTABLE_COLUMNS } from "../../components/ExportModal";
+-import jsPDF from "jspdf";
+-import autoTable from "jspdf-autotable";
+-import { getUsers } from "../../service/userApi";
+-import headerLogo from "../../assets/headerLogo.png";
+-import logo from "../../assets/logo.png";
+-
+-const loadImage = (src: string): Promise<HTMLImageElement> => {
+-  return new Promise((resolve, reject) => {
+-    const img = new Image();
+-    img.crossOrigin = "Anonymous";
+-    img.src = src;
+-    img.onload = () => resolve(img);
+-    img.onerror = reject;
+-  });
+-};
++import { DEFAULT_USER_FILTERS } from "../../types/filters";
+ 
+ const UserRow = memo(
+   ({
+@@ -113,220 +99,46 @@
+   const isSuperAdmin = !!currentUserData?.isSuperAdmin;
+   const canRegisterUsers = isSuperAdmin || adminPermissions.registerUsers;
+ 
+-  const [searchInput, setSearchInput] = useState("");
+-  const [appliedSearch, setAppliedSearch] = useState("");
++  const [searchTerm, setSearchTerm] = useState("");
++  const debouncedSearch = useDebounce(searchTerm, 300);
+ 
+   const [page, setPage] = useState(1);
+   const [limit, setLimit] = useState(10);
+   const [isFilterOpen, setIsFilterOpen] = useState(false);
+   const [filters, setFilters] = useState({ ...EMPTY_USER_FILTERS });
+-  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+-  const [pendingExport, setPendingExport] = useState<{ columns: string[], format: "PDF" | "DOC", title: string } | null>(null);
+ 
+-  useEffect(() => {
+-    const timer = setTimeout(() => {
+-      setAppliedSearch(searchInput);
+-      setPage(1);
+-    }, 3000);
+-
+-    return () => clearTimeout(timer);
+-  }, [searchInput]);
+-
+-  // Convert null filter values to undefined dynamically to automatically support future filters
+-  const toFetchParams = useCallback(
+-    () => {
+-      const dynamicFilters = Object.fromEntries(
+-        Object.entries(filters).filter(([_, v]) => v !== null)
+-      );
+-      return {
+-        page,
+-        limit,
+-        q: appliedSearch || undefined,
+-        ...dynamicFilters
+-      };
+-    },
+-    [page, limit, appliedSearch, filters],
+-  );
++  // Convert null filter values to undefined for the API params
++  const toFetchParams = useCallback(() => ({
++    page,
++    limit,
++    q: debouncedSearch || undefined,
++    gender: filters.gender ?? undefined,
++    batch: filters.batch ?? undefined,
++    participation: filters.participation ?? undefined,
++    sponsorshiptype: filters.sponsorshiptype ?? undefined,
++    cafeteriaaccess: filters.cafeteriaaccess ?? undefined,
++    tookcourse: filters.tookcourse ?? undefined,
++    departmentname: filters.departmentname ?? undefined,
++    clergicalstatus: filters.clergicalstatus ?? undefined,
++  }), [page, limit, debouncedSearch, filters]);
+ 
+   // Reset page when filters change
+   useEffect(() => {
+     setPage(1);
+   }, [filters]);
+ 
++  // perform fetch whenever relevant parameters change
+   useEffect(() => {
+     dispatch(fetchUsers(toFetchParams()));
+   }, [dispatch, toFetchParams]);
+ 
+-  const startExportFlow = useCallback((columns: string[], format: "PDF" | "DOC", title: string) => {
+-    setPendingExport({ columns, format, title });
+-    setIsExportModalOpen(false);
+-    setIsFilterOpen(true);
+-  }, []);
+-
+-  const handleExport = useCallback(async (selectedColumns: string[], format: "PDF" | "DOC", title: string, exportFilters: UserFilters) => {
+-    Swal.fire({
+-      title: "Exporting...",
+-      text: "Please wait while we generate your file.",
+-      allowOutsideClick: false,
+-      didOpen: () => {
+-        Swal.showLoading();
+-      }
+-    });
+-
+-    try {
+-      // Dynamically extract all filter properties that aren't null to automatically support future filters
+-      const dynamicFilters = Object.fromEntries(
+-        Object.entries(exportFilters).filter(([_, v]) => v !== null)
+-      );
+-
+-      let currentPage = 1;
+-      let allUsers = [];
+-      
+-      let response = await getUsers({
+-        page: currentPage, 
+-        limit: 100,
+-        q: appliedSearch || undefined,
+-        ...dynamicFilters
+-      });
+-      
+-      if (!response.success || !response.users) {
+-         throw new Error("Failed to fetch data for export");
+-      }
+-      
+-      allUsers = [...response.users];
+-      const totalPages = response.pagination?.totalPages || 1;
+-      
+-      for (currentPage = 2; currentPage <= totalPages; currentPage++) {
+-        Swal.update({ text: `Fetching data... ${Math.round(((currentPage - 1) / totalPages) * 100)}%` });
+-        const nextResponse = await getUsers({
+-          page: currentPage, 
+-          limit: 100,
+-          q: appliedSearch || undefined,
+-          ...dynamicFilters
+-        });
+-        if (nextResponse.success && nextResponse.users) {
+-          allUsers = [...allUsers, ...nextResponse.users];
+-        }
+-      }
+-      
+-      Swal.update({ text: "Processing file..." });
+-      const dataToExport = allUsers;
+-      const headers = ["#", ...EXPORTABLE_COLUMNS.filter((c: { id: string, label: string }) => selectedColumns.includes(c.id)).map((c: { id: string, label: string }) => c.label)];
+-      const rows = dataToExport.map((user, index) => {
+-        const rowData = EXPORTABLE_COLUMNS.filter((c: { id: string, label: string }) => selectedColumns.includes(c.id)).map((c: { id: string, label: string }) => {
+-          if (c.id === "fullname") {
+-            return `${user.firstname || ""} ${user.middlename || ""} ${user.lastname || ""}`.replace(/\s+/g, ' ').trim() || "N/A";
+-          }
+-          if (["departmentname", "batch", "sponsorshiptype", "participation", "cafeteriaaccess", "tookcourse", "activitylevel"].includes(c.id)) {
+-            return String(user.universityusers?.[c.id as keyof typeof user.universityusers] ?? "N/A");
+-          }
+-          return String(user[c.id as keyof User] ?? "N/A");
+-        });
+-        return [String(index + 1), ...rowData];
+-      });
+-
+-      if (format === "PDF") {
+-        const doc = new jsPDF("landscape");
+-        let mainLogoImg: HTMLImageElement | null = null;
+-        let headerImg: HTMLImageElement | null = null;
+-        
+-        try {
+-          mainLogoImg = await loadImage(logo);
+-          headerImg = await loadImage(headerLogo);
+-        } catch(err) {
+-          console.warn("Could not load pdf images", err);
+-        }
+-
+-        autoTable(doc, {
+-          head: [headers],
+-          body: rows,
+-          startY: 40,
+-          margin: { top: 40 }, // Reserve space for the header on every page
+-          styles: { 
+-            fontSize: Math.max(10 - (headers.length / 8), 7), 
+-            cellPadding: 3
+-          },
+-          headStyles: { 
+-            fillColor: [255, 255, 255], 
+-            textColor: [0, 0, 0], 
+-            fontStyle: "bold",
+-            lineWidth: 0.1,
+-            lineColor: [200, 200, 200],
+-            fontSize: Math.max(11 - (headers.length / 8), 8) 
+-          },
+-          bodyStyles: {
+-            lineWidth: 0.1,
+-            lineColor: [220, 220, 220]
+-          },
+-          didDrawPage: function () {
+-            if (mainLogoImg) {
+-              doc.addImage(mainLogoImg, "PNG", 14, 10, 20, 20);
+-            }
+-            
+-            doc.setFontSize(16);
+-            doc.setFont("helvetica", "bold");
+-            doc.setTextColor(0, 0, 0);
+-            
+-            const pageWidth = doc.internal.pageSize.getWidth();
+-            doc.text(title, pageWidth / 2, 22, { align: "center" });
+-            
+-            if (headerImg) {
+-              doc.addImage(headerImg, "PNG", pageWidth - 50, 10, 35, 20);
+-            }
+-          }
+-        });
+-        const safeTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+-        doc.save(`${safeTitle}.pdf`);
+-      } else {
+-        const tableHtml = `
+-          <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+-          <head><meta charset='utf-8'><title>${title}</title>
+-          <style>
+-            table { border-collapse: collapse; width: 100%; border: 1px solid black; font-family: sans-serif; }
+-            th, td { border: 1px solid black; padding: 8px; text-align: left; font-size: 14px; }
+-            th { background-color: #f2f2f2; font-weight: bold; }
+-          </style>
+-          </head>
+-          <body>
+-            <h2 style="text-align: center; font-family: sans-serif;">${title}</h2>
+-            <table>
+-              <thead>
+-                <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
+-              </thead>
+-              <tbody>
+-                ${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}
+-              </tbody>
+-            </table>
+-          </body>
+-          </html>
+-        `;
+-        const blob = new Blob([tableHtml], { type: "application/msword;charset=utf-8" });
+-        const url = URL.createObjectURL(blob);
+-        const link = document.createElement("a");
+-        link.href = url;
+-        const safeTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+-        link.download = `${safeTitle}.doc`;
+-        document.body.appendChild(link);
+-        link.click();
+-        document.body.removeChild(link);
+-        URL.revokeObjectURL(url);
+-      }
+-      Swal.close();
+-    } catch (error) {
+-       Swal.close();
+-       console.error("Export error", error);
+-       Swal.fire({
+-         icon: "error",
+-         title: "Export Failed",
+-         text: "An error occurred while exporting data."
+-       });
+-    }
+-  }, [appliedSearch]);
+-
++  // modal state
+   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+   const [isModalOpen, setIsModalOpen] = useState(false);
+   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
+ 
++  // initial data already covered by other effect above
++
+   const openModal = useCallback(
+     (mode: "add" | "edit" | "delete", user: User | null = null) => {
+       setModalMode(mode);
+@@ -371,6 +183,7 @@
+       closeModal,
+       toFetchParams,
+       canRegisterUsers,
++      filters,
+     ],
+   );
+ 
+@@ -434,19 +247,13 @@
+             Filters
+           </button>
+           <button
+-            onClick={() => setIsExportModalOpen(true)}
+-            className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition focus:outline-none focus:ring-2 focus:ring-emerald-400"
+-          >
+-            <Download size={18} className="mr-2" />
+-            Export
+-          </button>
+-          <button
+             onClick={() => canRegisterUsers && openModal("add")}
+             disabled={!canRegisterUsers}
+-            className={`inline-flex items-center justify-center px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto ${canRegisterUsers
+-              ? "bg-indigo-600 hover:bg-indigo-700"
+-              : "bg-indigo-300 cursor-not-allowed"
+-              }`}
++            className={`inline-flex items-center justify-center px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto ${
++              canRegisterUsers
++                ? "bg-indigo-600 hover:bg-indigo-700"
++                : "bg-indigo-300 cursor-not-allowed"
++            }`}
+           >
+             <Plus size={18} className="mr-2" />
+             {t("admin.users.add")}
+@@ -456,31 +263,15 @@
+ 
+       <FilterModal
+         isOpen={isFilterOpen}
+-        onClose={() => {
+-          setIsFilterOpen(false);
+-          if (pendingExport) setPendingExport(null);
+-        }}
++        onClose={() => setIsFilterOpen(false)}
+         filters={filters}
+-        onApply={(newFilters) => {
+-          setFilters(newFilters);
+-          if (pendingExport) {
+-            handleExport(pendingExport.columns, pendingExport.format, pendingExport.title, newFilters);
+-            setPendingExport(null);
+-          }
+-        }}
+-      />
+-      <ExportModal
+-        isOpen={isExportModalOpen}
+-        onClose={() => setIsExportModalOpen(false)}
+-        onNext={startExportFlow}
++        onApply={setFilters}
+       />
+ 
+-      {Object.values(filters).some((v) => v !== null) && (
++      {Object.values(filters).some(v => v !== null) && (
+         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+           <div className="flex items-center justify-between">
+-            <span className="text-sm font-medium text-blue-900">
+-              Active Filters:
+-            </span>
++            <span className="text-sm font-medium text-blue-900">Active Filters:</span>
+             <button
+               onClick={() => setFilters({ ...EMPTY_USER_FILTERS })}
+               className="text-xs text-blue-600 hover:text-blue-800 underline"
+@@ -489,46 +280,14 @@
+             </button>
+           </div>
+           <div className="flex flex-wrap gap-2 mt-2">
+-            {filters.gender && (
+-              <span className="px-2 py-1 bg-white text-xs rounded border">
+-                Gender: {filters.gender}
+-              </span>
+-            )}
+-            {filters.batch && (
+-              <span className="px-2 py-1 bg-white text-xs rounded border">
+-                Batch: {filters.batch}
+-              </span>
+-            )}
+-            {filters.departmentname && (
+-              <span className="px-2 py-1 bg-white text-xs rounded border">
+-                Dept: {filters.departmentname}
+-              </span>
+-            )}
+-            {filters.clergicalstatus && (
+-              <span className="px-2 py-1 bg-white text-xs rounded border">
+-                Clergy: {filters.clergicalstatus}
+-              </span>
+-            )}
+-            {filters.sponsorshiptype && (
+-              <span className="px-2 py-1 bg-white text-xs rounded border">
+-                Sponsor: {filters.sponsorshiptype}
+-              </span>
+-            )}
+-            {filters.cafeteriaaccess !== null && (
+-              <span className="px-2 py-1 bg-white text-xs rounded border">
+-                Cafe: {filters.cafeteriaaccess ? "Yes" : "No"}
+-              </span>
+-            )}
+-            {filters.tookcourse !== null && (
+-              <span className="px-2 py-1 bg-white text-xs rounded border">
+-                Course: {filters.tookcourse ? "Yes" : "No"}
+-              </span>
+-            )}
+-            {filters.participation && (
+-              <span className="px-2 py-1 bg-white text-xs rounded border">
+-                Participation: {filters.participation.replace(/_/g, " ")}
+-              </span>
+-            )}
++            {filters.gender && <span className="px-2 py-1 bg-white text-xs rounded border">Gender: {filters.gender}</span>}
++            {filters.batch && <span className="px-2 py-1 bg-white text-xs rounded border">Batch: {filters.batch}</span>}
++            {filters.departmentname && <span className="px-2 py-1 bg-white text-xs rounded border">Dept: {filters.departmentname}</span>}
++            {filters.clergicalstatus && <span className="px-2 py-1 bg-white text-xs rounded border">Clergy: {filters.clergicalstatus}</span>}
++            {filters.sponsorshiptype && <span className="px-2 py-1 bg-white text-xs rounded border">Sponsor: {filters.sponsorshiptype}</span>}
++            {filters.cafeteriaaccess !== null && <span className="px-2 py-1 bg-white text-xs rounded border">Cafe: {filters.cafeteriaaccess ? 'Yes' : 'No'}</span>}
++            {filters.tookcourse !== null && <span className="px-2 py-1 bg-white text-xs rounded border">Course: {filters.tookcourse ? 'Yes' : 'No'}</span>}
++            {filters.participation && <span className="px-2 py-1 bg-white text-xs rounded border">Participation: {filters.participation.replace(/_/g, ' ')}</span>}
+           </div>
+         </div>
+       )}
+@@ -541,26 +300,16 @@
+           type="text"
+           className="w-full pl-10 pr-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base"
+           placeholder={t("admin.users.search")}
+-          value={searchInput}
++          value={searchTerm}
+           onChange={(e) => {
+-            setSearchInput(e.target.value);
+-          }}
+-          onKeyDown={(e) => {
+-            if (e.key === "Enter") {
+-              e.preventDefault();
+-              setAppliedSearch(searchInput);
+-              setPage(1);
+-            }
++            setSearchTerm(e.target.value);
++            setPage(1);
+           }}
+         />
+-        {searchInput && (
++        {searchTerm && (
+           <button
+             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+-            onClick={() => {
+-              setSearchInput("");
+-              setAppliedSearch("");
+-              setPage(1);
+-            }}
++            onClick={() => setSearchTerm("")}
+             aria-label="Clear search"
+           >
+             <X className="h-5 w-5" />
+@@ -568,10 +317,6 @@
+         )}
+       </div>
+ 
+-      <div className="mb-3 text-xs text-gray-500">
+-        Search applies after 300 ms, or press Enter to search now.
+-      </div>
+-
+       <div className="overflow-x-auto bg-white rounded-lg border shadow-sm">
+         <table className="min-w-full divide-y divide-gray-200 text-sm sm:text-base text-left">
+           <thead className="bg-gray-50 w-full">
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/pages/superAdmin/SuperAdminPage.tsx /tmp/tmp.bYIqynuI57/src/pages/superAdmin/SuperAdminPage.tsx
+--- /workspaces/6kilogbigubae/src/pages/superAdmin/SuperAdminPage.tsx	2026-05-20 11:44:25.035737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/pages/superAdmin/SuperAdminPage.tsx	2026-05-20 12:00:23.000000000 +0000
+@@ -1,5 +1,4 @@
+ import React, { useState, useEffect, useMemo, useCallback } from "react";
+-import { useNavigate } from "react-router-dom";
+ import { Admin, Permissions, DEFAULT_PERMISSIONS } from "../../types";
+ import AdminCard from "../../components/superadmin/AdminCard";
+ import AdminModal from "../../components/superadmin/AdminModal";
+@@ -10,7 +9,6 @@
+   updateAdmin,
+   deleteAdmin,
+ } from "../../features/admins/adminsSlice";
+-import { fetchRoles } from "../../features/roles/rolesSlice";
+ import type { AppDispatch, RootState } from "../../app/store";
+ import LoadingScreen from "../../components/ui/LoadingScreen";
+ 
+@@ -20,7 +18,6 @@
+   const { admins = [], loading } = useSelector(
+     (state: RootState) => state.admin,
+   );
+-  const { roles = [] } = useSelector((state: RootState) => state.roles);
+   const { currentUserData } = useSelector((state: RootState) => state.auth);
+ 
+   const [searchTerm, setSearchTerm] = useState("");
+@@ -30,7 +27,6 @@
+ 
+   useEffect(() => {
+     dispatch(fetchAdmins());
+-    dispatch(fetchRoles());
+   }, [dispatch]);
+ 
+   const filteredAdmins = useMemo(() => {
+@@ -72,27 +68,12 @@
+   const handleSaveAdmin = useCallback(
+     (adminData: Partial<Admin>) => {
+       if (modalMode === "add") {
+-        const payload: Partial<Admin> = {
+-          ...adminData,
+-          studentid: adminData.studentid?.trim(),
+-          adminusername: adminData.adminusername?.trim(),
+-          roleName: adminData.roleName?.trim(),
+-        };
+-
+-        dispatch(addAdmin(payload));
++        dispatch(addAdmin(adminData));
+       } else if (modalMode === "edit" && selectedAdmin?.studentid) {
+         const payload = { ...adminData };
+-        if (payload.studentid) {
+-          payload.studentid = payload.studentid.trim();
+-        }
+-        if (payload.adminusername) {
+-          payload.adminusername = payload.adminusername.trim();
+-        }
+-
+-        if (!payload.adminpassword?.trim()) {
++        if (!payload.adminpassword) {
+           delete payload.adminpassword;
+         }
+-
+         dispatch(
+           updateAdmin({ id: selectedAdmin.studentid, adminData: payload }),
+         );
+@@ -126,7 +107,7 @@
+     },
+     [dispatch],
+   );
+-  const navigate = useNavigate();
++
+   if (loading) return <LoadingScreen />;
+ 
+   return (
+@@ -142,49 +123,27 @@
+               {`Student ID: ${currentUserData?.studentid ?? ""}`}
+             </p>
+           </div>
+-          <div className="flex flex-col gap-2">
+-            <button
+-              id="add-admin-btn"
+-              onClick={() => navigate("/admin/manageRoles")}
+-              className="inline-flex items-center gap-2 bg-cyan-500 hover:bg-cyan-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-cyan-200 transition-all duration-200 whitespace-nowrap"
+-            >
+-              <svg
+-                width="16"
+-                height="16"
+-                viewBox="0 0 24 24"
+-                fill="none"
+-                stroke="currentColor"
+-                strokeWidth="2"
+-                strokeLinecap="round"
+-                strokeLinejoin="round"
+-              >
+-                <circle cx="12" cy="12" r="3" />
+-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09c.7 0 1.31-.39 1.51-1a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06c.51.51 1.21.66 1.82.33.46-.26.75-.76.75-1.29V3a2 2 0 1 1 4 0v.09c0 .53.29 1.03.75 1.29.61.33 1.31.18 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06c-.39.39-.52.96-.33 1.82.2.61.81 1 1.51 1H21a2 2 0 1 1 0 4h-.09c-.7 0-1.31.39-1.51 1z" />
+-              </svg>
+-
+-              <span>Manage Roles</span>
+-            </button>
+-            <button
+-              id="add-admin-btn"
+-              onClick={openAddModal}
+-              className="inline-flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-indigo-200 transition-all duration-200 whitespace-nowrap"
++
++          <button
++            id="add-admin-btn"
++            onClick={openAddModal}
++            className="inline-flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-indigo-200 transition-all duration-200 whitespace-nowrap"
++          >
++            <svg
++              width="16"
++              height="16"
++              viewBox="0 0 24 24"
++              fill="none"
++              stroke="currentColor"
++              strokeWidth="2.5"
++              strokeLinecap="round"
++              strokeLinejoin="round"
+             >
+-              <svg
+-                width="16"
+-                height="16"
+-                viewBox="0 0 24 24"
+-                fill="none"
+-                stroke="currentColor"
+-                strokeWidth="2.5"
+-                strokeLinecap="round"
+-                strokeLinejoin="round"
+-              >
+-                <line x1="12" y1="5" x2="12" y2="19" />
+-                <line x1="5" y1="12" x2="19" y2="12" />
+-              </svg>
+-              <span>Add Admin</span>
+-            </button>
+-          </div>
++              <line x1="12" y1="5" x2="12" y2="19" />
++              <line x1="5" y1="12" x2="19" y2="12" />
++            </svg>
++            <span>Add Admin</span>
++          </button>
+         </header>
+ 
+         {/* === Admin List === */}
+@@ -285,7 +244,6 @@
+         <AdminModal
+           mode={modalMode}
+           initialData={selectedAdmin}
+-          roles={roles}
+           onSave={handleSaveAdmin}
+           onCancel={closeModal}
+         />
+diff -ru '--exclude=node_modules' '--exclude=.git' '--exclude=dist' /workspaces/6kilogbigubae/src/types/index.ts /tmp/tmp.bYIqynuI57/src/types/index.ts
+--- /workspaces/6kilogbigubae/src/types/index.ts	2026-05-20 11:44:25.035737917 +0000
++++ /tmp/tmp.bYIqynuI57/src/types/index.ts	2026-05-20 12:00:23.000000000 +0000
+@@ -98,8 +98,6 @@
+   studentid: string;
+   adminusername: string;
+   adminpassword?: string;
+-  roleName?: string;
+-  passwordUpdatedAt?: string;
+   isSuperAdmin?: boolean;
+   role?: "Super Admin" | "Admin";
+   usersCreatedCount?: number;
+@@ -143,17 +141,6 @@
+   pagination: Pagination;
+ }
+ 
+-export interface Role {
+-  id?: number;
+-  name: string;
+-  readUsers: boolean;
+-  registerUsers: boolean;
+-  editAnyUser: boolean;
+-  editSpecificUsers: boolean;
+-  removeAnyUsers: boolean;
+-  removeSpecificUsers: boolean;
+-}
+-
+ export interface Permissions {
+   readUsers: boolean;
+   registerUsers: boolean;
