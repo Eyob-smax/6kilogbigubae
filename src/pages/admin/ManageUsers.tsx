@@ -11,6 +11,7 @@ import {
 import type { AppDispatch, RootState } from "../../app/store";
 import { DEFAULT_PERMISSIONS, EMPTY_USER_FILTERS, User, UserFilters } from "../../types";
 import UserForm from "../../components/admin/UserForm";
+import UserDetail from "../../components/admin/UserDetail";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import Swal from "sweetalert2";
 import { memo } from "react";
@@ -38,14 +39,12 @@ const UserRow = memo(
     user,
     onEdit,
     onDelete,
-    canEdit,
-    canDelete,
+    onDetail,
   }: {
     user: User;
     onEdit: (user: User) => void;
     onDelete: (user: User) => void;
-    canEdit: boolean;
-    canDelete: boolean;
+    onDetail: (user: User) => void;
   }) => (
     <tr key={user.userid} className="hover:bg-gray-50 text-sm">
       <td className="px-3 sm:px-6 py-4">{user.studentid}</td>
@@ -64,13 +63,15 @@ const UserRow = memo(
       <td className="px-3 sm:px-6 py-4">
         <div className="flex space-x-3">
           <button
-            onClick={() => canEdit && onEdit(user)}
-            disabled={!canEdit}
-            className={
-              canEdit
-                ? "text-indigo-600 hover:text-indigo-900"
-                : "text-indigo-300 cursor-not-allowed"
-            }
+            onClick={() => onDetail(user)}
+            className="text-blue-600 hover:text-blue-900"
+            aria-label="View details"
+          >
+            <Eye size={18} />
+          </button>
+          <button
+            onClick={() => onEdit(user)}
+            className="text-indigo-600 hover:text-indigo-900"
             aria-label="Edit user"
           >
             <Edit size={18} />
@@ -325,10 +326,10 @@ const ManageUsers = () => {
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
+  const [modalMode, setModalMode] = useState<"add" | "edit" | "delete" | "detail">("add");
 
   const openModal = useCallback(
-    (mode: "add" | "edit" | "delete", user: User | null = null) => {
+    (mode: "add" | "edit" | "delete" | "detail", user: User | null = null) => {
       setModalMode(mode);
       setSelectedUser(user);
       setIsModalOpen(true);
@@ -593,10 +594,9 @@ const ManageUsers = () => {
               <UserRow
                 key={user.userid}
                 user={user}
-                onEdit={(u) => canEditUser(u) && openModal("edit", u)}
-                onDelete={(u) => canDeleteUser(u) && openModal("delete", u)}
-                canEdit={canEditUser(user)}
-                canDelete={canDeleteUser(user)}
+                onDetail={(u) => openModal("detail", u)}
+                onEdit={(u) => openModal("edit", u)}
+                onDelete={(u) => openModal("delete", u)}
               />
             ))}
             {users.length === 0 && (
@@ -616,7 +616,9 @@ const ManageUsers = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl h-auto max-h-[90vh] overflow-y-auto transform transition-all duration-300 sm:rounded-lg sm:max-w-2xl">
-            {modalMode === "delete" ? (
+            {modalMode === "detail" && selectedUser ? (
+              <UserDetail user={selectedUser} onClose={closeModal} />
+            ) : modalMode === "delete" ? (
               <div className="p-6 space-y-4">
                 <h3 className="text-lg font-semibold">{t("forms.confirm")}</h3>
                 <p className="text-gray-700">
@@ -641,7 +643,7 @@ const ManageUsers = () => {
             ) : (
               <div className="p-4 sm:p-6">
                 <UserForm
-                  mode={modalMode}
+                  mode={modalMode as "add" | "edit"}
                   initialData={selectedUser}
                   onCancel={closeModal}
                   onSubmit={handleSaveUser}
