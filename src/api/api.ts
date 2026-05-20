@@ -18,21 +18,26 @@ export interface IResponseObject {
   user?: User & { userid: number };
 }
 
-// compute base URL from Vite environment or fall back to sensible defaults
+const normalizeBaseURL = (url: string) => {
+  const trimmedUrl = url.trim().replace(/\/+$/, "");
+  return trimmedUrl.endsWith("/api") ? trimmedUrl : `${trimmedUrl}/api`;
+};
+
 const getBaseURL = () => {
-  // Vite exposes variables prefixed with VITE_ to the client code
-  const envUrl = import.meta.env.VITE_API_URL as string | undefined;
+  const env = import.meta.env as ImportMetaEnv & {
+    BASE_API_URL?: string;
+  };
+
+  const envUrl = env.VITE_API_URL || env.BASE_API_URL;
   if (envUrl) {
-    return envUrl;
+    return normalizeBaseURL(envUrl);
   }
 
-  // during development use localhost (adjust port if backend listens elsewhere)
   if (import.meta.env.DEV) {
-    return "http://localhost:6500/api";
+    return "https://gbi-backend-h76f.vercel.app/api"; // http://localhost:6500/api
   }
 
-  // production default remains the hosted API
-  return "https://gbi-backend-h76f.vercel.app/api";
+  return "https://gbi-backend-h76f.vercel.app/api"; // http://localhost:6500/api
 };
 
 export const api = axios.create({

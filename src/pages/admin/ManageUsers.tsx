@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Search, Plus, Edit, Trash2, X, Eye } from "lucide-react";
+import { Search, Plus, Edit, Trash2, X, Filter, Download } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUsers,
@@ -9,14 +9,30 @@ import {
   deleteUser,
 } from "../../features/users/userSlice";
 import type { AppDispatch, RootState } from "../../app/store";
-import { User } from "../../types";
+import { DEFAULT_PERMISSIONS, EMPTY_USER_FILTERS, User, UserFilters } from "../../types";
 import UserForm from "../../components/admin/UserForm";
 import UserDetail from "../../components/admin/UserDetail";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import Swal from "sweetalert2";
 import { memo } from "react";
-import useDebounce from "../../customhook/useDebounce";
 import Pagination from "../../components/Pagination";
+import FilterModal from "../../components/FilterModal";
+import ExportModal, { EXPORTABLE_COLUMNS } from "../../components/ExportModal";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { getUsers } from "../../service/userApi";
+import headerLogo from "../../assets/headerLogo.png";
+import logo from "../../assets/logo.png";
+
+const loadImage = (src: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = src;
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+  });
+};
 
 const UserRow = memo(
   ({
@@ -61,8 +77,13 @@ const UserRow = memo(
             <Edit size={18} />
           </button>
           <button
-            onClick={() => onDelete(user)}
-            className="text-red-600 hover:text-red-900"
+            onClick={() => canDelete && onDelete(user)}
+            disabled={!canDelete}
+            className={
+              canDelete
+                ? "text-red-600 hover:text-red-900"
+                : "text-red-300 cursor-not-allowed"
+            }
             aria-label="Delete user"
           >
             <Trash2 size={18} />
@@ -81,33 +102,231 @@ const ManageUsers = () => {
   const {
     users = [],
     loading,
-    error,
     pagination,
   } = useSelector((state: RootState) => state.user);
+  const { currentUserData } = useSelector((state: RootState) => state.auth);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearch = useDebounce(searchTerm, 300);
+  const adminPermissions = useMemo(
+    () => currentUserData?.permissions || { ...DEFAULT_PERMISSIONS },
+    [currentUserData?.permissions],
+  );
+  const adminId = currentUserData?.studentid;
+  const isSuperAdmin = !!currentUserData?.isSuperAdmin;
+  const canRegisterUsers = isSuperAdmin || adminPermissions.registerUsers;
+
+  const [searchInput, setSearchInput] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({ ...EMPTY_USER_FILTERS });
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [pendingExport, setPendingExport] = useState<{ columns: string[], format: "PDF" | "DOC", title: string } | null>(null);
 
-  // perform fetch whenever relevant parameters change
   useEffect(() => {
-    dispatch(
-      fetchUsers({
+    const timer = setTimeout(() => {
+      setAppliedSearch(searchInput);
+      setPage(1);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // Convert null filter values to undefined dynamically to automatically support future filters
+  const toFetchParams = useCallback(
+    () => {
+      const dynamicFilters = Object.fromEntries(
+        Object.entries(filters).filter(([_, v]) => v !== null)
+      );
+      return {
         page,
         limit,
-        q: debouncedSearch || undefined,
-      }),
-    );
-  }, [dispatch, page, limit, debouncedSearch]);
+        q: appliedSearch || undefined,
+        ...dynamicFilters
+      };
+    },
+    [page, limit, appliedSearch, filters],
+  );
 
-  // modal state
+  // Reset page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [filters]);
+
+  useEffect(() => {
+    dispatch(fetchUsers(toFetchParams()));
+  }, [dispatch, toFetchParams]);
+
+  const startExportFlow = useCallback((columns: string[], format: "PDF" | "DOC", title: string) => {
+    setPendingExport({ columns, format, title });
+    setIsExportModalOpen(false);
+    setIsFilterOpen(true);
+  }, []);
+
+  const handleExport = useCallback(async (selectedColumns: string[], format: "PDF" | "DOC", title: string, exportFilters: UserFilters) => {
+    Swal.fire({
+      title: "Exporting...",
+      text: "Please wait while we generate your file.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    try {
+      // Dynamically extract all filter properties that aren't null to automatically support future filters
+      const dynamicFilters = Object.fromEntries(
+        Object.entries(exportFilters).filter(([_, v]) => v !== null)
+      );
+
+      let currentPage = 1;
+      let allUsers = [];
+      
+      let response = await getUsers({
+        page: currentPage, 
+        limit: 100,
+        q: appliedSearch || undefined,
+        ...dynamicFilters
+      });
+      
+      if (!response.success || !response.users) {
+         throw new Error("Failed to fetch data for export");
+      }
+      
+      allUsers = [...response.users];
+      const totalPages = response.pagination?.totalPages || 1;
+      
+      for (currentPage = 2; currentPage <= totalPages; currentPage++) {
+        Swal.update({ text: `Fetching data... ${Math.round(((currentPage - 1) / totalPages) * 100)}%` });
+        const nextResponse = await getUsers({
+          page: currentPage, 
+          limit: 100,
+          q: appliedSearch || undefined,
+          ...dynamicFilters
+        });
+        if (nextResponse.success && nextResponse.users) {
+          allUsers = [...allUsers, ...nextResponse.users];
+        }
+      }
+      
+      Swal.update({ text: "Processing file..." });
+      const dataToExport = allUsers;
+      const headers = ["#", ...EXPORTABLE_COLUMNS.filter((c: { id: string, label: string }) => selectedColumns.includes(c.id)).map((c: { id: string, label: string }) => c.label)];
+      const rows = dataToExport.map((user, index) => {
+        const rowData = EXPORTABLE_COLUMNS.filter((c: { id: string, label: string }) => selectedColumns.includes(c.id)).map((c: { id: string, label: string }) => {
+          if (c.id === "fullname") {
+            return `${user.firstname || ""} ${user.middlename || ""} ${user.lastname || ""}`.replace(/\s+/g, ' ').trim() || "N/A";
+          }
+          if (["departmentname", "batch", "sponsorshiptype", "participation", "cafeteriaaccess", "tookcourse", "activitylevel"].includes(c.id)) {
+            return String(user.universityusers?.[c.id as keyof typeof user.universityusers] ?? "N/A");
+          }
+          return String(user[c.id as keyof User] ?? "N/A");
+        });
+        return [String(index + 1), ...rowData];
+      });
+
+      if (format === "PDF") {
+        const doc = new jsPDF("landscape");
+        let mainLogoImg: HTMLImageElement | null = null;
+        let headerImg: HTMLImageElement | null = null;
+        
+        try {
+          mainLogoImg = await loadImage(logo);
+          headerImg = await loadImage(headerLogo);
+        } catch(err) {
+          console.warn("Could not load pdf images", err);
+        }
+
+        autoTable(doc, {
+          head: [headers],
+          body: rows,
+          startY: 40,
+          margin: { top: 40 }, // Reserve space for the header on every page
+          styles: { 
+            fontSize: Math.max(10 - (headers.length / 8), 7), 
+            cellPadding: 3
+          },
+          headStyles: { 
+            fillColor: [255, 255, 255], 
+            textColor: [0, 0, 0], 
+            fontStyle: "bold",
+            lineWidth: 0.1,
+            lineColor: [200, 200, 200],
+            fontSize: Math.max(11 - (headers.length / 8), 8) 
+          },
+          bodyStyles: {
+            lineWidth: 0.1,
+            lineColor: [220, 220, 220]
+          },
+          didDrawPage: function () {
+            if (mainLogoImg) {
+              doc.addImage(mainLogoImg, "PNG", 14, 10, 20, 20);
+            }
+            
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(0, 0, 0);
+            
+            const pageWidth = doc.internal.pageSize.getWidth();
+            doc.text(title, pageWidth / 2, 22, { align: "center" });
+            
+            if (headerImg) {
+              doc.addImage(headerImg, "PNG", pageWidth - 50, 10, 35, 20);
+            }
+          }
+        });
+        const safeTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        doc.save(`${safeTitle}.pdf`);
+      } else {
+        const tableHtml = `
+          <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+          <head><meta charset='utf-8'><title>${title}</title>
+          <style>
+            table { border-collapse: collapse; width: 100%; border: 1px solid black; font-family: sans-serif; }
+            th, td { border: 1px solid black; padding: 8px; text-align: left; font-size: 14px; }
+            th { background-color: #f2f2f2; font-weight: bold; }
+          </style>
+          </head>
+          <body>
+            <h2 style="text-align: center; font-family: sans-serif;">${title}</h2>
+            <table>
+              <thead>
+                <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
+              </thead>
+              <tbody>
+                ${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}
+              </tbody>
+            </table>
+          </body>
+          </html>
+        `;
+        const blob = new Blob([tableHtml], { type: "application/msword;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        const safeTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        link.download = `${safeTitle}.doc`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+      Swal.close();
+    } catch (error) {
+       Swal.close();
+       console.error("Export error", error);
+       Swal.fire({
+         icon: "error",
+         title: "Export Failed",
+         text: "An error occurred while exporting data."
+       });
+    }
+  }, [appliedSearch]);
+
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete" | "detail">("add");
-
-  // initial data already covered by other effect above
 
   const openModal = useCallback(
     (mode: "add" | "edit" | "delete" | "detail", user: User | null = null) => {
@@ -126,17 +345,21 @@ const ManageUsers = () => {
   const handleSaveUser = useCallback(
     (userData: User) => {
       if (modalMode === "add") {
+        if (!canRegisterUsers) {
+          Swal.fire({
+            icon: "error",
+            title: "Access Denied",
+            text: "You are not allowed to register users.",
+          });
+          return;
+        }
         dispatch(addUser(userData)).then(() => {
-          dispatch(
-            fetchUsers({ page, limit, q: debouncedSearch || undefined }),
-          );
+          dispatch(fetchUsers(toFetchParams()));
         });
       } else if (modalMode === "edit" && selectedUser?.studentid) {
         dispatch(updateUser({ id: selectedUser.studentid, userData })).then(
           () => {
-            dispatch(
-              fetchUsers({ page, limit, q: debouncedSearch || undefined }),
-            );
+            dispatch(fetchUsers(toFetchParams()));
           },
         );
         closeModal();
@@ -147,20 +370,47 @@ const ManageUsers = () => {
       modalMode,
       selectedUser,
       closeModal,
-      page,
-      limit,
-      debouncedSearch,
+      toFetchParams,
+      canRegisterUsers,
     ],
+  );
+
+  const canEditUser = useCallback(
+    (user: User) => {
+      if (isSuperAdmin || adminPermissions.editAnyUser) return true;
+      if (
+        adminPermissions.editSpecificUsers ||
+        adminPermissions.registerUsers
+      ) {
+        return !!adminId && user.createdBy === adminId;
+      }
+      return false;
+    },
+    [isSuperAdmin, adminPermissions, adminId],
+  );
+
+  const canDeleteUser = useCallback(
+    (user: User) => {
+      if (isSuperAdmin || adminPermissions.removeAnyUsers) return true;
+      if (
+        adminPermissions.removeSpecificUsers ||
+        adminPermissions.registerUsers
+      ) {
+        return !!adminId && user.createdBy === adminId;
+      }
+      return false;
+    },
+    [isSuperAdmin, adminPermissions, adminId],
   );
 
   const handleDeleteUser = useCallback(() => {
     if (selectedUser?.studentid) {
       dispatch(deleteUser(selectedUser.studentid)).then(() => {
-        dispatch(fetchUsers({ page, limit, q: debouncedSearch || undefined }));
+        dispatch(fetchUsers(toFetchParams()));
       });
     }
     closeModal();
-  }, [dispatch, selectedUser, closeModal, page, limit, debouncedSearch]);
+  }, [dispatch, selectedUser, closeModal, toFetchParams]);
 
   if (loading) return <LoadingScreen />;
 
@@ -176,14 +426,113 @@ const ManageUsers = () => {
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
           {t("admin.users.title")}
         </h2>
-        <button
-          onClick={() => openModal("add")}
-          className="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto"
-        >
-          <Plus size={18} className="mr-2" />
-          {t("admin.users.add")}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsFilterOpen(true)}
+            className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <Filter size={18} className="mr-2" />
+            Filters
+          </button>
+          <button
+            onClick={() => setIsExportModalOpen(true)}
+            className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          >
+            <Download size={18} className="mr-2" />
+            Export
+          </button>
+          <button
+            onClick={() => canRegisterUsers && openModal("add")}
+            disabled={!canRegisterUsers}
+            className={`inline-flex items-center justify-center px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-auto ${canRegisterUsers
+              ? "bg-indigo-600 hover:bg-indigo-700"
+              : "bg-indigo-300 cursor-not-allowed"
+              }`}
+          >
+            <Plus size={18} className="mr-2" />
+            {t("admin.users.add")}
+          </button>
+        </div>
       </div>
+
+      <FilterModal
+        isOpen={isFilterOpen}
+        onClose={() => {
+          setIsFilterOpen(false);
+          if (pendingExport) setPendingExport(null);
+        }}
+        filters={filters}
+        onApply={(newFilters) => {
+          setFilters(newFilters);
+          if (pendingExport) {
+            handleExport(pendingExport.columns, pendingExport.format, pendingExport.title, newFilters);
+            setPendingExport(null);
+          }
+        }}
+      />
+      <ExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        onNext={startExportFlow}
+      />
+
+      {Object.values(filters).some((v) => v !== null) && (
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-blue-900">
+              Active Filters:
+            </span>
+            <button
+              onClick={() => setFilters({ ...EMPTY_USER_FILTERS })}
+              className="text-xs text-blue-600 hover:text-blue-800 underline"
+            >
+              Clear All
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {filters.gender && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Gender: {filters.gender}
+              </span>
+            )}
+            {filters.batch && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Batch: {filters.batch}
+              </span>
+            )}
+            {filters.departmentname && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Dept: {filters.departmentname}
+              </span>
+            )}
+            {filters.clergicalstatus && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Clergy: {filters.clergicalstatus}
+              </span>
+            )}
+            {filters.sponsorshiptype && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Sponsor: {filters.sponsorshiptype}
+              </span>
+            )}
+            {filters.cafeteriaaccess !== null && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Cafe: {filters.cafeteriaaccess ? "Yes" : "No"}
+              </span>
+            )}
+            {filters.tookcourse !== null && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Course: {filters.tookcourse ? "Yes" : "No"}
+              </span>
+            )}
+            {filters.participation && (
+              <span className="px-2 py-1 bg-white text-xs rounded border">
+                Participation: {filters.participation.replace(/_/g, " ")}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="relative mb-6">
         <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
@@ -193,21 +542,35 @@ const ManageUsers = () => {
           type="text"
           className="w-full pl-10 pr-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm sm:text-base"
           placeholder={t("admin.users.search")}
-          value={searchTerm}
+          value={searchInput}
           onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
+            setSearchInput(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              setAppliedSearch(searchInput);
+              setPage(1);
+            }
           }}
         />
-        {searchTerm && (
+        {searchInput && (
           <button
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-            onClick={() => setSearchTerm("")}
+            onClick={() => {
+              setSearchInput("");
+              setAppliedSearch("");
+              setPage(1);
+            }}
             aria-label="Clear search"
           >
             <X className="h-5 w-5" />
           </button>
         )}
+      </div>
+
+      <div className="mb-3 text-xs text-gray-500">
+        Search applies after 300 ms, or press Enter to search now.
       </div>
 
       <div className="overflow-x-auto bg-white rounded-lg border shadow-sm">

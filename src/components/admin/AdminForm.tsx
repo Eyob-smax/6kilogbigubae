@@ -1,34 +1,50 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
-import { Admin } from "../../types";
+import { Admin, Role } from "../../types";
 
 interface AdminFormProps {
   mode: "add" | "edit";
   initialData: Admin | null;
+  roles: Role[];
   onSave: (data: Partial<Admin>) => void;
   onCancel: () => void;
 }
 
-const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
+const AdminForm = ({
+  mode,
+  initialData,
+  roles,
+  onSave,
+  onCancel,
+}: AdminFormProps) => {
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState<Partial<Admin>>({
     studentid: initialData?.studentid ?? "",
     adminusername: initialData?.adminusername ?? "",
     adminpassword: "",
+    roleName: initialData?.roleName ?? "",
   });
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  }, []);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value, type, checked } = e.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    },
+    [],
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (mode === "add" && !formData.roleName?.trim()) {
+      return;
+    }
+
     onSave(formData);
   };
 
@@ -80,6 +96,30 @@ const AdminForm = ({ mode, initialData, onSave, onCancel }: AdminFormProps) => {
             placeholder="e.g., john_admin"
           />
         </div>
+
+        {mode === "add" && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Role
+            </label>
+            <select
+              name="roleName"
+              value={formData.roleName ?? ""}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border rounded-md bg-white"
+            >
+              <option value="" disabled>
+                Select role
+              </option>
+              {roles.map((role) => (
+                <option key={role.id ?? role.name} value={role.name}>
+                  {role.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Admin Password */}
         <div>

@@ -17,16 +17,17 @@ import {
   updateAdmin,
   deleteAdmin,
 } from "../../features/admins/adminsSlice";
+import { fetchRoles } from "../../features/roles/rolesSlice";
 import type { AppDispatch, RootState } from "../../app/store";
 import LoadingScreen from "../../components/ui/LoadingScreen";
-let isFirstRender = true;
 
 const ManageAdmins: React.FC = React.memo(() => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { admins = [], loading } = useSelector(
-    (state: RootState) => state.admin
+    (state: RootState) => state.admin,
   );
+  const { roles = [] } = useSelector((state: RootState) => state.roles);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
@@ -34,12 +35,9 @@ const ManageAdmins: React.FC = React.memo(() => {
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
 
   useEffect(() => {
-    if (isFirstRender) {
-      isFirstRender = false;
-      dispatch(fetchAdmins());
-      return;
-    }
-  }, [dispatch, admins]);
+    dispatch(fetchAdmins());
+    dispatch(fetchRoles());
+  }, [dispatch]);
 
   const filteredAdmins = useMemo(() => {
     const term = searchTerm.toLowerCase();
@@ -47,7 +45,7 @@ const ManageAdmins: React.FC = React.memo(() => {
       ? admins.filter(
           (admin: Admin) =>
             admin?.studentid?.toLowerCase()?.includes(term) ||
-            admin?.adminusername?.toLowerCase()?.includes(term)
+            admin?.adminusername?.toLowerCase()?.includes(term),
         )
       : [];
   }, [admins, searchTerm]);
@@ -78,16 +76,25 @@ const ManageAdmins: React.FC = React.memo(() => {
   const handleSaveAdmin = useCallback(
     (adminData: Partial<Admin>) => {
       if (modalMode === "add") {
-        dispatch(addAdmin(adminData));
+        const payload: Partial<Admin> = {
+          ...adminData,
+          studentid: adminData.studentid?.trim(),
+          adminusername: adminData.adminusername?.trim(),
+          roleName: adminData.roleName?.trim(),
+        };
+        dispatch(addAdmin(payload));
       } else if (modalMode === "edit" && selectedAdmin?.studentid) {
-        if (adminData.adminpassword === "") {
-          adminData.adminpassword = "previous one";
+        const payload = { ...adminData };
+        if (!payload.adminpassword) {
+          delete payload.adminpassword;
         }
-        dispatch(updateAdmin({ id: selectedAdmin.studentid, adminData }));
+        dispatch(
+          updateAdmin({ id: selectedAdmin.studentid, adminData: payload }),
+        );
       }
       closeModal();
     },
-    [dispatch, modalMode, selectedAdmin, closeModal]
+    [dispatch, modalMode, selectedAdmin, closeModal],
   );
 
   const handleDeleteAdmin = useCallback(() => {
@@ -171,7 +178,7 @@ const ManageAdmins: React.FC = React.memo(() => {
                           <span className="text-sm font-medium">
                             Super Admin{" "}
                             {admins.find(
-                              (a) => a.adminusername === admin.adminusername
+                              (a) => a.adminusername === admin.adminusername,
                             )
                               ? "(You)"
                               : ""}
@@ -257,6 +264,7 @@ const ManageAdmins: React.FC = React.memo(() => {
               <AdminForm
                 mode={modalMode}
                 initialData={selectedAdmin}
+                roles={roles}
                 onSave={handleSaveAdmin}
                 onCancel={closeModal}
               />

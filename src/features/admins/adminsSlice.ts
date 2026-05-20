@@ -70,7 +70,7 @@ export const addAdmin = createAsyncThunk<
     const res = await postRequest<
       { success: boolean; message: string; admin?: Admin },
       Partial<Admin>
-    >("/admin/register", adminData);
+    >("/admin", adminData);
 
     if (res.success) {
       await showSuccess("Admin added successfully");

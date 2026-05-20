@@ -25,7 +25,7 @@ const Analytics = () => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch<AppDispatch>();
-  const { users, pagination, loading } = useSelector(
+  const { users, pagination } = useSelector(
     (state: RootState) => state.user,
   );
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);

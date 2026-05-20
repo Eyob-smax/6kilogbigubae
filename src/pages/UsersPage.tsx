@@ -1,33 +1,42 @@
 import { useEffect, useState } from "react";
-import useDebounce from "../customhook/useDebounce";
+import { Filter } from "lucide-react";
 import useUsers from "../service/useUsers";
 import Pagination from "../components/Pagination";
+import FilterModal from "../components/FilterModal";
+import { EMPTY_USER_FILTERS } from "../types";
 
 export default function UsersPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [q, setQ] = useState("");
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
     undefined,
   );
-  const [batch, setBatch] = useState<number | null>(null);
-  const [participation, setParticipation] = useState<string | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({ ...EMPTY_USER_FILTERS });
+  const [searchInput, setSearchInput] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
 
-  const debouncedQ = useDebounce(q, 300);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAppliedSearch(searchInput);
+      setPage(1);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedQ, limit, sortBy, sortOrder, batch, participation]);
+  }, [limit, sortBy, sortOrder, filters]);
 
   const { data, isLoading, isError } = useUsers({
     page,
     limit,
-    q: debouncedQ,
+    q: appliedSearch,
     sortBy,
     sortOrder,
-    batch,
-    participation,
+    ...filters,
   });
 
   const totalPages = data?.pagination?.totalPages ?? 1;
@@ -47,13 +56,20 @@ export default function UsersPage() {
       </p>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-2">
           <input
             aria-label="Search users"
             className="w-full sm:w-64 px-3 py-2 border rounded"
             placeholder="Search by name or id"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                setAppliedSearch(searchInput);
+                setPage(1);
+              }
+            }}
           />
           <select
             className="px-2 py-2 border rounded"
@@ -67,7 +83,10 @@ export default function UsersPage() {
           <select
             className="px-2 py-2 border rounded"
             value={sortOrder || ""}
-            onChange={(e) => setSortOrder((e.target.value as any) || undefined)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setSortOrder(val === "asc" || val === "desc" ? val : undefined);
+            }}
           >
             <option value="">Order</option>
             <option value="asc">Asc</option>
@@ -75,23 +94,25 @@ export default function UsersPage() {
           </select>
         </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            className="px-2 py-2 border rounded w-24"
-            placeholder="Batch"
-            value={batch ?? ""}
-            onChange={(e) =>
-              setBatch(e.target.value ? Number(e.target.value) : null)
-            }
-          />
-          <input
-            className="px-2 py-2 border rounded w-40"
-            placeholder="Participation"
-            value={participation ?? ""}
-            onChange={(e) => setParticipation(e.target.value || null)}
-          />
-        </div>
+        <button
+          onClick={() => setIsFilterOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          <Filter size={18} />
+          Filters
+        </button>
       </div>
+
+      <div className="mb-3 text-xs text-gray-500">
+        Search applies after 300 ms, or press Enter to search now.
+      </div>
+
+      <FilterModal
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        filters={filters}
+        onApply={setFilters}
+      />
 
       <div className="space-y-3">
         {isLoading && (

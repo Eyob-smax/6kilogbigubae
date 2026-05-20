@@ -57,6 +57,7 @@ type TRegionType =
 export interface User {
   userid?: string;
   studentid: string;
+  createdBy?: string | null;
   firstname: string;
   middlename: string;
   lastname: string;
@@ -97,8 +98,13 @@ export interface Admin {
   studentid: string;
   adminusername: string;
   adminpassword?: string;
+  roleName?: string;
+  passwordUpdatedAt?: string;
   isSuperAdmin?: boolean;
   role?: "Super Admin" | "Admin";
+  usersCreatedCount?: number;
+  createdAt?: string;
+  permissions: Permissions;
 }
 
 export interface GetAdminResponse {
@@ -118,7 +124,6 @@ export interface ChartData {
 }
 export interface AuthPayload {
   admin: Admin;
-  token: string;
 }
 
 export interface Pagination {
@@ -137,3 +142,91 @@ export interface UsersApiResponse {
   users: User[];
   pagination: Pagination;
 }
+
+export interface Role {
+  id?: number;
+  name: string;
+  readUsers: boolean;
+  registerUsers: boolean;
+  editAnyUser: boolean;
+  editSpecificUsers: boolean;
+  removeAnyUsers: boolean;
+  removeSpecificUsers: boolean;
+}
+
+export interface Permissions {
+  readUsers: boolean;
+  registerUsers: boolean;
+  editAnyUser: boolean;
+  editSpecificUsers: boolean;
+  removeAnyUsers: boolean;
+  removeSpecificUsers: boolean;
+}
+
+export const DEFAULT_PERMISSIONS: Permissions = {
+  readUsers: false,
+  registerUsers: false,
+  editAnyUser: false,
+  editSpecificUsers: false,
+  removeAnyUsers: false,
+  removeSpecificUsers: false,
+};
+
+export interface UserFilters {
+  gender: string | null;
+  batch: number | null;
+  departmentname: string | null;
+  clergicalstatus: string | null;
+  sponsorshiptype: string | null;
+  cafeteriaaccess: boolean | null;
+  tookcourse: boolean | null;
+  participation: string | null;
+}
+
+export const EMPTY_USER_FILTERS: UserFilters = {
+  gender: null,
+  batch: null,
+  departmentname: null,
+  clergicalstatus: null,
+  sponsorshiptype: null,
+  cafeteriaaccess: null,
+  tookcourse: null,
+  participation: null,
+};
+
+export const PERMISSION_META: {
+  key: keyof Permissions;
+  label: string;
+  description: string;
+}[] = [
+  {
+    key: "readUsers",
+    label: "Read Users",
+    description: "View user profiles and account details",
+  },
+  {
+    key: "registerUsers",
+    label: "Register Users",
+    description: "Create new user accounts in the system",
+  },
+  {
+    key: "editAnyUser",
+    label: "Edit Any User",
+    description: "Modify details for any user account",
+  },
+  {
+    key: "editSpecificUsers",
+    label: "Edit Only Specific Users",
+    description: "Modify details for assigned users only",
+  },
+  {
+    key: "removeAnyUsers",
+    label: "Remove Any Users",
+    description: "Delete any user account from the system",
+  },
+  {
+    key: "removeSpecificUsers",
+    label: "Remove Only Specific Users",
+    description: "Delete only assigned user accounts",
+  },
+];

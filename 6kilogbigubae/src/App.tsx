@@ -1,0 +1,70 @@
+import { Suspense, lazy } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import LoadingScreen from "./components/ui/LoadingScreen";
+import ProtectedAdminsPage from "./components/auth/protectedAdminsPage";
+import useGetCurrentUser from "./customhook/useGetCurrentUser";
+
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const ManageUsers = lazy(() => import("./pages/admin/ManageUsers"));
+
+const Analytics = lazy(() => import("./pages/admin/Analytics"));
+const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
+const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
+const SuperAdmin = lazy(() => import("./pages/superAdmin/SuperAdminPage"));
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LandingPage />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin",
+    element: (
+      <ProtectedRoute>
+        <AdminDashboard />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+      {
+        path: "users",
+        element: <ManageUsers />,
+      },
+      {
+        path: "superadmin",
+        element: (
+          <ProtectedAdminsPage>
+            <SuperAdmin />
+          </ProtectedAdminsPage>
+        ),
+      },
+      {
+        path: "analytics",
+        element: <Analytics />,
+      },
+    ],
+  },
+]);
+function App() {
+  const { hasInitialized } = useGetCurrentUser();
+
+  if (!hasInitialized) {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
+}
+
+export default App;
