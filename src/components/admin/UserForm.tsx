@@ -184,7 +184,6 @@ function getUniversityUserValue<K extends keyof UniversityUser>(
 
 function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
   const [formData, setFormData] = useState<User>(initialData || defaultUser);
-  const [errors, setErrors] = useState<string[]>([]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -211,7 +210,6 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
         [name]: checked !== undefined ? checked : value,
       }));
     }
-    setErrors([]);
   };
 
   const validateForm = (): string[] => {
@@ -258,7 +256,6 @@ function UserForm({ mode, initialData, onCancel, onSubmit }: UserFormProps) {
       newErrors.push("Role cannot be 'None' if participating in a section.");
     }
 
-    setErrors(newErrors);
     return newErrors;
   };
 

@@ -149,7 +149,7 @@ const ManageUsers = () => {
   const toFetchParams = useCallback(
     () => {
       const dynamicFilters = Object.fromEntries(
-        Object.entries(filters).filter(([_, v]) => v !== null)
+        Object.entries(filters).filter(([, v]) => v !== null)
       );
       return {
         page,
@@ -189,13 +189,13 @@ const ManageUsers = () => {
     try {
       // Dynamically extract all filter properties that aren't null to automatically support future filters
       const dynamicFilters = Object.fromEntries(
-        Object.entries(exportFilters).filter(([_, v]) => v !== null)
+        Object.entries(exportFilters).filter(([, v]) => v !== null)
       );
 
       let currentPage = 1;
       let allUsers = [];
       
-      let response = await getUsers({
+      const response = await getUsers({
         page: currentPage, 
         limit: 100,
         q: appliedSearch || undefined,
@@ -365,16 +365,33 @@ const ManageUsers = () => {
           });
           return;
         }
-        dispatch(addUser(userData)).then(() => {
-          dispatch(fetchUsers(toFetchParams()));
-        });
-      } else if (modalMode === "edit" && selectedUser?.studentid) {
-        dispatch(updateUser({ id: selectedUser.studentid, userData })).then(
-          () => {
+        dispatch(addUser(userData))
+          .unwrap()
+          .then(() => {
+            closeModal();
             dispatch(fetchUsers(toFetchParams()));
-          },
-        );
-        closeModal();
+          })
+          .catch((err) => {
+            Swal.fire({
+              icon: "error",
+              title: "Failed to Add User",
+              text: err || "An unknown error occurred.",
+            });
+          });
+      } else if (modalMode === "edit" && selectedUser?.studentid) {
+        dispatch(updateUser({ id: selectedUser.studentid, userData }))
+          .unwrap()
+          .then(() => {
+            closeModal();
+            dispatch(fetchUsers(toFetchParams()));
+          })
+          .catch((err) => {
+            Swal.fire({
+              icon: "error",
+              title: "Failed to Update User",
+              text: err || "An unknown error occurred.",
+            });
+          });
       }
     },
     [
